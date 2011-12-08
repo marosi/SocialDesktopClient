@@ -33,7 +33,7 @@ void ConfigManager::LoadConfig(const std::string & file_path) {
   while(conf_file.good()) {
     std::getline(conf_file, line);
     if(!line.empty() && is_next) { //first line of the user configuration text block
-      user_conf = this->GetService(line)->CreateUserConfig();
+      user_conf = this->GetService(line)->CreateUserConfig(); // FIXME: situation when service ID in configuration doesn't exist
       connection_configs_.push_back(user_conf);
       is_next = false;
     }

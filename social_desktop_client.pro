@@ -2,7 +2,10 @@ TEMPLATE = app
 TARGET = social_desktop_client
 QT += core \
     gui
-HEADERS += testing/testconsole.ui.h \
+HEADERS += core/include/controller.h \
+    testing/simple_message.h \
+    core/include/data_manager.h \
+    testing/testconsole.ui.h \
     testing/testwindow.h \
     core/include/event_manager.h \
     core/include/abstract_manager.h \
@@ -14,7 +17,10 @@ HEADERS += testing/testconsole.ui.h \
     core/include/connection_manager.h \
     core/include/plugin_manager.h \
     mainwindow.h
-SOURCES += testing/testwindow.cpp \
+SOURCES += testing/simple_message.cc \
+    core/controller.cc \
+    core/data_manager.cc \
+    testing/testwindow.cpp \
     core/event_manager.cc \
     core/abstract_manager.cc \
     core/core.cc \
@@ -28,9 +34,10 @@ SOURCES += testing/testwindow.cpp \
 FORMS += testing/testwindow.ui \
     mainwindow.ui
 RESOURCES += 
-INCLUDEPATH += core/include \
+INCLUDEPATH += core/include \ # /home/xangel/projects/Plugins
     /home/xangel/boost_1_47_0
-LIBS += -L/home/xangel/boost_1_47_0/stage/lib \
+LIBS += -L/home/xangel/boost_1_47_0/stage/lib \ # -L/home/xangel/projects/Plugins \
+# -lbuddycloud \
     -lboost_system \
     -lboost_thread
 QMAKE_LFLAGS += -Wl \

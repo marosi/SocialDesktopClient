@@ -11,14 +11,17 @@
 
 int main(int argc, char *argv[]) {
 
+  QApplication a(argc, argv);
+  TestWindow w;
   sdc::Core core;
+
+  core.SetGui(&w);
   core.Start();
 
   //sdc::UI ui(&core);
   //ui.Run();
 
-  QApplication a(argc, argv);
-  TestWindow w;
+
   w.show();
   int gui_result = a.exec();
 

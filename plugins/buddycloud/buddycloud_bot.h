@@ -53,7 +53,7 @@ class BuddycloudBot {
 
       LOG(DEBUG) << "Handling recieved message..";
 
-      /*// Echo back the incoming message
+      // Echo back the incoming message
       if (message->getBody() != "") {
         std::cout << message->getBody() << std::endl;
         message->setTo(message->getFrom());
@@ -65,7 +65,7 @@ class BuddycloudBot {
         // Post message onto EventLoop queue
         sdc::SimpleStringMessage* msg = new sdc::SimpleStringMessage(message->getBody());
         sdc::g_event_manager->PostMessage(msg);
-      }*/
+      }
     }
 
     void handlePresenceReceived(Presence::ref presence) {

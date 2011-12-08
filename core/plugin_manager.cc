@@ -31,8 +31,8 @@ void PluginManager::LoadPlugins() {
   LOG(INFO) << "Loading plugins...";
   //TODO: loop it for a certain directory
   //TODO: implement try catch block
-  std::string lib_filename = "libosw.so";
-  std::string path = "/home/xangel/projects/Plugins/";
+  std::string lib_filename = "libbuddycloud.so";
+  std::string path = "/home/xangel/projects/social_desktop_client/plugins/";
   LIB_HANDLE_TYPE lib_handle = LoadLibrary(path + lib_filename);
   registerLibrary* fn_register = (registerLibrary*) LoadLibrarySymbol(lib_handle, "registerLibrary");
   Registration* registration = fn_register();

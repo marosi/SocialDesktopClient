@@ -12,8 +12,9 @@ public:
     TestWindow(QWidget *parent = 0);
     ~TestWindow();
 
-private:
     Ui::TestWindowClass ui;
+private:
+    //Ui::TestWindowClass ui;
 };
 
 #endif // TESTWINDOW_H

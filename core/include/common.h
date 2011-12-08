@@ -13,6 +13,11 @@
 
 #include "log.h"
 
+/*
+ * Application data elements, ...
+ */
+#include "message.h"
+
 #include <string>
 
 namespace sdc {
@@ -25,6 +30,7 @@ class PluginManager;
 class ConnectionManager;
 class ConfigManager;
 class EventManager;
+class DataManager;
 
 /// @defgroup manager_glob_vars Managers's global access variables
 /// @{
@@ -32,6 +38,7 @@ extern ConfigManager* g_config_manager;
 extern ConnectionManager* g_connection_manager;
 extern PluginManager* g_plugin_manager;
 extern EventManager* g_event_manager;
+extern DataManager* g_data_manager;
 /// @}
 
 }

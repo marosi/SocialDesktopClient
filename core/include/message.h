@@ -18,10 +18,7 @@ namespace sdc {
  */
 class Message {
  public:
-  void Process();
- protected:
-
- private:
+  virtual void Process()=0;
 };
 
 } /* namespace sdc */

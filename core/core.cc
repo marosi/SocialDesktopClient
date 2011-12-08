@@ -14,6 +14,7 @@ ConfigManager* g_config_manager;
 ConnectionManager* g_connection_manager;
 PluginManager* g_plugin_manager;
 EventManager* g_event_manager;
+DataManager* g_data_manager;
 
 Core::Core() {
   Init();
@@ -24,6 +25,7 @@ Core::~Core() {
   delete g_connection_manager;
   delete g_plugin_manager;
   delete g_event_manager;
+  delete g_data_manager;
 }
 
 void Core::Start() {
@@ -36,6 +38,7 @@ void Core::Init() {
   g_connection_manager = new ConnectionManager;
   g_plugin_manager = new PluginManager;
   g_event_manager = new EventManager;
+  g_data_manager = new DataManager;
 }
 
 void Core::Exec() {
@@ -46,6 +49,9 @@ void Core::Exec() {
   g_config_manager->Init();
   g_config_manager->LoadConfig("debug/configuration.conf");
   g_connection_manager->ConnectAll();
+
+  g_data_manager->SetView(gui_);
+  g_data_manager->ConnectView();
   // Main LOOP
   g_event_manager->Run();
   // Quit actions
@@ -59,6 +65,14 @@ void Core::Exit() {
 
 void Core::Join() {
   core_.join();
+}
+
+void Core::SetGui(void* gui) {
+  gui_ = gui;
+}
+
+void* Core::GetGui() {
+  return gui_;
 }
 
 }

@@ -13,8 +13,9 @@
 
 #include "common.h"
 
-#include "config_manager.h"
-#include "connection_manager.h"
-#include "plugin_manager.h"
+#include "core.h"
+
+// TODO:For testing purposes ...delete afterwards
+#include "../../testing/simple_message.h"
 
 #endif /* SDC_H_ */

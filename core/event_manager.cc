@@ -21,6 +21,10 @@ void EventManager::PostEvent(boost::function<void ()> callback) {
   is_empty_queue_.notify_one();
 }
 
+void EventManager::PostMessage(Message* message) {
+  PostEvent(boost::bind(&Message::Process, message));
+}
+
 void EventManager::Run() {
   // Run, Forest, run!
   while (is_running_) {
