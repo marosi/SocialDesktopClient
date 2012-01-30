@@ -16,82 +16,41 @@
 #include "Swiften/Swiften.h"
 #include "boost/bind.hpp"
 
+#include "pubsub_payload.h"
+#include "pubsub_payload_parser.h"
+#include "pubsub_payload_serializer.h"
+
 using namespace Swift;
 using namespace boost;
 
+class BuddycloudConnection;
+
+class PubsubRequest : public Swift::GenericRequest<PubsubPayload> {
+ public:
+  PubsubRequest(const std::string &body, const std::string &reciever, Swift::IQRouter* router) :
+      Swift::GenericRequest<PubsubPayload>(Swift::IQ::Get, reciever, boost::shared_ptr<PubsubPayload>(new PubsubPayload()), router) {}
+};
+
 class BuddycloudBot {
   public:
-    BuddycloudBot(NetworkFactories* networkFactories) {
-      client = new Client("sdc_test@jabbim.com", "sdc_test", networkFactories);
-      client->setAlwaysTrustCertificates();
-      client->onConnected.connect(bind(&BuddycloudBot::handleConnected, this));
-      client->onMessageReceived.connect(
-          bind(&BuddycloudBot::handleMessageReceived, this, _1));
-      client->onPresenceReceived.connect(
-                bind(&BuddycloudBot::handlePresenceReceived, this, _1));
-      tracer = new ClientXMLTracer(client);
-      client->connect();
-    }
+    BuddycloudBot(BuddycloudConnection* connection, NetworkFactories* networkFactories);
+    ~BuddycloudBot();
 
-    ~BuddycloudBot  () {
-      delete tracer;
-      delete client;
-    }
+    void SendMessage(std::string msg);
 
   private:
-    void handleConnected() {
-      std::cout << "@@@ CLIENT IS CONNECTED @@@" << std::endl;
-      // Request the roster
-      GetRosterRequest::ref rosterRequest =
-          GetRosterRequest::create(client->getIQRouter());
-      rosterRequest->onResponse.connect(
-          bind(&BuddycloudBot::handleRosterReceived, this, _2));
-      rosterRequest->send();
-    }
-
-    void handleMessageReceived(Message::ref message) {
-
-      LOG(DEBUG) << "Handling recieved message..";
-
-      // Echo back the incoming message
-      if (message->getBody() != "") {
-        std::cout << message->getBody() << std::endl;
-        message->setTo(message->getFrom());
-        message->setFrom(JID());
-        client->sendMessage(message);
-
-        // Transform message into SDC core message format
-
-        // Post message onto EventLoop queue
-        sdc::SimpleStringMessage* msg = new sdc::SimpleStringMessage(message->getBody());
-        sdc::g_event_manager->PostMessage(msg);
-      }
-    }
-
-    void handlePresenceReceived(Presence::ref presence) {
-
-      LOG(DEBUG) << "Handling presence message..";
-
-          // Automatically approve subscription requests
-          if (presence->getType() == Presence::Subscribe) {
-            Presence::ref response = Presence::create();
-            response->setTo(presence->getFrom());
-            response->setType(Presence::Subscribed);
-            client->sendPresence(response);
-          }
-        }
-
-    void handleRosterReceived(ErrorPayload::ref error) {
-          if (error) {
-            std::cerr << "Error receiving roster. Continuing anyway.";
-          }
-          // Send initial available presence
-          client->sendPresence(Presence::create("Send me a message"));
-        }
+    void handleConnected();
+    void handleMessageReceived(Message::ref message);
+    void handlePresenceReceived(Presence::ref presence);
+    void handleRosterReceived(ErrorPayload::ref error);
 
   private:
+    BuddycloudConnection* connection_;
     Client* client;
     ClientXMLTracer* tracer;
+
+    PubsubPayloadParserFactory pubsubPayloadParserFactory_;
+    PubsubPayloadSerializer pubsubPayloadSerializer_;
 };
 
 

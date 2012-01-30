@@ -6,8 +6,7 @@
  */
 
 #include "connection_manager.h"
-
-
+#include "service.h"
 #include <exception>
 
 namespace sdc {
@@ -22,10 +21,23 @@ void ConnectionManager::ConnectAll() {
   }
 }
 
+std::vector<Service::Connection*> ConnectionManager::GetAllActiveConnections() const {
+  typedef std::vector<Service::Connection*> Conns;
+  Conns result;
+  for(Conns::const_iterator it = connections_.begin(); it != connections_.end(); ++it) {
+    Service::Connection* conn = *it;
+    if(conn->IsActive())
+      result.push_back(conn);
+  }
+  return result;
+}
+
 void ConnectionManager::MakeConnection(Service::UserConfig* user_config) {
   try {
     Service::Connection* conn = user_config->CreateConnection();
-    boost::thread* thrd = new boost::thread(&Service::Connection::Run, conn);
+    conn->SetCore(GetCore());
+    connections_.push_back(conn);
+    boost::thread* thrd = new boost::thread(&Service::Connection::DoRun, conn);
     threads_.add_thread(thrd);
     //threads_.join_all();
   } catch (std::exception& e) {

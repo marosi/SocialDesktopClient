@@ -17,7 +17,10 @@ sdc::Registration* registerLibrary() {
   std::string version = "0.1";
   std::string description = "Buddycloud protocol plugin";
   sdc::Registration *reg = new sdc::Registration(name, version, description);
+
   reg->AddClass(sdc::SERVICE, "BuddycloudService", "createBuddycloudService");
+  //reg->AddClass(sdc::UI, "whatever", "initModelAndController");
+
   return reg;
 }
 

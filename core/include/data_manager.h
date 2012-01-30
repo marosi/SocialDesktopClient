@@ -14,18 +14,14 @@
 #include "abstract_manager.h"
 #include "common.h"
 #include <vector>
+#include "model.h"
 
 namespace sdc {
 
-class Controller;
-
-class DataManager : public AbstractManager {
+class DataManager : public AbstractManager, public Model {
  public:
   DataManager();
-  void ConnectView();
   void AddContent(std::string content);
-
-  void SetView(void* view);
 
  private:
   /**
@@ -36,10 +32,7 @@ class DataManager : public AbstractManager {
   void Notify();
 
  private:
-  Controller* controller_;
   std::vector<std::string> main_content_;
-
-  void* view_;
 };
 
 } /* namespace sdc */

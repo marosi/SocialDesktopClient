@@ -10,17 +10,24 @@
 #define CORE_SOCIALDESKTOPCLIENT_H_
 
 #include "common.h"
-
-#include "config_manager.h"
-#include "connection_manager.h"
-#include "plugin_manager.h"
-#include "event_manager.h"
-#include "data_manager.h"
-
+#include "model.h"
+#include "view.h"
+#include "controller.h"
+#include "test_controller.h"
 #include "boost/noncopyable.hpp"
 #include "boost/thread.hpp"
+#include "boost/shared_ptr.hpp"
+#include <QApplication>
+#include <QtGui>
+#include <vector>
+
+class MainWindow;
 
 namespace sdc {
+
+class Controller;
+class Model;
+class Message;
 
 /**
  * @class SocialDesktopClient
@@ -28,20 +35,37 @@ namespace sdc {
  */
 class Core : boost::noncopyable {
  public:
-	Core();
+	Core(int argc, char* argv[]);
 	~Core();
 	void Start();
 	void Exit();
-	void Join();
-	void SetGui(void* main_window);
-	void* GetGui();
+	EventManager* event_manager() { return g_event_manager; }
+
+	int GetReturnCode() { return return_code_; }
+
+	void RegisterController(Controller::Ref controller);
+	void RegisterModel(Model::Ref model);
+
+	void Process(boost::shared_ptr<Message> message); // Method that takes care of incomming message processing, it will be probably change to individual manager
 
  private:
 	void Init();
 	void Exec();
+	void InitUi();
+	void ExecUi();
 
 	boost::thread core_;
-	void* gui_;
+	//boost::thread ui_; // Qt GUI cannot run in secondary thread
+	QApplication qt_app_;
+	MainWindow* main_view_;
+
+	boost::shared_ptr<TestController> test_controller_;
+
+	std::vector<Model::Ref> models_;
+	std::vector<View::Ref> views_;
+	std::vector<Controller::Ref> controllers_;
+
+	int return_code_;
 };
 
 }

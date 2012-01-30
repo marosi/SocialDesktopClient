@@ -17,12 +17,14 @@
 namespace sdc {
 
 // TODO: testing ... delete afterwards
-class SimpleStringMessage : public Message {
+class DummyMessage : public Message {
  public:
-  SimpleStringMessage(std::string message);
+  DummyMessage(std::string content) : Message(content) {
+    content_ = content;
+  }
+  virtual void OnDispatch()=0;
 
-  virtual void Process();
- private:
+ protected:
   std::string content_;
 };
 

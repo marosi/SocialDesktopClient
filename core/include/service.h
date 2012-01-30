@@ -12,7 +12,7 @@
 #define CORE_SERVICE_H_
 
 #include "common.h"
-
+#include "boost/shared_ptr.hpp"
 #include <map>
 
 namespace sdc {
@@ -38,12 +38,31 @@ class Service {
 
 };
 
+class Message;
+class Core;
+
 /// @class Connection
 /// @brief TODO:comment
 class Service::Connection {
  public:
+  friend class ConnectionManager;
+
+  bool IsActive() const { return is_active_; }
+
   virtual void Set(Service::UserConfig* /*user_config*/)=0;
+  virtual void SendMessage(boost::shared_ptr<Message> message)=0;
+  virtual void RecieveMessage(boost::shared_ptr<Message> message);
+
+ protected:
+  Core* core() const { return core_; }
+
+ private:
+  void SetCore(Core* core) { core_ = core; }
+  void DoRun();
   virtual void Run()=0;
+
+  Core* core_;
+  bool is_active_;
 };
 
 /// @class UserConfig

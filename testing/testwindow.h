@@ -4,17 +4,39 @@
 #include <QtGui/QMainWindow>
 #include "ui_testwindow.h"
 
-class TestWindow : public QMainWindow
+#include <string>
+#include "view.h"
+
+//#include <QAction>
+
+class TestModel;
+class TestController;
+
+class TestWindow : public QMainWindow, public sdc::GenericView<TestController, TestModel>
 {
     Q_OBJECT
 
 public:
-    TestWindow(QWidget *parent = 0);
+    TestWindow(boost::shared_ptr<TestController> controller, boost::shared_ptr<TestModel> model, QWidget* parent=0);
     ~TestWindow();
 
-    Ui::TestWindowClass ui;
+    void Update();
+
+    std::string GetText();
+    void ClearText();
+
+public slots:
+    void OnConfirmText();
+    void DoUpdate();
+
+signals:
+    void update();
+
 private:
-    //Ui::TestWindowClass ui;
+    Ui::TestWindowClass ui_;
+
+    void CreateActions();
+    //QAction* send_input_text_;
 };
 
 #endif // TESTWINDOW_H

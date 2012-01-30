@@ -18,6 +18,9 @@
  */
 #include "message.h"
 
+/*
+ * Commonly used data structures
+ */
 #include <string>
 
 namespace sdc {

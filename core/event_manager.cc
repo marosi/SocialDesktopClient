@@ -21,8 +21,12 @@ void EventManager::PostEvent(boost::function<void ()> callback) {
   is_empty_queue_.notify_one();
 }
 
+/*void EventManager::PostCommand(Command* command) {
+  PostEvent(boost::bind(&Command::Execute, command));
+}*/
+
 void EventManager::PostMessage(Message* message) {
-  PostEvent(boost::bind(&Message::Process, message));
+  //PostEvent(boost::bind(&Message::OnDispatch, message));
 }
 
 void EventManager::Run() {

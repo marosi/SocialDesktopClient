@@ -13,7 +13,7 @@
 
 #include "common.h"
 
-#include "core.h"
+#include "plugin_manager.h" // for the Registration type
 
 // TODO:For testing purposes ...delete afterwards
 #include "../../testing/simple_message.h"

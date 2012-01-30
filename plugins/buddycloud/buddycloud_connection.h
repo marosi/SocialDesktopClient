@@ -10,24 +10,27 @@
 #include <iostream>
 #include "sdc.h"
 
+class BuddycloudBot;
+
 class BuddycloudService : public sdc::Service {
  public:
-  class Connection;
-  class UserConfig;
   sdc::Service::Connection* CreateConnection();
   sdc::Service::UserConfig* CreateUserConfig();
 };
 
-class BuddycloudService::Connection : public sdc::Service::Connection {
+class BuddycloudConnection : public sdc::Service::Connection {
  public:
-  Connection();
+  BuddycloudConnection();
   void Set(sdc::Service::UserConfig*);
   void Run();
+  void SendMessage(boost::shared_ptr<sdc::Message> msg);
+ private:
+  BuddycloudBot* bot_;
 };
 
-class BuddycloudService::UserConfig : public sdc::Service::UserConfig {
+class BuddycloudUserConfig : public sdc::Service::UserConfig {
  public:
-  UserConfig(sdc::Service* service) : sdc::Service::UserConfig(service) { }
+  BuddycloudUserConfig(sdc::Service* service) : sdc::Service::UserConfig(service) { }
 };
 
 #endif /* BUDDYCLOUD_CONNECTION_H_ */

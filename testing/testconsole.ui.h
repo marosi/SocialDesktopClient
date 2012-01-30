@@ -19,7 +19,7 @@
 
 namespace sdc {
 
-class Core;
+/*class Core;
 class ExitController;
 
 class UI {
@@ -34,7 +34,7 @@ class UI {
   }
  private:
   Core* core_;
-};
+};*/
 
 /*
 class Controller {

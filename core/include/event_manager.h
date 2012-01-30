@@ -21,6 +21,8 @@
 
 namespace sdc {
 
+class Message;
+
 class EventManager : public AbstractManager {
  public:
   class Event;
@@ -30,6 +32,7 @@ class EventManager : public AbstractManager {
   void Run();
 
   void PostEvent(boost::function<void ()> callback);
+  //void PostCommand(Command* command);
   void PostMessage(Message* message);
 
   void Stop();

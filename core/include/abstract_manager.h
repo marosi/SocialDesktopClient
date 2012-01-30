@@ -15,10 +15,21 @@
 
 namespace sdc {
 
+class Core;
+
 class AbstractManager : public boost::noncopyable {
  public:
   virtual void OnExit() {}
 
+  void SetCore(Core* core) { // TODO: Modify so the core would be set in ctor in every manager.
+    core_ = core;
+  }
+
+ protected:
+  Core* GetCore() { return core_; }
+
+ private:
+  Core* core_;
 };
 
 }

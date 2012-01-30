@@ -6,28 +6,33 @@
  */
 
 #include "buddycloud_connection.h"
-
-#include "Swiften/Swiften.h"
-
 #include "buddycloud_bot.h"
 
-BuddycloudService::Connection::Connection() {
+#include "Swiften/Swiften.h"
+#include "boost/shared_ptr.hpp"
+#include "boost/pointer_cast.hpp"
+
+BuddycloudConnection::BuddycloudConnection() {
   LOG(DEBUG1) << "OswService::Connection has been instantiated.";
 }
-void BuddycloudService::Connection::Set(sdc::Service::UserConfig* uc) {
+void BuddycloudConnection::Set(sdc::Service::UserConfig* uc) {
   LOG(DEBUG1) << "Setting user configuration";
 }
-void BuddycloudService::Connection::Run() {
+void BuddycloudConnection::Run() {
   //Swift::logging = true;
 
   Swift::SimpleEventLoop eventLoop;
   Swift::BoostNetworkFactories networkFactories(&eventLoop);
 
-  BuddycloudBot bot(&networkFactories);
+  bot_ = new BuddycloudBot(this, &networkFactories);
 
   eventLoop.run();
   LOG(DEBUG1) << "Connection running";
 }
 
-sdc::Service::Connection* BuddycloudService::CreateConnection() { return new BuddycloudService::Connection(); }
-sdc::Service::UserConfig* BuddycloudService::CreateUserConfig() { return new BuddycloudService::UserConfig(this); }
+void BuddycloudConnection::SendMessage(boost::shared_ptr<sdc::Message> msg) {
+  bot_->SendMessage(msg->GetText());
+}
+
+sdc::Service::Connection* BuddycloudService::CreateConnection() { return new BuddycloudConnection(); }
+sdc::Service::UserConfig* BuddycloudService::CreateUserConfig() { return new BuddycloudUserConfig(this); }
