@@ -12,22 +12,24 @@
 #define TEST_MODEL_H_
 
 #include "model.h"
-
 #include "log.h"
 #include <string>
+#include <vector>
 
 class TestModel : public sdc::Model {
  public:
-  std::string GetContent() const {
+  std::vector<std::string> GetContent() const {
     return content_;
   }
+  std::string GetLastlyAddedContent() const {
+    return content_.back();
+  }
   void SetText(const std::string &content) {
-    content_ = content;
+    content_.push_back(content);
     NotifyObservers();
-    LOG(DEBUG2) << "Setting model content ... " << content_;
   }
  private:
-  std::string content_;
+  std::vector<std::string> content_;
 };
 
 #endif /* TEST_MODEL_H_ */

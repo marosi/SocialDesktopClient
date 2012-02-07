@@ -11,8 +11,7 @@
 #ifndef CORE_CONTROLLER_H_
 #define CORE_CONTROLLER_H_
 
-#include "model.h"
-#include "view.h"
+#include "mvc_typedefs.h"
 #include "boost/make_shared.hpp"
 #include "boost/shared_ptr.hpp"
 #include "boost/enable_shared_from_this.hpp"
@@ -21,35 +20,73 @@ namespace sdc {
 
 class Controller {
  public:
-  typedef boost::shared_ptr<Controller> Ref;
-
   Controller() {}
+  void SetModel(ModelRef model) {
+    model_ = model;
+  }
+  void SetView(ViewRef view) {
+    view_ = view;
+  }
   virtual ~Controller() {}
   virtual void Init() {};
+
+ private:
+  ModelRef model_;
+  ViewRef view_;
 };
 
 /**
  * Generic controller class.
  *
- * Binds model and view within the controller. TODO: Make model and view type safe, now any class can be model or view
+ * Binds model and view within the controller.
  */
-template <class M, class V, class C>
-class GenericController : public boost::enable_shared_from_this<C>, public Controller {
+template <class M, class V>
+class GenericController : public Controller {
  public:
-  typedef boost::shared_ptr<M> ModelRef;
-  typedef boost::shared_ptr<V> ViewRef;
+  typedef boost::shared_ptr<M> Model_ref;
+  typedef boost::shared_ptr<V> View_ref;
 
-  GenericController(ModelRef model) : model_(model) {}
+  void SetModel(Model_ref model) {
+    model_ = model;
+    Controller::SetModel(model);
+  }
+  void SetView(View_ref view) {
+    view_ = view;
+    Controller::SetView(view);
+  }
+
+ protected:
+  Model_ref GetModel() { return model_; }
+  View_ref GetView() { return view_; }
+
+ private:
+  Model_ref model_;
+  View_ref view_;
+};
+
+
+template <class M, class V, class C>
+class GenericAutoController : public boost::enable_shared_from_this<C>, public Controller {
+ public:
+  typedef boost::shared_ptr<M> Model_ref;
+  typedef boost::shared_ptr<V> View_ref;
+
+  GenericAutoController(Model_ref model, View_ref view) :
+      model_(model),
+      view_(view)
+  {
+    SetModel(model);
+    SetView(view);
+  }
   virtual void Init() {
     //view_ = boost::make_shared<ViewRef>(this->shared_from_this(), GetModel());
-    ViewRef tmp(new V(this->shared_from_this(), GetModel()));
-    tmp->RegisterToModel();
+    View_ref tmp(new V(this->shared_from_this(), GetModel()));
     view_ = tmp;
   }
 
  protected:
-  ModelRef GetModel() { return model_; }
-  ViewRef GetView() { return view_; }
+  Model_ref GetModel() { return model_; }
+  View_ref GetView() { return view_; }
 
  private:
   /*virtual ViewRef CreateView() {
@@ -58,8 +95,8 @@ class GenericController : public boost::enable_shared_from_this<C>, public Contr
     //return boost::make_shared<ViewRef>(this->shared_from_this(), GetModel());
   }*/
 
-  ModelRef model_;
-  ViewRef view_;
+  Model_ref model_;
+  View_ref view_;
 };
 
 /** TODO: GENERIC SERVICE CONTROLLER

@@ -10,23 +10,18 @@
 #define CORE_SOCIALDESKTOPCLIENT_H_
 
 #include "common.h"
-#include "model.h"
-#include "view.h"
-#include "controller.h"
-#include "test_controller.h"
+#include "mvc_typedefs.h"
 #include "boost/noncopyable.hpp"
 #include "boost/thread.hpp"
 #include "boost/shared_ptr.hpp"
-#include <QApplication>
-#include <QtGui>
 #include <vector>
 
+class QApplication;
 class MainWindow;
+class TestController;
 
 namespace sdc {
 
-class Controller;
-class Model;
 class Message;
 
 /**
@@ -40,11 +35,12 @@ class Core : boost::noncopyable {
 	void Start();
 	void Exit();
 	EventManager* event_manager() { return g_event_manager; }
+	ConnectionManager* connection_manager() { return g_connection_manager; }
 
 	int GetReturnCode() { return return_code_; }
 
-	void RegisterController(Controller::Ref controller);
-	void RegisterModel(Model::Ref model);
+	void RegisterController(ControllerRef controller);
+	void RegisterModel(ModelRef model);
 
 	void Process(boost::shared_ptr<Message> message); // Method that takes care of incomming message processing, it will be probably change to individual manager
 
@@ -55,15 +51,18 @@ class Core : boost::noncopyable {
 	void ExecUi();
 
 	boost::thread core_;
+	boost::mutex mutex_;
+	boost::condition_variable gui_unprepared_;
+	bool is_gui_prepared_;
 	//boost::thread ui_; // Qt GUI cannot run in secondary thread
-	QApplication qt_app_;
+	QApplication* qt_app_;
 	MainWindow* main_view_;
 
 	boost::shared_ptr<TestController> test_controller_;
 
-	std::vector<Model::Ref> models_;
-	std::vector<View::Ref> views_;
-	std::vector<Controller::Ref> controllers_;
+	std::vector<ModelRef> models_;
+	std::vector<ViewRef> views_;
+	std::vector<ControllerRef> controllers_;
 
 	int return_code_;
 };

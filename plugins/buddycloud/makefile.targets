@@ -1,0 +1,44 @@
+#######################
+# Qt building process #
+#######################
+
+DIR := ../
+QT_PATH := /home/xangel/QtSDK/Desktop/Qt/473/gcc/bin/
+MOC := ${QT_PATH}moc
+UIC := ${QT_PATH}uic
+
+MOC_MODULES := $(patsubst %.h, moc_%.cpp, $(shell cd ..; grep -l Q_OBJECT *.h; cd Debug))
+UIC_MODULES := $(patsubst %.ui, ui_%.h, $(shell cd ..; ls *.ui; cd Debug))
+
+qt: remove_moc remove_uic uic moc
+	@echo '------------------------'
+	@echo '-- Qt build finished. --'
+	@echo '------------------------'
+
+remove_moc:
+	rm -f ${DIR}moc_*
+	@echo 'MOC files from Debug removed'
+	@echo ' '
+	
+remove_uic:
+	rm -f ${DIR}ui_*
+	@echo 'UIC files from Debug removed'
+	@echo ' '
+
+moc: ${MOC_MODULES}
+
+moc_%.cpp: ../%.h
+	@echo 'Prebuilding file: $<'
+	@echo 'Invoking: Qt MOC'
+	${MOC} $< -o ${DIR}$@
+	@echo 'Finished building: $<'
+	@echo ' '
+	
+uic: ${UIC_MODULES}
+
+ui_%.h: ../%.ui
+	@echo 'Generating header from GUI file: $<'
+	@echo 'Invoking: Qt UIC'
+	${UIC} $< -o ${DIR}$@
+	@echo 'Finished building: $<'
+	@echo ' '

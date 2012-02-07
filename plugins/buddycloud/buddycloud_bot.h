@@ -20,9 +20,6 @@
 #include "pubsub_payload_parser.h"
 #include "pubsub_payload_serializer.h"
 
-using namespace Swift;
-using namespace boost;
-
 class BuddycloudConnection;
 
 class PubsubRequest : public Swift::GenericRequest<PubsubPayload> {
@@ -33,21 +30,25 @@ class PubsubRequest : public Swift::GenericRequest<PubsubPayload> {
 
 class BuddycloudBot {
   public:
-    BuddycloudBot(BuddycloudConnection* connection, NetworkFactories* networkFactories);
+    BuddycloudBot(BuddycloudConnection* connection, Swift::NetworkFactories* networkFactories);
     ~BuddycloudBot();
 
     void SendMessage(std::string msg);
+    void SendDiscoInfo(const std::string &to_attribute, const std::string &node_attribute);
+    void SendDiscoItems(const std::string &to_attribute, const std::string &node_attribute);
 
   private:
     void handleConnected();
-    void handleMessageReceived(Message::ref message);
-    void handlePresenceReceived(Presence::ref presence);
-    void handleRosterReceived(ErrorPayload::ref error);
+    void handleIQRecieved(boost::shared_ptr<Swift::IQ> iq);
+    void handleMessageReceived(Swift::Message::ref message);
+    void handlePresenceReceived(Swift::Presence::ref presence);
+    void handleRosterReceived(Swift::ErrorPayload::ref error);
+    void handleDataRecieved(const Swift::SafeByteArray &byte_array);
 
   private:
     BuddycloudConnection* connection_;
-    Client* client;
-    ClientXMLTracer* tracer;
+    Swift::Client* client;
+    Swift::ClientXMLTracer* tracer;
 
     PubsubPayloadParserFactory pubsubPayloadParserFactory_;
     PubsubPayloadSerializer pubsubPayloadSerializer_;

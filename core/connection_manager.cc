@@ -6,45 +6,50 @@
  */
 
 #include "connection_manager.h"
-#include "service.h"
+#include "config_manager.h"
+#include "connection.h"
+#include "boost/make_shared.hpp"
 #include <exception>
+
+using std::vector;
+using boost::thread;
 
 namespace sdc {
 
-// ConnectionManager
-void ConnectionManager::ConnectAll() {
-  LOG(INFO) << "Connecting configured services...";
-  typedef std::vector<Service::UserConfig*> UserConfigs;
-  UserConfigs user_configs = g_config_manager->GetConnectionConfigs();
-  for (UserConfigs::iterator u = user_configs.begin(); u != user_configs.end(); ++u) {
-    MakeConnection(*u);
+void ConnectionManager::InitServiceConnections() {
+  vector<Service::UserConfig*> user_configs = g_config_manager->GetConnectionConfigs();
+  vector<Service::UserConfig*>::iterator u;
+  for (u = user_configs.begin(); u != user_configs.end(); ++u) {
+    ConnectionRef conn((*u)->CreateConnection());
+    // add new connection
+    connections_.push_back(conn);
+    // set connection anchor to Core
+    conn->SetCore(GetCore());
   }
 }
 
-std::vector<Service::Connection*> ConnectionManager::GetAllActiveConnections() const {
-  typedef std::vector<Service::Connection*> Conns;
-  Conns result;
-  for(Conns::const_iterator it = connections_.begin(); it != connections_.end(); ++it) {
-    Service::Connection* conn = *it;
+void ConnectionManager::ConnectAll() {
+  LOG(INFO) << "Connecting configured services...";
+  vector<ConnectionRef>::iterator conn;
+  for (conn = connections_.begin(); conn != connections_.end(); ++conn) {
+    try {
+      thread* thrd = new thread(&Connection::DoRun, *conn);
+      threads_.add_thread(thrd);
+      //threads_.join_all();
+    } catch (std::exception& e) {
+      // TODO: handle exceptions
+      LOG(ERROR) << "Problem in making connection thread:" << e.what();
+    }
+  }
+}
+
+void ConnectionManager::GetAllActiveConnections(vector<ConnectionRef> &result) const {
+  vector<ConnectionRef>::const_iterator it;
+  for (it = connections_.begin(); it != connections_.end(); ++it) {
+    ConnectionRef conn = *it;
     if(conn->IsActive())
       result.push_back(conn);
   }
-  return result;
 }
 
-void ConnectionManager::MakeConnection(Service::UserConfig* user_config) {
-  try {
-    Service::Connection* conn = user_config->CreateConnection();
-    conn->SetCore(GetCore());
-    connections_.push_back(conn);
-    boost::thread* thrd = new boost::thread(&Service::Connection::DoRun, conn);
-    threads_.add_thread(thrd);
-    //threads_.join_all();
-  } catch (std::exception& e) {
-    // TODO: handle exceptions
-    LOG(ERROR) << "Problem in making connection thread:" << e.what();
-  }
-
-}
-
-} // namespace sdc
+} /* namespace sdc */

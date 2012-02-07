@@ -30,6 +30,10 @@ class Model {
   void NotifyObservers() const;
 
   std::vector<ObserverRef> observers_;
+
+  /*
+   * TODO: IMPLEMENT THREAD SAFE ACCESS
+   */
 };
 
 } /* namespace sdc */

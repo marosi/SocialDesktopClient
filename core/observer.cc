@@ -11,12 +11,10 @@
 
 namespace sdc {
 
-Observer::Observer(boost::shared_ptr<Model> model) : model_(model) {
-}
-
 Observer::~Observer() {}
 
-void Observer::RegisterToModel() {
+void Observer::SetModel(boost::shared_ptr<Model> model) {
+  model_ = model;
   model_->RegisterObserver(this->shared_from_this());
 }
 

@@ -33,9 +33,8 @@ class EnterKeyInterceptor : QObject {
 
 #include "boost/pointer_cast.hpp"
 
-TestWindow::TestWindow(boost::shared_ptr<TestController> controller, boost::shared_ptr<TestModel> model, QWidget* parent) :
-    QMainWindow(parent),
-    GenericView<TestController, TestModel>(controller, model)
+TestWindow::TestWindow(QWidget* parent) :
+    QMainWindow(parent)
 {
   ui_.setupUi(this);
   CreateActions();
@@ -64,7 +63,7 @@ void TestWindow::OnConfirmText() {
 }
 
 void TestWindow::DoUpdate() {
-  ui_.textBrowser->setText(QString::fromStdString(GetModel()->GetContent()));
+  ui_.textBrowser->append(QString::fromStdString(GetModel()->GetLastlyAddedContent()));
 }
 
 void TestWindow::CreateActions() {

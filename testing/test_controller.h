@@ -17,12 +17,11 @@
 #include "testwindow.h"
 #include "message.h"
 
-class TestController : public sdc::GenericController<TestModel, TestWindow, TestController> {
+class TestController : public sdc::GenericController<TestModel, TestWindow> {
  public:
-  TestController(boost::shared_ptr<TestModel> model);
+  TestController();
   void SendXmppStanza();
   void PrintMessageFromPlugin(boost::shared_ptr<sdc::Message> message);
-  void Init();
 };
 
 #endif /* TEST_CONTROLLER_H_ */

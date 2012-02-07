@@ -6,24 +6,28 @@
  */
 
 #include "core.h"
+#include "core_typedefs.h"
 // MVC
-#include "controller.h"
-#include "model.h"
+#include "service_controller.h"
+#include "service_model.h"
+#include "service_view.h"
 // Managers
 #include "config_manager.h"
 #include "connection_manager.h"
 #include "plugin_manager.h"
 #include "event_manager.h"
 #include "data_manager.h"
+//
+#include "connection.h"
 // UI
+#include <QApplication>
 #include "mainwindow.h"
 // Boost
 #include "boost/shared_ptr.hpp"
 // Temporary test includes
 #include "test_controller.h"
 #include "test_model.h"
-
-#include "newwindow.h"
+#include "testwindow.h"
 
 namespace sdc {
 
@@ -34,11 +38,16 @@ PluginManager* g_plugin_manager;
 EventManager* g_event_manager;
 DataManager* g_data_manager;
 
-Core::Core(int argc, char* argv[]) : qt_app_(argc, argv) {
+Core::Core(int argc, char* argv[]) :
+    is_gui_prepared_(false),
+    qt_app_(new QApplication(argc, argv))
+{
   Init();
 }
 
 Core::~Core() {
+  delete main_view_;
+  delete qt_app_;
   delete g_config_manager;
   delete g_connection_manager;
   delete g_plugin_manager;
@@ -82,8 +91,13 @@ void Core::Init() {
 }
 
 void Core::Exec() {
+  g_connection_manager->InitServiceConnections();
   g_connection_manager->ConnectAll();
-  // Main LOOP
+  { // Core loop should not be started unless the GUI is prepared
+    boost::unique_lock<boost::mutex> lock(mutex_);
+    while(!is_gui_prepared_)
+      gui_unprepared_.wait(lock);
+  }
   g_event_manager->Run();
 }
 
@@ -92,11 +106,11 @@ void Core::Exit() {
   g_event_manager->Stop();
 }
 
-void Core::RegisterController(Controller::Ref controller) {
+void Core::RegisterController(ControllerRef controller) {
   controllers_.push_back(controller);
 }
 
-void Core::RegisterModel(Model::Ref model) {
+void Core::RegisterModel(ModelRef model) {
   models_.push_back(model);
 }
 
@@ -108,24 +122,50 @@ void Core::InitUi() {
   // Init core models, controllers and views
 
   main_view_ = new MainWindow;
-  main_view_->show();
+  //main_view_->show();
 
-  //boost::shared_ptr<NewWindow> nw = boost::make_shared<NewWindow>();
-  //nw->show();
+  // Launch GUI of each initiated service connection
+  std::vector<ConnectionRef> conns;
+  connection_manager()->GetAllActiveConnections(conns);
+  std::vector<ConnectionRef>::iterator it;
+  for(it = conns.begin(); it != conns.end(); ++it) {
+    ConnectionRef conn = (*it);
+    //conn->service()->InitializeGui(main_view_);
+    // create service controller for connection
+    ServiceControllerRef sctrler = conn->service()->CreateServiceController();
+    conn->SetController(sctrler);
+    sctrler->SetConnection(conn);
+    // set controller's view and model
+    ServiceViewRef sview = conn->service()->CreateMainView();
+    ServiceModelRef smodel = conn->service()->CreateMainModel();
+    sctrler->SetModel(smodel);
+    sctrler->SetView(sview);
+    sview->SetController(sctrler);
+    sview->SetModel(smodel);
+    //main_view_->StartUpServiceMainWidget(boost::dynamic_pointer_cast<QWidget>(view));
+  }
 
   boost::shared_ptr<TestModel> tm = boost::make_shared<TestModel>();
-  //RegisterModel(tm);
-  boost::shared_ptr<TestController> tc = boost::make_shared<TestController>(tm);
-  tc->Init(); //initialize controller ... it will create also view TestWindow which registers to model
-  //RegisterController(tc);
-  test_controller_ = tc;
-  // Init pluged-in models, controllers and views
+  boost::shared_ptr<TestWindow> tw = boost::make_shared<TestWindow>();
+  boost::shared_ptr<TestController> tc = boost::make_shared<TestController>();
+  tc->SetModel(tm);
+  tc->SetView(tw);
+  tw->SetModel(tm);
+  tw->SetController(tc);
 
+  tw->show();
+
+  test_controller_ = tc;
 }
 
 void Core::ExecUi() {
   InitUi();
-  return_code_ = qt_app_.exec();
+  {
+    boost::unique_lock<boost::mutex> lock(mutex_);
+    is_gui_prepared_ = true;
+  }
+  gui_unprepared_.notify_one();
+  return_code_ = qt_app_->exec();
 }
 
 }

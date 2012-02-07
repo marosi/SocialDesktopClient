@@ -17,7 +17,7 @@ class TestWindow : public QMainWindow, public sdc::GenericView<TestController, T
     Q_OBJECT
 
 public:
-    TestWindow(boost::shared_ptr<TestController> controller, boost::shared_ptr<TestModel> model, QWidget* parent=0);
+    TestWindow(QWidget* parent=0);
     ~TestWindow();
 
     void Update();

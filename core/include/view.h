@@ -12,11 +12,10 @@
 #define CORE_VIEW_H_
 
 #include "observer.h"
+#include "mvc_typedefs.h"
 #include "boost/shared_ptr.hpp"
 
 namespace sdc {
-
-class Model;
 
 /**
  * View base class.
@@ -25,33 +24,43 @@ class Model;
  */
 class View : public Observer {
  public:
-  typedef boost::shared_ptr<View> Ref;
-  View(boost::shared_ptr<Model> model) : Observer(model) {}
+  View() {}
+  void SetController(ControllerRef controller) {
+    controller_ = controller;
+  }
+  ControllerRef controller() { return controller_; }
+ private:
+  ControllerRef controller_;
 };
 
 /**
  * Generic view.
  *
- * Need to know interface of model and controller.
+ * In order to work with controller and model, view has to know their interfaces.
+ * This template gets work done for its child classes.
  */
 template<class Controller, class Model>
 class GenericView : public View {
  public:
-  typedef boost::shared_ptr<Controller> ControllerRef;
-  typedef boost::shared_ptr<Model> ModelRef;
+  typedef boost::shared_ptr<Controller> Controller_ref;
+  typedef boost::shared_ptr<Model> Model_ref;
 
-  GenericView(ControllerRef controller, ModelRef model) :
-      View(model),
-      controller_(controller),
-      model_(model) {}
+  void SetModel(Model_ref model) {
+    View::SetModel(model);
+    model_ = model;
+  }
+  void SetController(Controller_ref controller) {
+    View::SetController(controller);
+    controller_ = controller;
+  }
 
  protected:
-  ControllerRef GetController() { return controller_; }
-  ModelRef GetModel() { return model_; }
+  Controller_ref GetController() { return controller_; }
+  Model_ref GetModel() { return model_; }
 
  private:
-  ControllerRef controller_;
-  ModelRef model_;
+  Controller_ref controller_;
+  Model_ref model_;
 };
 
 } /* namespace sdc */

@@ -8,6 +8,7 @@
 #include "service.h"
 #include "message.h"
 #include "core.h"
+#include "connection.h"
 #include "log.h"
 #include "boost/bind.hpp"
 
@@ -19,24 +20,13 @@ Service::UserConfig* Service::CreateUserConfig() {
   return new Service::UserConfig(this);
 }
 
-void Service::Connection::DoRun() {
-  is_active_ = true;
-  LOG(DEBUG) << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ CONNECTION ACTIVE";
-  Run();
-  LOG(DEBUG) << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ CONNECTION INACTIVE";
-  is_active_ = false;
-}
-
-void Service::Connection::RecieveMessage(boost::shared_ptr<Message> message) {
-  core()->event_manager()->PostEvent(boost::bind(&Core::Process, core(), message));
-}
-
 Service::UserConfig::UserConfig(Service* service) {
   service_ = service;
 }
 
-Service::Connection* Service::UserConfig::CreateConnection() {
+Connection* Service::UserConfig::CreateConnection() {
   Connection* c = service_->CreateConnection();
+  c->SetService(service_);
   c->Set(this);
   return c;
 }

@@ -11,11 +11,23 @@
 #ifndef SDC_H_
 #define SDC_H_
 
-#include "common.h"
-
 #include "plugin_manager.h" // for the Registration type
-
-// TODO:For testing purposes ...delete afterwards
-#include "../../testing/simple_message.h"
+#include "connection.h"
+#include "model.h"
+#include "view.h"
+#include "controller.h"
+#include "message.h"
+#include "mvc_typedefs.h"
+#include "qt_controller.h"
+#include "qt_view.h"
+#include <QtGui>
+#include "log.h"
+#include "main_view.h"
+#include "service_controller.h"
+#include "core_typedefs.h"
+#include "service.h"
+#include "service_model.h"
+#include "service_view.h"
+#include <string>
 
 #endif /* SDC_H_ */

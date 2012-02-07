@@ -2,7 +2,15 @@ TEMPLATE = app
 TARGET = social_desktop_client
 QT += core \
     gui
-HEADERS += testing/newwindow.h \
+HEADERS += core/include/core_typedefs.h \
+    core/include/service_view.h \
+    core/include/service_model.h \
+    core/include/service_controller.h \
+    core/include/qt_controller.h \
+    core/include/main_view.h \
+    core/include/mvc_typedefs.h \
+    core/include/connection.h \
+    core/include/qt_view.h \
     testing/test_model.h \
     testing/test_controller.h \
     core/include/observer.h \
@@ -24,10 +32,11 @@ HEADERS += testing/newwindow.h \
     core/include/connection_manager.h \
     core/include/plugin_manager.h \
     mainwindow.h
-SOURCES += core/observer.cc \
+SOURCES += core/qt_view.cc \
+    core/connection.cc \
+    core/observer.cc \
     core/model.cc \
     testing/test_controller.cc \
-    testing/newwindow.cpp \
     testing/simple_message.cc \
     core/controller.cc \
     core/data_manager.cc \
@@ -42,8 +51,7 @@ SOURCES += core/observer.cc \
     core/plugin_manager.cc \
     main.cpp \
     mainwindow.cpp
-FORMS += testing/newwindow.ui \
-    testing/testwindow.ui \
+FORMS += testing/testwindow.ui \
     mainwindow.ui
 RESOURCES += 
 INCLUDEPATH += core/include \ # /home/xangel/projects/Plugins

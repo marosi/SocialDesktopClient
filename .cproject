@@ -96,7 +96,31 @@
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
 			<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+			<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
+				<buildTargets>
+					<target name="Qt Release Build" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>make</buildCommand>
+						<buildTarget>release</buildTarget>
+						<stopOnError>false</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+						<runAllBuilders>true</runAllBuilders>
+					</target>
+					<target name="Qt Debug Build" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>make</buildCommand>
+						<buildTarget>debug</buildTarget>
+						<stopOnError>false</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+						<runAllBuilders>true</runAllBuilders>
+					</target>
+				</buildTargets>
+			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.pathentry">
+				<pathentry excluding="include|testing/" kind="src" path="core"/>
+				<pathentry excluding="*" kind="src" path="plugins"/>
+				<pathentry kind="src" path="testing"/>
+				<pathentry kind="src" path="core/include"/>
+				<pathentry excluding="core/include/|include|core/|core/testing/|testing/|plugins/" kind="src" path=""/>
+				<pathentry kind="out" path=""/>
 				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="" kind="inc" path="" system="true"/>
 				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtSql" kind="inc" path="" system="true"/>
 				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtDeclarative" kind="inc" path="" system="true"/>
@@ -121,29 +145,6 @@
 				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtUiTools" kind="inc" path="" system="true"/>
 				<pathentry include="/usr/include/c++/4.5" kind="inc" path="" system="true"/>
 				<pathentry include="/home/xangel/boost_1_47_0" kind="inc" path="" system="true"/>
-				<pathentry excluding="include|testing/" kind="src" path="core"/>
-				<pathentry kind="src" path="core/include"/>
-				<pathentry excluding="core/include/|include|core/|core/testing/|testing/" kind="src" path=""/>
-				<pathentry kind="out" path=""/>
-				<pathentry kind="src" path="testing"/>
-			</storageModule>
-			<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
-				<buildTargets>
-					<target name="Qt Release Build" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
-						<buildCommand>make</buildCommand>
-						<buildTarget>release</buildTarget>
-						<stopOnError>false</stopOnError>
-						<useDefaultCommand>false</useDefaultCommand>
-						<runAllBuilders>true</runAllBuilders>
-					</target>
-					<target name="Qt Debug Build" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
-						<buildCommand>make</buildCommand>
-						<buildTarget>debug</buildTarget>
-						<stopOnError>false</stopOnError>
-						<useDefaultCommand>false</useDefaultCommand>
-						<runAllBuilders>true</runAllBuilders>
-					</target>
-				</buildTargets>
 			</storageModule>
 		</cconfiguration>
 	</storageModule>

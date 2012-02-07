@@ -12,10 +12,10 @@
 #define CORE_MESSAGE_H_
 
 #include "common.h"
-#include "event_manager.h"
-#include "service.h"
-#include <string>
-#include <vector>
+//#include "event_manager.h"
+//#include "service.h"
+//#include <string>
+//#include <vector>
 
 namespace sdc {
 

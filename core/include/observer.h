@@ -11,24 +11,22 @@
 #ifndef CORE_OBSERVER_H_
 #define CORE_OBSERVER_H_
 
+#include "mvc_typedefs.h"
 #include "boost/shared_ptr.hpp"
 #include "boost/enable_shared_from_this.hpp"
 
 namespace sdc {
 
-class Model;
-
 class Observer : public boost::enable_shared_from_this<Observer> {
  public:
   typedef boost::shared_ptr<Observer> Ref;
 
-  Observer(boost::shared_ptr<Model> model);
   virtual ~Observer();
-  void RegisterToModel();
+  void SetModel(ModelRef model);
   virtual void Update()=0;
 
  private:
-  boost::shared_ptr<Model> model_; // TODO: Unused so far.
+  ModelRef model_; // TODO: Unused so far.
 };
 
 } /* namespace sdc */

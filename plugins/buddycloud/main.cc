@@ -8,7 +8,7 @@
  *      Author: Maros Kasinec
  */
 
-#include "buddycloud_connection.h"
+#include "buddycloud_service.h"
 
 extern "C" {
 
