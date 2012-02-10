@@ -42,22 +42,25 @@ Log::~Log() {
   //fflush(stderr);
 }
 
-std::ostringstream& Log::Get(Level level) {
+std::ostringstream& Log::Get(Level level, std::string producer) {
   //set one-time use level
   current_level_ = level;
-  //figure out current time
+  //log
+  os << "[" << current_time() << "]";
+  os << " " << level_name_[level] << " ";
+  os << "= " << producer << " >";
+  os << std::string(level < DEBUG ? 0 : level - DEBUG, '\t');
+  return os;
+}
+
+std::string Log::current_time() {
   time_t now;
   struct tm* tmnow;
   char buff[80];
   time(&now);
   tmnow = localtime(&now);
   strftime(buff, 80, time_format_.c_str(), tmnow);
-  //log
-  os << "<";
-  os << buff;
-  os << " | " << level_name_[level] << "> ";
-  os << std::string(level < DEBUG ? 0 : level - DEBUG, '\t');
-  return os;
+  return std::string(buff);
 }
 
 }

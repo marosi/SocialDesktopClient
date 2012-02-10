@@ -17,9 +17,19 @@
 #include <map>
 
 /// Macro defined for logging purposes
+#if LOG_PLUGIN
+
 #define LOG(level) \
   if(sdc::Log::level > sdc::Log::GetGlobalLevel()) ; \
-  else sdc::Log().Get(sdc::Log::level)
+  else sdc::Log().Get(sdc::Log::level, PLUGIN_LOG)
+
+#else
+
+#define LOG(level) \
+  if(sdc::Log::level > sdc::Log::GetGlobalLevel()) ; \
+  else sdc::Log().Get(sdc::Log::level, "Core")
+
+#endif
 
 namespace sdc {
 
@@ -37,7 +47,7 @@ class Log {
   };
   Log();
   virtual ~Log();
-  std::ostringstream& Get(Level level);
+  std::ostringstream& Get(Level level, std::string producer);
 
   static void SetGlobalLevel(Level level);
   static Level GetGlobalLevel();
@@ -53,6 +63,8 @@ class Log {
  private:
   Log(const Log&);
   Log& operator=(const Log&);
+
+  std::string current_time();
 };
 
 }
