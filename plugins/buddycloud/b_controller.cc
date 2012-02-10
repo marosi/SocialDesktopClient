@@ -24,6 +24,10 @@ void BController::SendDiscoItems(const string &to_attribute, const string &node_
   GetConnection<BuddycloudConnection>()->HandleSendDiscoItems(to_attribute, node_attribute);
 }
 
+void BController::DoSomeThing(const string &param) {
+  GetConnection<BuddycloudConnection>()->HandleSomething(param);
+}
+
 void BController::ConnectView() {
 
 }

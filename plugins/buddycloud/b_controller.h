@@ -24,6 +24,7 @@ class BController : public QObject, public sdc::ServiceController {
   BController();
   void SendDiscoInfo(const std::string &to_attribute, const std::string &node_attribute);
   void SendDiscoItems(const std::string &to_attribute, const std::string &node_attribute);
+  void DoSomeThing(const std::string &param);
   // Qt signal wrappers
 
  signals: // signals in controller are used to manipulate Qt view

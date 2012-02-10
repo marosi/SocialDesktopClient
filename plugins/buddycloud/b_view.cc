@@ -28,13 +28,20 @@ void BView::DiscoItemsClicked() {
   GetController<BController>()->SendDiscoItems(to.toUtf8().constData(), node.toUtf8().constData());
 }
 
+void BView::SomeButtonClicked() {
+  QString param = xmpp_->ui.someLineEdit->text();
+  GetController<BController>()->DoSomeThing(param.toUtf8().constData());
+}
+
 void BView::ShowMessage(const QString &string) {
   LOG(DEBUG3) << "SHOWWWWWWWWWWWWING MESSSSSSAAAGE";
 }
 
 void BView::CreateActions() {
-  QObject::connect(xmpp_->ui.discoInfo, SIGNAL(clicked()), this,
-      SLOT(DiscoInfoClicked()));
-  QObject::connect(xmpp_->ui.discoItems, SIGNAL(clicked()), this,
-      SLOT(DiscoItemsClicked()));
+  QObject::connect(xmpp_->ui.discoInfo, SIGNAL(clicked()),
+      this, SLOT(DiscoInfoClicked()));
+  QObject::connect(xmpp_->ui.discoItems, SIGNAL(clicked()),
+      this, SLOT(DiscoItemsClicked()));
+  QObject::connect(xmpp_->ui.someButton, SIGNAL(clicked()),
+      this, SLOT(SomeButtonClicked()));
 }

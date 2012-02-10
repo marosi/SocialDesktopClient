@@ -12,35 +12,48 @@
 using namespace Swift;
 using namespace boost;
 using std::string;
+using std::vector;
 
-BuddycloudBot::BuddycloudBot(BuddycloudConnection* connection, NetworkFactories* networkFactories) :
-  connection_(connection) {
+BuddycloudBot::BuddycloudBot(BuddycloudConnection* connection, NetworkFactories* networkFactories)
+    : connection_(connection) {
   //client = new Client("sdc_test@jabbim.com", "sdc_test", networkFactories);
   //client = new Client("maros@buddycloud.org", "udsampia", networkFactories);
-  client = new Client("pista@localhost", "pista", networkFactories);
+  client = new Client("pista@localhost", "pista", networkFactories); // TODO: take uid and password to SDC logic
+  //client = new Client("test_subject@buddycloud.org", "test", networkFactories);
   client->setAlwaysTrustCertificates();
   client->onConnected.connect(bind(&BuddycloudBot::handleConnected, this));
   client->onMessageReceived.connect(
       bind(&BuddycloudBot::handleMessageReceived, this, _1));
   client->onPresenceReceived.connect(
       bind(&BuddycloudBot::handlePresenceReceived, this, _1));
-
-  client->onDataRead.connect(bind(&BuddycloudBot::handleDataRecieved, this, _1));
-
+  client->onDataRead.connect( // TODO :: remove
+      bind(&BuddycloudBot::handleDataRecieved, this, _1));
   // Tracer
-  tracer = new ClientXMLTracer(client);
-
-  // Payload parsers and serializers
-  client->addPayloadParserFactory(&pubsubPayloadParserFactory_);
-  client->addPayloadSerializer(&pubsubPayloadSerializer_);
-
+  tracer_ = new ClientXMLTracer(client);
+  // Just playing
   client->getStanzaChannel()->onIQReceived.connect(bind(&BuddycloudBot::handleIQRecieved, this, _1));
 
+  AddParserFactories();
+  AddSerializers();
+
+
+  // TODO : take connecting logic to SDC Connection
+  // Finally connect to social service
   client->connect();
 }
 
 BuddycloudBot::~BuddycloudBot() {
-  delete tracer;
+  for(vector<PayloadParserFactory*>::iterator
+      it = parsers_.begin(); it != parsers_.end(); ++it) {
+    client->removePayloadParserFactory(*it);
+    delete *it;
+  }
+  for (vector<PayloadSerializer*>::iterator
+      it = serializers_.begin(); it != serializers_.end(); ++it) {
+    client->removePayloadSerializer(*it);
+    delete *it;
+  }
+  delete tracer_;
   delete client;
 }
 
@@ -63,14 +76,53 @@ void BuddycloudBot::SendDiscoItems(const string &to_attribute, const string &nod
   di->send();
 }
 
+void BuddycloudBot::DoSomething(const string &param) {
+  LOG(DEBUG) << "DoSomething with param : " << param.substr(0,2);
+  if (param == "gsv") {
+    GetSoftwareVersionRequest::ref gsvr = GetSoftwareVersionRequest::create("localhost", client->getIQRouter());
+    gsvr->send();
+  } else if (param == "gr") {
+    GetRosterRequest::ref grr = GetRosterRequest::create(client->getIQRouter());
+    grr->send();
+  } else if (param.substr(0, 3) == "gvc") {
+    std::size_t pos = param.find('=');
+    string to = param.substr(pos + 1);
+    GetVCardRequest::ref gvcr = GetVCardRequest::create(to,
+        client->getIQRouter());
+    gvcr->send();
+  } else if (param.substr(0, 5) == "gibrf") {
+    std::size_t pos = param.find('=');
+    string to = param.substr(pos + 1);
+    GetInBandRegistrationFormRequest::ref gibrf = GetInBandRegistrationFormRequest::create(to, client->getIQRouter());
+    gibrf->send();
+  } else if (param.substr(0, 5) == "sibrf") {
+    std::size_t pos = param.find('=');
+    string to = param.substr(pos + 1);
+    InBandRegistrationPayload::ref payload(new InBandRegistrationPayload);
+    SetInBandRegistrationRequest::ref sibrf = SetInBandRegistrationRequest::create(to, payload, client->getIQRouter());
+    sibrf->send();
+  } else if (param == "publish") {
+    Atom::ref atom(new Atom);
+    atom->setAuthor(channel_user_.jid);
+    atom->setVerb(Atom::POST);
+    atom->setObjectType(Atom::NOTE);
+    atom->setContent("cuuuuuuuuzte vy tam vsetciiia");
+    //
+    PublishAtomToNode("/user/pista@localhost/posts", atom);
+  }
+}
+
 void BuddycloudBot::handleConnected() {
   LOG(DEBUG2) << "@@@ CLIENT IS CONNECTED @@@" << std::endl;
   // Request the roster
-  GetRosterRequest::ref rosterRequest = GetRosterRequest::create(
-      client->getIQRouter());
+  GetRosterRequest::ref rosterRequest = GetRosterRequest::create(client->getIQRouter());
   rosterRequest->onResponse.connect(
       bind(&BuddycloudBot::handleRosterReceived, this, _2));
   rosterRequest->send();
+  // Discover channel service
+  DiscoverChannelService();
+  // Discover user channel
+  DiscoverUserSelfChannel();
 }
 
 void BuddycloudBot::handleIQRecieved(boost::shared_ptr<IQ> iq) {
@@ -129,5 +181,24 @@ void BuddycloudBot::handleDataRecieved(const SafeByteArray &byte_array) {
   /* WARNING! This breaks the safety of the data in the safe byte array.
      * Do not use in modes that require data safety. */
   connection_->RecieveMessage(safeByteArrayToString(byte_array));
+}
+
+void BuddycloudBot::AddParserFactories() {
+  // Payload parsers and serializers
+  //client->addPayloadParserFactory(&pubsubPayloadParserFactory_);
+}
+
+void BuddycloudBot::AddSerializers() {
+  AddSerializer(new PubsubSerializer);
+}
+
+void BuddycloudBot::AddParserFactory(Swift::PayloadParserFactory* factory) {
+  parsers_.push_back(factory);
+  client->addPayloadParserFactory(factory);
+}
+
+void BuddycloudBot::AddSerializer(Swift::PayloadSerializer* serializer) {
+  serializers_.push_back(serializer);
+  client->addPayloadSerializer(serializer);
 }
 

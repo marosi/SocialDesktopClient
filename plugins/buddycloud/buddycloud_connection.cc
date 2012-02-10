@@ -16,7 +16,7 @@ using std::string;
 using boost::shared_ptr;
 
 BuddycloudConnection::BuddycloudConnection() {
-  LOG(DEBUG1) << "OswService::Connection has been instantiated.";
+  LOG(DEBUG1) << "BuddycloudConnection has been instantiated.";
 }
 void BuddycloudConnection::Set(Service::UserConfig* uc) {
   LOG(DEBUG1) << "Setting user configuration";
@@ -53,4 +53,8 @@ void BuddycloudConnection::HandleSendDiscoInfo(const string &to_attribute, const
 
 void BuddycloudConnection::HandleSendDiscoItems(const string &to_attribute, const string &node_attribute) {
   bot_->SendDiscoItems(to_attribute, node_attribute);
+}
+
+void BuddycloudConnection::HandleSomething(const string &param) {
+  bot_->DoSomething(param);
 }

@@ -29,6 +29,7 @@ class BView : public QWidget, public sdc::ServiceView {
   void DoUpdate();
   void DiscoInfoClicked();
   void DiscoItemsClicked();
+  void SomeButtonClicked();
   void ShowMessage(const QString &string = "DEFAULT MESSAGE");
 
  private:

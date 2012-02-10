@@ -18,14 +18,14 @@
 
 #include <string>
 
-class PubsubPayloadParser : public Swift::GenericPayloadParser<PubsubPayload> {
+/*class PubsubPayloadParser : public Swift::GenericPayloadParser<PubsubPayload> {
  public:
   void handleStartElement(
-      const std::string& /* element */, const std::string& /* ns */, const Swift::AttributeMap& /* map */) {
+      const std::string&  element , const std::string&  ns , const Swift::AttributeMap&  map ) {
     current_depth_++;
   }
 
-  void handleEndElement(const std::string& /* element */, const std::string& /* ns */) {
+  void handleEndElement(const std::string&  element , const std::string&  ns ) {
     current_depth_--;
     if(current_depth_ == 0) {
       getPayloadInternal()->setMessage(current_text_);
@@ -44,6 +44,6 @@ class PubsubPayloadParser : public Swift::GenericPayloadParser<PubsubPayload> {
 class PubsubPayloadParserFactory : public Swift::GenericPayloadParserFactory<PubsubPayloadParser> {
  public:
   PubsubPayloadParserFactory() : Swift::GenericPayloadParserFactory<PubsubPayloadParser>("event", "http://jabber.org/protocol/pubsub#event") {}
-};
+};*/
 
 #endif /* PUBSUB_PAYLOAD_PARSER_H_ */
