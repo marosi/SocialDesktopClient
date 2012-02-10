@@ -6,11 +6,12 @@
  */
 
 #include "test_controller.h"
+#include "event_manager.h"
 #include "common.h"
 #include "connection.h"
-#include "message.h"
 #include "connection_manager.h"
 #include "core_typedefs.h"
+#include "message.h"
 #include <vector>
 
 TestController::TestController() {}
