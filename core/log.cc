@@ -48,7 +48,7 @@ std::ostringstream& Log::Get(Level level, std::string producer) {
   //log
   os << "[" << current_time() << "]";
   os << " " << level_name_[level] << " ";
-  os << "= " << producer << " >";
+  os << "= " << producer << " > ";
   os << std::string(level < DEBUG ? 0 : level - DEBUG, '\t');
   return os;
 }

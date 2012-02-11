@@ -17,11 +17,13 @@
 #include <map>
 
 /// Macro defined for logging purposes
-#if LOG_PLUGIN
+#ifdef LOG_PRODUCER
 
+#define TOKEN_TO_STRING(TOK) # TOK
+#define STRINGIZE_TOKEN(TOK) TOKEN_TO_STRING(TOK)
 #define LOG(level) \
   if(sdc::Log::level > sdc::Log::GetGlobalLevel()) ; \
-  else sdc::Log().Get(sdc::Log::level, PLUGIN_LOG)
+  else sdc::Log().Get(sdc::Log::level, STRINGIZE_TOKEN(LOG_PRODUCER))
 
 #else
 

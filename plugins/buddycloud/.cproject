@@ -46,7 +46,7 @@
 								</option>
 								<option id="gnu.cpp.compiler.option.other.other.1195275630" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 -fPIC -DBOOST_ALL_NO_LIB -DBOOST_SYSTEM_NO_DEPRECATED -DBOOST_FILESYSTEM_VERSION=2 -DIDNA_STATIC -DXML_STATIC" valueType="string"/>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.1216397576" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="LOG_PLUGIN=Buddycloud"/>
+									<listOptionValue builtIn="false" value="LOG_PRODUCER=Buddycloud"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1891030003" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
