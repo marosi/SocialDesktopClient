@@ -16,6 +16,7 @@ BView::BView(QWidget* parent) {
 void BView::DoUpdate() {
 }
 
+/// XMPP testing @{
 void BView::DiscoInfoClicked() {
   QString to = xmpp_->ui.discoInfoToAttribute->text();
   QString node = xmpp_->ui.discoInfoNodeAttribute->text();
@@ -36,6 +37,7 @@ void BView::SomeButtonClicked() {
 void BView::ShowMessage(const QString &string) {
   LOG(DEBUG3) << "SHOWWWWWWWWWWWWING MESSSSSSAAAGE";
 }
+/// @}
 
 void BView::CreateActions() {
   QObject::connect(xmpp_->ui.discoInfo, SIGNAL(clicked()),

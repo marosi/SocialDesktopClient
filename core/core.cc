@@ -115,7 +115,7 @@ void Core::RegisterModel(ModelRef model) {
 }
 
 void Core::Process(boost::shared_ptr<Message> message) {
-  test_controller_->PrintMessageFromPlugin(message);
+  //test_controller_->PrintMessageFromPlugin(message);
 }
 
 void Core::InitUi() {
@@ -143,9 +143,10 @@ void Core::InitUi() {
     sview->SetController(sctrler);
     sview->SetModel(smodel);
     //main_view_->StartUpServiceMainWidget(boost::dynamic_pointer_cast<QWidget>(view));
+    sctrler->Initiate();
   }
 
-  boost::shared_ptr<TestModel> tm = boost::make_shared<TestModel>();
+  /*boost::shared_ptr<TestModel> tm = boost::make_shared<TestModel>();
   boost::shared_ptr<TestWindow> tw = boost::make_shared<TestWindow>();
   boost::shared_ptr<TestController> tc = boost::make_shared<TestController>();
   tc->SetModel(tm);
@@ -155,7 +156,7 @@ void Core::InitUi() {
 
   tw->show();
 
-  test_controller_ = tc;
+  test_controller_ = tc;*/
 }
 
 void Core::ExecUi() {

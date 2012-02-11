@@ -27,10 +27,13 @@ class BView : public QWidget, public sdc::ServiceView {
 
  private slots:
   void DoUpdate();
+
+  /// XMPP Testing @{
   void DiscoInfoClicked();
   void DiscoItemsClicked();
   void SomeButtonClicked();
   void ShowMessage(const QString &string = "DEFAULT MESSAGE");
+  /// @}
 
  private:
   void CreateActions();

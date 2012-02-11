@@ -27,8 +27,12 @@ class Controller {
   void SetView(ViewRef view) {
     view_ = view;
   }
+  template<class Model>
+  boost::shared_ptr<Model> GetModel() {
+    return boost::dynamic_pointer_cast<Model>(model_);
+  }
   virtual ~Controller() {}
-  virtual void Init() {};
+  virtual void Initiate() {}
 
  private:
   ModelRef model_;

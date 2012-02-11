@@ -32,14 +32,9 @@ BuddycloudBot::BuddycloudBot(BuddycloudConnection* connection, NetworkFactories*
   tracer_ = new ClientXMLTracer(client);
   // Just playing
   client->getStanzaChannel()->onIQReceived.connect(bind(&BuddycloudBot::handleIQRecieved, this, _1));
-
+  // Add parsers and serializers
   AddParserFactories();
   AddSerializers();
-
-
-  // TODO : take connecting logic to SDC Connection
-  // Finally connect to social service
-  client->connect();
 }
 
 BuddycloudBot::~BuddycloudBot() {
@@ -123,6 +118,7 @@ void BuddycloudBot::handleConnected() {
   DiscoverChannelService();
   // Discover user channel
   DiscoverUserSelfChannel();
+  connection_->OnConnected();
 }
 
 void BuddycloudBot::handleIQRecieved(boost::shared_ptr<IQ> iq) {

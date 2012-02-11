@@ -7,6 +7,7 @@
 
 #include "buddycloud_connection.h"
 #include "buddycloud_bot.h"
+#include "b_controller.h"
 #include "Swiften/Swiften.h"
 #include "boost/shared_ptr.hpp"
 #include "boost/pointer_cast.hpp"
@@ -18,9 +19,11 @@ using boost::shared_ptr;
 BuddycloudConnection::BuddycloudConnection() {
   LOG(DEBUG1) << "BuddycloudConnection has been instantiated.";
 }
+
 void BuddycloudConnection::Set(Service::UserConfig* uc) {
   LOG(DEBUG1) << "Setting user configuration";
 }
+
 void BuddycloudConnection::Run() {
   //Swift::logging = true;
 
@@ -33,6 +36,20 @@ void BuddycloudConnection::Run() {
   LOG(DEBUG1) << "Connection running";
 }
 
+void BuddycloudConnection::Connect() {
+  bot_->client->connect(); // TODO: implement more client with connect(Swift::ClientOptions*)
+}
+
+void BuddycloudConnection::Disconnect() {
+  bot_->client->disconnect();
+}
+
+void BuddycloudConnection::OnConnected() {
+  GetController<BController>()->AcknowledgeOnlineState();
+}
+
+
+/// Testing @{
 void BuddycloudConnection::SendMessage(shared_ptr<sdc::Message> msg) {
   bot_->SendMessage(msg->GetText());
 }
@@ -58,3 +75,4 @@ void BuddycloudConnection::HandleSendDiscoItems(const string &to_attribute, cons
 void BuddycloudConnection::HandleSomething(const string &param) {
   bot_->DoSomething(param);
 }
+/// @}

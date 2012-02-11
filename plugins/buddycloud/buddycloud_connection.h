@@ -13,9 +13,14 @@ class BuddycloudBot;
 
 class BuddycloudConnection : public sdc::Connection {
  public:
+  friend class BuddycloudBot;
+
   BuddycloudConnection();
   void Set(sdc::Service::UserConfig*);
+
   void Run();
+  void Connect();
+  void Disconnect();
 
   /// Testing @{
   void SendMessage(boost::shared_ptr<sdc::Message> msg);
@@ -27,6 +32,8 @@ class BuddycloudConnection : public sdc::Connection {
   /// @}
 
  private:
+  void OnConnected();
+
   BuddycloudBot* bot_;
 };
 

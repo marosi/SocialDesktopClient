@@ -20,7 +20,7 @@ void ConnectionManager::InitServiceConnections() {
   vector<Service::UserConfig*> user_configs = g_config_manager->GetConnectionConfigs();
   vector<Service::UserConfig*>::iterator u;
   for (u = user_configs.begin(); u != user_configs.end(); ++u) {
-    ConnectionRef conn((*u)->CreateConnection());
+    ConnectionRef conn((*u)->CreateConnection()); // TODO: Create connection using new construct!!
     // add new connection
     connections_.push_back(conn);
     // set connection anchor to Core
