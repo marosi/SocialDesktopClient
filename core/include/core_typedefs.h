@@ -19,11 +19,13 @@ class Connection;
 class ServiceModel;
 class ServiceView;
 class ServiceController;
+class Request;
 
 typedef boost::shared_ptr<Connection> ConnectionRef;
 typedef boost::shared_ptr<ServiceModel> ServiceModelRef;
 typedef boost::shared_ptr<ServiceView> ServiceViewRef;
 typedef boost::shared_ptr<ServiceController> ServiceControllerRef;
+typedef boost::shared_ptr<Request> RequestRef;
 
 }  /* namespace sdc */
 

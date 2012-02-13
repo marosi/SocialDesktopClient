@@ -31,6 +31,10 @@ class BuddycloudConnection : public sdc::Connection {
   void HandleSomething(const std::string &param);
   /// @}
 
+  BuddycloudBot* bot() {
+    return bot_;
+  }
+
  private:
   void OnConnected();
 

@@ -13,11 +13,13 @@
 
 #include "service.h"
 #include "core_typedefs.h"
+#include <list>
 
 namespace sdc {
 
 class Message;
 class Core;
+class Service;
 class ServiceController;
 
 /// @class Connection
@@ -28,7 +30,10 @@ class Connection {
 
   virtual void Connect() = 0;
   virtual void Disconnect() = 0;
-  virtual void Set(Service::UserConfig* /*user_config*/) = 0;
+  virtual void Set(Service::UserConfig* /*user_config*/) = 0; // TODO: change logic for user config and remove header service.h
+  virtual void Send(RequestRef request);
+  virtual void DeleteRequest(RequestRef request);
+
   bool IsActive() const {
     return is_active_;
   }
@@ -39,9 +44,10 @@ class Connection {
     controller_ = ctrler;
   }
 
+  /// @{
   virtual void SendMessage(boost::shared_ptr<Message> message) = 0;
   virtual void RecieveMessage(boost::shared_ptr<Message> message);
-
+  /// @}
 
   template<class Controller>
   boost::shared_ptr<Controller> GetController() {
@@ -71,8 +77,9 @@ class Connection {
   Service* service_;
   boost::shared_ptr<ServiceController> controller_;
   bool is_active_;
+  std::list<RequestRef> pending_requests_;
 };
 
 } /* namespace sdc */
 
-#endif /* CONNECTION_H_ */
+#endif /* CORE_CONNECTION_H_ */

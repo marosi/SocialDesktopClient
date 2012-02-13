@@ -100,7 +100,7 @@ class BuddycloudBot {
     }
     void RegisterChannel() {} // TODO: done by inbandregistration to channel component
     void PublishAtomToNode(const std::string &node, Atom::ref atom) {
-      PubsubRequest::ref publish = PubsubRequest::createPublish(channel_service_.jid, node, atom, client->getIQRouter());
+      PubsubRequest::ref publish = PubsubRequest::createPublish(channel_service_.jid, node, atom, client_->getIQRouter());
       publish->send();
     }
     void SubscribeToNode(const std::string &node) {}
@@ -108,6 +108,10 @@ class BuddycloudBot {
 
     // higher abstract level
     void SubscribeToChannel(const std::string &channel) {}
+
+    Swift::Client* client() {
+      return client_;
+    }
 
   private:
     void handleConnected();
@@ -125,7 +129,7 @@ class BuddycloudBot {
     void AddSerializer(Swift::PayloadSerializer* serializer);
 
     BuddycloudConnection* connection_;
-    Swift::Client* client;
+    Swift::Client* client_;
     Swift::ClientXMLTracer* tracer_;
 
     std::vector<Swift::PayloadParserFactory*> parsers_;

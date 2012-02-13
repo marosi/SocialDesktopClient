@@ -37,15 +37,15 @@ void BuddycloudConnection::Run() {
 }
 
 void BuddycloudConnection::Connect() {
-  bot_->client->connect(); // TODO: implement more client with connect(Swift::ClientOptions*)
+  bot_->client()->connect(); // TODO: implement more client with connect(Swift::ClientOptions*)
 }
 
 void BuddycloudConnection::Disconnect() {
-  bot_->client->disconnect();
+  bot_->client()->disconnect();
 }
 
 void BuddycloudConnection::OnConnected() {
-  GetController<BController>()->AcknowledgeOnlineState();
+  // TODO: is this method necessary?
 }
 
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>840</width>
-    <height>742</height>
+    <width>706</width>
+    <height>518</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,7 +22,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QFrame" name="frame">
+     <widget class="QFrame" name="contentFrame">
       <property name="sizePolicy">
        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
         <horstretch>0</horstretch>
@@ -73,7 +73,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>840</width>
+     <width>706</width>
      <height>21</height>
     </rect>
    </property>
@@ -82,14 +82,21 @@
      <string>Main</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionXMPP_Commands"/>
+   </widget>
    <addaction name="menuMain"/>
+   <addaction name="menuTools"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dockWidget_3">
    <property name="minimumSize">
     <size>
      <width>250</width>
-     <height>94</height>
+     <height>106</height>
     </size>
    </property>
    <property name="features">
@@ -124,15 +131,15 @@
         <item>
          <widget class="QToolButton" name="avatar">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="minimumSize">
            <size>
-            <width>50</width>
-            <height>0</height>
+            <width>40</width>
+            <height>40</height>
            </size>
           </property>
           <property name="text">
@@ -158,18 +165,28 @@
       </widget>
      </item>
      <item>
-      <widget class="QFrame" name="frame_3">
+      <widget class="QFrame" name="contactPanel">
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
        </property>
        <property name="frameShadow">
         <enum>QFrame::Raised</enum>
        </property>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <layout class="QVBoxLayout" name="contactPanelLayout"/>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
    </widget>
   </widget>
+  <action name="actionXMPP_Commands">
+   <property name="text">
+    <string>XMPP Commands</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

@@ -6,6 +6,7 @@
  */
 
 #include "connection.h"
+#include "commands.h"
 #include "core.h"
 #include "event_manager.h"
 
@@ -17,6 +18,15 @@ void Connection::DoRun() {
   Run();
   LOG(DEBUG) << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ CONNECTION INACTIVE";
   is_active_ = false;
+}
+
+void Connection::Send(RequestRef request) {
+  pending_requests_.push_back(request);
+  request->Send(this);
+}
+
+void Connection::DeleteRequest(RequestRef request) {
+    pending_requests_.remove(request);
 }
 
 void Connection::RecieveMessage(boost::shared_ptr<Message> message) {

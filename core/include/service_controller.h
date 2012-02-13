@@ -23,6 +23,11 @@ class ServiceController : public Controller {
   boost::shared_ptr<Connection> GetConnection() {
       return boost::dynamic_pointer_cast<Connection>(connection_);
   }
+
+  ConnectionRef GetConnection() {
+    return connection_;
+  }
+
  private:
   ConnectionRef connection_;
 };

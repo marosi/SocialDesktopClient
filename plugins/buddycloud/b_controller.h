@@ -16,6 +16,7 @@
 class BModel;
 class BView;
 class BuddycloudView;
+class ContactFrameView;
 
 class BController : public QObject, public sdc::ServiceController {
 
@@ -25,7 +26,7 @@ class BController : public QObject, public sdc::ServiceController {
   BController();
   void Initiate();
 
-  void AcknowledgeOnlineState();
+  void SynchronizeContacts() {}
 
   /// XMPP testing @{
   void SendDiscoInfo(const std::string &to_attribute, const std::string &node_attribute);
@@ -36,13 +37,22 @@ class BController : public QObject, public sdc::ServiceController {
   // Qt signal wrappers
 
  public slots:
-   void SwitchOnlineState(const QString &state);
+  void SwitchOnlineState(const QString &state);
 
  signals: // signals in controller are used to manipulate Qt view
-  void acknowledgeOnlineState(const QString &);
+  void signalOnlineState(const QString &);
+  void signalShowContact(const QString & uid, const QString & name);
 
  private:
   void ConnectView();
+// Actions
+  void GoOnline();
+  void HandleIsOnline();
+  void GoOffline();
+  //void HandleIsOffline();
+//
+  void GetRemoteContacts();
+  void HandleRemoteContacts(sdc::Contacts::Ref contacts);
 
   boost::shared_ptr<BModel> model_;
   BuddycloudView* channel_view_;

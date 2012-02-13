@@ -9,7 +9,11 @@
 #include "b_model.h"
 #include "buddycloud_connection.h"
 #include "buddycloud_view.h"
+#include "contact_frame_view.h"
+#include "swift_commands.h"
+#include "boost/bind.hpp"
 
+using namespace boost;
 using std::string;
 
 BController::BController() {
@@ -23,24 +27,18 @@ void BController::Initiate() {
 }
 
 void BController::ConnectView() {
-  connect(this, SIGNAL(acknowledgeOnlineState(const QString &)),
+  connect(this, SIGNAL(signalOnlineState(const QString &)),
       channel_view_, SLOT(ShowState(const QString &)));
-}
-
-void BController::AcknowledgeOnlineState() {
-  model_->SetOnlineState(state_to_be_acknowledged_);
-  QString str = QString::fromStdString(model_->GetOnlineState());
-  LOG(DEBUG) << str.toStdString();
-  emit acknowledgeOnlineState(str);
+  connect(this, SIGNAL(signalShowContact(const QString &, const QString &)),
+      channel_view_, SLOT(ShowContact(const QString &, const QString &)));
 }
 
 void BController::SwitchOnlineState(const QString &state) {
   QString lower = state.toLower();
-  if (lower == "online") {
-    GetConnection<BuddycloudConnection>()->Connect();
-    channel_view_->ShowConnecting();;
+  if (lower == "online" && GetModel<BModel>()->GetOnlineState() == "offline") {
+    this->GoOnline();
   } else if (lower == "offline" && GetModel<BModel>()->GetOnlineState() != "offline") {
-    GetConnection<BuddycloudConnection>()->Disconnect();
+    this->GoOffline();
   }
   state_to_be_acknowledged_ = lower.toStdString();
 }
@@ -60,3 +58,38 @@ void BController::DoSomeThing(const string &param) {
   GetConnection<BuddycloudConnection>()->HandleSomething(param);
 }
 /// @}
+
+void BController::GoOnline() {
+  SwiftGoOnlineRequest::Ref request(new SwiftGoOnlineRequest);
+  request->SetCallback(boost::bind(&BController::HandleIsOnline, this));
+  GetConnection()->Send(request);
+  channel_view_->ShowConnecting();
+}
+
+void BController::HandleIsOnline() {
+  this->GetRemoteContacts();
+  //
+  model_->SetOnlineState(state_to_be_acknowledged_);
+  QString str = QString::fromStdString(model_->GetOnlineState());
+  emit signalOnlineState(str);
+}
+
+void BController::GoOffline() {
+  GetConnection<BuddycloudConnection>()->Disconnect();
+  model_->SetOnlineState("offline");
+}
+
+void BController::GetRemoteContacts() {
+  SwiftContactsRequest::Ref request(new SwiftContactsRequest);
+  request->SetCallback(boost::bind(&BController::HandleRemoteContacts, this, _1));
+  GetConnection()->Send(request);
+}
+
+void BController::HandleRemoteContacts(sdc::Contacts::Ref contacts) {
+  contacts->Iterate();
+  while(sdc::Contact::Ref contact = contacts->GetNext()) {
+    emit signalShowContact(
+        QString::fromStdString(contact->GetUid()),
+        QString::fromStdString(contact->GetName()));
+  }
+}

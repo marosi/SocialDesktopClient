@@ -1,4 +1,5 @@
 #include "buddycloud_view.h"
+#include "contact_frame_view.h"
 #include <QString>
 
 BuddycloudView::BuddycloudView(BController* controller, QWidget *parent)
@@ -11,10 +12,7 @@ BuddycloudView::BuddycloudView(BController* controller, QWidget *parent)
 	ui.connectingMessage->setVisible(false);
 }
 
-BuddycloudView::~BuddycloudView()
-{
-
-}
+BuddycloudView::~BuddycloudView() {}
 
 void BuddycloudView::CreateActions() {
   connect(ui.onlineState, SIGNAL(currentIndexChanged(const QString &)),
@@ -34,9 +32,18 @@ void BuddycloudView::ShowState(const QString &state) {
   for (int i = 0; i < item_count; ++i) {
     if (ui.onlineState->itemText(i) == upper) {
       ui.onlineState->setCurrentIndex(i);
-      ui.connectingMessage->setVisible(false);
+      ui.connectingMessage->setVisible(false); // hide connecting ...
       return;
     }
   }
   assert(false);
+}
+
+void BuddycloudView::ShowContact(const QString &uid, const QString &name) {
+  ContactFrameView* cframe = new ContactFrameView(ui.contactPanel);
+  cframe->SetInfo(name);
+  cframe->setEnabled(true);
+  cframe->setVisible(true);
+  contacts_.append(cframe);
+  ui.contactPanelLayout->addWidget(cframe);
 }

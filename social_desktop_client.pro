@@ -2,7 +2,10 @@ TEMPLATE = app
 TARGET = social_desktop_client
 QT += core \
     gui
-HEADERS += core/include/core_typedefs.h \
+HEADERS += core/include/commands.h \
+    core/include/contact.h \
+    core/include/content.h \
+    core/include/core_typedefs.h \
     core/include/service_view.h \
     core/include/service_model.h \
     core/include/service_controller.h \

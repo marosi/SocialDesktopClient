@@ -11,6 +11,7 @@
 #ifndef SDC_H_
 #define SDC_H_
 
+#include "core_typedefs.h"
 #include "plugin_manager.h" // for the Registration type
 #include "connection.h"
 #include "model.h"
@@ -24,10 +25,13 @@
 #include "log.h"
 #include "main_view.h"
 #include "service_controller.h"
-#include "core_typedefs.h"
 #include "service.h"
 #include "service_model.h"
 #include "service_view.h"
 #include <string>
+#include "commands.h"
+#include "content.h"
+#include "contact.h"
+
 
 #endif /* SDC_H_ */
