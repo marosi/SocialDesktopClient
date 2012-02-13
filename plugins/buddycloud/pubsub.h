@@ -1,5 +1,5 @@
 /**
- * @file pubsub_payload_serializer.h
+ * @file pubsub_payload.h
  * @brief TODO:
  *	
  * TODO: Complete detailed description
@@ -8,10 +8,13 @@
  *   @date Dec 30, 2011
  */
 
-#ifndef PUBSUB_PAYLOAD_SERIALIZER_H_
-#define PUBSUB_PAYLOAD_SERIALIZER_H_
+#ifndef PUBSUB_PAYLOAD_H_
+#define PUBSUB_PAYLOAD_H_
 
 #include "Swiften/Swiften.h"
+#include "boost/shared_ptr.hpp"
+#include <string>
+#include <vector>
 
 class Pubsub : public Swift::Payload {
  public:
@@ -124,18 +127,4 @@ class Geoloc : Swift::Payload {
   // TODO: As far as this is a desktop client geoloc info are not that important
 };
 
-class AtomSerializer : public Swift::GenericPayloadSerializer<Atom> {
- public:
-  std::string serializePayload(boost::shared_ptr<Atom> payload) const;
-};
-
-class PubsubSerializer : public Swift::GenericPayloadSerializer<Pubsub> {
- public:
-  PubsubSerializer();
-  virtual std::string serializePayload(boost::shared_ptr<Pubsub> payload) const;
-
- private:
-  Swift::PayloadSerializerCollection serializers_;
-};
-
-#endif /* PUBSUB_PAYLOAD_SERIALIZER_H_ */
+#endif /* PUBSUB_PAYLOAD_H_ */

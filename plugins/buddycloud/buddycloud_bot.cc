@@ -138,9 +138,9 @@ void BuddycloudBot::handleMessageReceived(Message::ref message) {
     message->setFrom(JID());
     //client->sendMessage(message);
 
-    if (message->getPayload<PubsubPayload> ()) {
+    /*if (message->getPayload<PubsubPayload> ()) {
 
-    }
+    }*/
 
     //boost::shared_ptr<IQ> iq = new boost::make_shared()
     //client->getIQRouter()->sendIQ()

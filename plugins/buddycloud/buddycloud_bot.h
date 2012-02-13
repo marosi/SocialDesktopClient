@@ -11,9 +11,9 @@
 #ifndef BUDDYCLOUD_BOT_H_
 #define BUDDYCLOUD_BOT_H_
 
-#include "pubsub_payload.h"
-#include "pubsub_payload_parser.h"
-#include "pubsub_payload_serializer.h"
+#include "pubsub.h"
+#include "pubsub_parser.h"
+#include "pubsub_serializer.h"
 #include "sdc.h"
 #include "Swiften/Swiften.h"
 #include "boost/bind.hpp"

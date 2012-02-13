@@ -5,8 +5,7 @@
  *  Created on: Feb 8, 2012
  */
 
-#include "pubsub_payload_serializer.h"
-#include "pubsub_payload.h"
+#include "pubsub_serializer.h"
 #include "sdc.h"
 
 using namespace Swift;

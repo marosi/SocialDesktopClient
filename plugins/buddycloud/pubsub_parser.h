@@ -13,7 +13,7 @@
 
 #include "sdc.h"
 #include "Swiften/Swiften.h"
-#include "pubsub_payload.h"
+#include "pubsub.h"
 
 
 #include <string>
