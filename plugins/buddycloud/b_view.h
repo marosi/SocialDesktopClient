@@ -17,6 +17,7 @@ class BController;
 class BModel;
 class XmppCommands;
 
+// TODO: There not much sense for serviceview here
 class BView : public QWidget, public sdc::ServiceView {
 
   Q_OBJECT

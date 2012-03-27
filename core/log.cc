@@ -10,13 +10,14 @@
 namespace sdc {
 
 Log::Level Log::global_level_;
-std::string Log::level_name_[8];
+std::string Log::level_name_[9];
 std::string Log::time_format_ = "%H:%M:%S";
 
 void Log::SetGlobalLevel(Level level) {
   Log::level_name_[Log::ERROR]   = "ERROR  ";
   Log::level_name_[Log::WARNING] = "WARNING";
   Log::level_name_[Log::INFO]    = "INFO   ";
+  Log::level_name_[Log::TRACE]   = "TRACE  ";
   Log::level_name_[Log::DEBUG]   = "DEBUG  ";
   Log::level_name_[Log::DEBUG1]  = "DEBUG1 ";
   Log::level_name_[Log::DEBUG2]  = "DEBUG2 ";

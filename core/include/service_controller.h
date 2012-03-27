@@ -13,11 +13,16 @@
 
 #include "controller.h"
 #include "core_typedefs.h"
+#include "log.h"
 
 namespace sdc {
 
 class ServiceController : public Controller {
  public:
+  virtual ~ServiceController() {
+    LOG(INFO) << "Turning the service controller off.";
+  }
+
   void SetConnection(ConnectionRef conn) { connection_ = conn; }
   template<class Connection>
   boost::shared_ptr<Connection> GetConnection() {

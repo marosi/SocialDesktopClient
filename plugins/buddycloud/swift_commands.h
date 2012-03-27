@@ -34,4 +34,13 @@ class SwiftContactsRequest : public sdc::GenericRequest<sdc::Contacts> {
   void HandleResponse(Swift::Payload::ref payload, Swift::ErrorPayload::ref error);
 };
 
+class SwiftPostsRequest : public sdc::GenericRequest<sdc::Posts> {
+ public:
+  typedef boost::shared_ptr<SwiftPostsRequest> Ref;
+
+  void HandleRequest(sdc::Connection* connection);
+  void HandleResponse(Swift::Payload::ref payload, Swift::ErrorPayload::ref error);
+};
+
+
 #endif /* SWIFT_COMMANDS_H_ */

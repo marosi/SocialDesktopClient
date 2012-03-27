@@ -9,7 +9,7 @@ BView::BView(QWidget* parent) {
   //window_->show();
   xmpp_ = new XmppCommands;
   xmpp_->setWindowTitle("XMPP Commands");
-  xmpp_->show();
+  xmpp_->show(); // TODO: Make separate method for showing xmpp window
   CreateActions();
 }
 

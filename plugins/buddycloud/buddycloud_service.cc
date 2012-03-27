@@ -14,7 +14,7 @@
 using namespace sdc;
 
 void BuddycloudService::InitializeGui(MainView* main_view) {
-  boost::shared_ptr<BModel> m(new BModel);
+/*  boost::shared_ptr<BModel> m(new BModel);
   boost::shared_ptr<BView> v(new BView);
   boost::shared_ptr<BController> c(new BController);
 
@@ -24,7 +24,7 @@ void BuddycloudService::InitializeGui(MainView* main_view) {
   v->SetController(c);
   v->SetModel(m);
 
-  main_view->SetMVC(m,v,c);
+  main_view->SetMVC(m,v,c);*/
 }
 
 Connection* BuddycloudService::CreateConnection() {

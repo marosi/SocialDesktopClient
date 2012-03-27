@@ -72,7 +72,7 @@ void BuddycloudBot::SendDiscoItems(const string &to_attribute, const string &nod
 }
 
 void BuddycloudBot::DoSomething(const string &param) {
-  LOG(DEBUG) << "DoSomething with param : " << param.substr(0,2);
+  LOG(DEBUG) << "Parameter from GUI : " << param;
   if (param == "gsv") {
     GetSoftwareVersionRequest::ref gsvr = GetSoftwareVersionRequest::create("localhost", client_->getIQRouter());
     gsvr->send();
@@ -103,8 +103,19 @@ void BuddycloudBot::DoSomething(const string &param) {
     atom->setObjectType(Atom::NOTE);
     atom->setContent("cuuuuuuuuzte vy tam vsetciiia");
     //
-    PublishAtomToNode("/user/pista@localhost/posts", atom);
+    PublishAtomToNode(channel_user_.posts_node, atom);
+  } else if (param == "items") {
+    GetPubsubItemsRequest::ref req = GetPubsubItemsRequest::create(channel_service_.jid, channel_user_.posts_node, client_->getIQRouter());
+    req->onResponse.connect(bind(&BuddycloudBot::handleItemsRecieved, this, _1));
+    req->send();
   }
+}
+
+void BuddycloudBot::handleItemsRecieved(boost::shared_ptr<PubsubItemsRequest> items) {
+  LOG(DEBUG) << "handleItemsRecieved";
+  LOG(DEBUG) << items->getItems()->get().at(0)->getAuthor();
+  LOG(DEBUG) << items->getItems()->get().at(0)->getContent();
+  LOG(DEBUG) << items->getItems()->get().at(0)->getObjectTypeString();
 }
 
 void BuddycloudBot::handleConnected() {
@@ -124,6 +135,17 @@ void BuddycloudBot::handleConnected() {
 void BuddycloudBot::handleIQRecieved(boost::shared_ptr<IQ> iq) {
   //shared_ptr<Body> payload = iq->getPayload<Body>();
   LOG(DEBUG2) << "IQ recieved"; // << payload->getText();
+  foreach (const shared_ptr<Payload> p, iq->getPayloads()) {
+    LOG(DEBUG) << typeid(*p.get()).name();
+  }
+  boost::shared_ptr<Items<Atom> > items = boost::dynamic_pointer_cast<Items<Atom> >(iq->getPayloads().front());
+  if(items)
+    LOG(DEBUG2) << items->get().size();
+
+  Pubsub::ref pubsub(new Pubsub(Pubsub::ITEMS, "cuz"));
+  Payload::ref p = iq->getPayloadOfSameType(pubsub);
+  if(p)
+    LOG(DEBUG2) << typeid(*p.get()).name();
 }
 
 void BuddycloudBot::handleMessageReceived(Message::ref message) {
@@ -181,11 +203,12 @@ void BuddycloudBot::handleDataRecieved(const SafeByteArray &byte_array) {
 
 void BuddycloudBot::AddParserFactories() {
   // Payload parsers and serializers
-  //client->addPayloadParserFactory(&pubsubPayloadParserFactory_);
+  AddParserFactory(new GenericPayloadParserFactory<PubsubParser>("pubsub", "http://jabber.org/protocol/pubsub"));
 }
 
 void BuddycloudBot::AddSerializers() {
   AddSerializer(new PubsubSerializer);
+  AddSerializer(new PubsubItemsRequestSerializer);
 }
 
 void BuddycloudBot::AddParserFactory(Swift::PayloadParserFactory* factory) {

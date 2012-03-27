@@ -7,6 +7,7 @@
 
 #include "b_controller.h"
 #include "b_model.h"
+#include "b_view.h"
 #include "buddycloud_connection.h"
 #include "buddycloud_view.h"
 #include "contact_frame_view.h"
@@ -16,10 +17,15 @@
 using namespace boost;
 using std::string;
 
-BController::BController() {
+BController::BController() : xmpp_commands_view_(0) {
   channel_view_ = new BuddycloudView(this);
   ConnectView();
   channel_view_->show();
+}
+
+BController::~BController() {
+  delete channel_view_;
+  delete xmpp_commands_view_;
 }
 
 void BController::Initiate() {
@@ -31,6 +37,8 @@ void BController::ConnectView() {
       channel_view_, SLOT(ShowState(const QString &)));
   connect(this, SIGNAL(signalShowContact(const QString &, const QString &)),
       channel_view_, SLOT(ShowContact(const QString &, const QString &)));
+  connect(this, SIGNAL(signalShowPost(const QString &, const QString &)),
+        channel_view_, SLOT(ShowPost(const QString &, const QString &)));
 }
 
 void BController::SwitchOnlineState(const QString &state) {
@@ -41,6 +49,15 @@ void BController::SwitchOnlineState(const QString &state) {
     this->GoOffline();
   }
   state_to_be_acknowledged_ = lower.toStdString();
+}
+
+void BController::ShowXmppCommandsWindow() {
+  if (!xmpp_commands_view_) {
+    xmpp_commands_view_ = new BView(channel_view_);
+    xmpp_commands_view_->SetController(boost::shared_ptr<BController>(this)); // TODO: remove shared_ptr on MVC !!!
+  }
+  assert(xmpp_commands_view_);
+  xmpp_commands_view_->show();
 }
 
 /// XMPP testing @{
@@ -68,6 +85,7 @@ void BController::GoOnline() {
 
 void BController::HandleIsOnline() {
   this->GetRemoteContacts();
+  this->GetPosts();
   //
   model_->SetOnlineState(state_to_be_acknowledged_);
   QString str = QString::fromStdString(model_->GetOnlineState());
@@ -81,7 +99,7 @@ void BController::GoOffline() {
 
 void BController::GetRemoteContacts() {
   SwiftContactsRequest::Ref request(new SwiftContactsRequest);
-  request->SetCallback(boost::bind(&BController::HandleRemoteContacts, this, _1));
+  request->SetCallback(bind(&BController::HandleRemoteContacts, this, _1));
   GetConnection()->Send(request);
 }
 
@@ -91,5 +109,20 @@ void BController::HandleRemoteContacts(sdc::Contacts::Ref contacts) {
     emit signalShowContact(
         QString::fromStdString(contact->GetUid()),
         QString::fromStdString(contact->GetName()));
+  }
+}
+
+void BController::GetPosts() {
+  SwiftPostsRequest::Ref request(new SwiftPostsRequest);
+  request->SetCallback(bind(&BController::HandleGetPosts, this, _1));
+  GetConnection()->Send(request);
+}
+
+void BController::HandleGetPosts(sdc::Posts::Ref posts) {
+  posts->Iterate();
+  while(sdc::Post::Ref post = posts->GetNext()) {
+    emit signalShowPost(
+        QString::fromStdString(post->GetAuthor()),
+        QString::fromStdString(post->GetContent()));
   }
 }

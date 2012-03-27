@@ -15,6 +15,43 @@
 
 namespace sdc {
 
+template<class C>
+class Items : public Content {
+ public:
+  typedef boost::shared_ptr<C> ContentRef;
+
+  Items() : ready_to_iterate_(false) {}
+
+  void AddItem(ContentRef content) {
+    items_.push_back(content);
+  }
+
+  void RemoveItem(ContentRef content) {
+    items_.remove(content);
+  }
+
+  void Iterate() {
+    iterator_ = items_.begin();
+    ready_to_iterate_ = true;
+  }
+
+  ContentRef GetNext() {
+    if(iterator_ == items_.end()) {
+      ready_to_iterate_ = false;
+      return ContentRef();
+    }
+    assert(ready_to_iterate_);
+    ContentRef result = *iterator_;
+    ++iterator_;
+    return result;
+  }
+
+ private:
+  bool ready_to_iterate_;
+  typename std::list<ContentRef>::iterator iterator_;
+  std::list<ContentRef> items_;
+};
+
 class Contact : public Content {
  public:
   typedef boost::shared_ptr<Contact> Ref;
@@ -45,44 +82,41 @@ class Contact : public Content {
   std::vector<std::string> groups_;
 };
 
-class Contacts : public Content {
+class Contacts : public Items<Contact> {
  public:
   typedef boost::shared_ptr<Contacts> Ref;
+};
 
-  Contacts() : ready_to_iterate_(false) {}
+class Post {
+ public:
+  typedef boost::shared_ptr<Post> Ref;
 
-  void AddItem(Contact::Ref contact) {
-    items_.push_back(contact);
+  void SetAuthor(const std::string author) {
+    author_ = author;
   }
 
-  void RemoveItem(Contact::Ref contact) {
-    items_.remove(contact);
+  void SetContent(const std::string &content) {
+    content_ = content;
   }
 
-  void Iterate() {
-    iterator_ = items_.begin();
-    ready_to_iterate_ = true;
+  std::string GetAuthor() {
+    return author_;
   }
 
-  Contact::Ref GetNext() {
-    if(iterator_ == items_.end()) {
-      ready_to_iterate_ = false;
-      return Contact::Ref();
-    }
-    assert(ready_to_iterate_);
-    Contact::Ref result = *iterator_;
-    ++iterator_;
-    return result;
+  std::string GetContent() {
+    return content_;
   }
 
  private:
-  bool ready_to_iterate_;
-  std::list<Contact::Ref>::iterator iterator_;
-  std::list<Contact::Ref> items_;
+  std::string content_;
+  std::string author_;
+};
+
+class Posts : public Items<Post> {
+ public:
+  typedef boost::shared_ptr<Posts> Ref;
 };
 
 }  /* namespace sdc */
-
-
 
 #endif /* CORE_CONTACT_H_ */

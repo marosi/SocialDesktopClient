@@ -24,6 +24,7 @@ class BController : public QObject, public sdc::ServiceController {
 
  public:
   BController();
+  ~BController();
   void Initiate();
 
   void SynchronizeContacts() {}
@@ -38,10 +39,12 @@ class BController : public QObject, public sdc::ServiceController {
 
  public slots:
   void SwitchOnlineState(const QString &state);
+  void ShowXmppCommandsWindow();
 
  signals: // signals in controller are used to manipulate Qt view
   void signalOnlineState(const QString &);
   void signalShowContact(const QString & uid, const QString & name);
+  void signalShowPost(const QString & author, const QString & content);
 
  private:
   void ConnectView();
@@ -54,8 +57,13 @@ class BController : public QObject, public sdc::ServiceController {
   void GetRemoteContacts();
   void HandleRemoteContacts(sdc::Contacts::Ref contacts);
 
+  void GetPosts();
+  void HandleGetPosts(sdc::Posts::Ref posts);
+
   boost::shared_ptr<BModel> model_;
   BuddycloudView* channel_view_;
+
+  BView* xmpp_commands_view_;
 
   std::string state_to_be_acknowledged_;
 };

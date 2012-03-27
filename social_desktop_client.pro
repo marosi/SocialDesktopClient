@@ -65,3 +65,4 @@ LIBS += -L/home/xangel/projects/boost_1_48_0/stage/lib \ # -L/home/xangel/projec
     -lboost_system \
     -lboost_thread
 QMAKE_LFLAGS += -export-dynamic
+QMAKE_CXXFLAGS += -Wunused

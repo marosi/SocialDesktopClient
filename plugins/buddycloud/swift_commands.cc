@@ -19,7 +19,7 @@ using std::vector;
 void SwiftGoOnlineRequest::HandleRequest(sdc::Connection* connection) {
   connection->Connect();
   BuddycloudConnection* conn = polymorphic_downcast<BuddycloudConnection*> (connection);
-  signal_connection_ = conn->bot()->client()->onConnected.connect(bind(&SwiftGoOnlineRequest::HandleResponse, this));
+  signal_connection_ = conn->bot()->xmpp()->onConnected.connect(bind(&SwiftGoOnlineRequest::HandleResponse, this));
 }
 
 void SwiftGoOnlineRequest::HandleResponse() {
@@ -28,9 +28,9 @@ void SwiftGoOnlineRequest::HandleResponse() {
 }
 
 void SwiftContactsRequest::HandleRequest(sdc::Connection* connection) {
-  BuddycloudConnection* conn = boost::polymorphic_downcast<BuddycloudConnection*>(connection);
+  BuddycloudConnection* conn = polymorphic_downcast<BuddycloudConnection*>(connection);
   assert(conn);
-  GetRosterRequest::ref request = GetRosterRequest::create(conn->bot()->client()->getIQRouter());
+  GetRosterRequest::ref request = GetRosterRequest::create(conn->bot()->xmpp()->getIQRouter());
   request->onResponse.connect(bind(&SwiftContactsRequest::HandleResponse, this, _1, _2));
   request->send();
 }
@@ -48,4 +48,28 @@ void SwiftContactsRequest::HandleResponse(Payload::ref payload, ErrorPayload::re
     contacts->AddItem(c);
   }
   HandleContent(contacts);
+}
+
+void SwiftPostsRequest::HandleRequest(sdc::Connection* connection) {
+  BuddycloudConnection* conn = polymorphic_downcast<BuddycloudConnection*>(connection);
+  assert(conn);
+  GetPubsubItemsRequest::ref request = GetPubsubItemsRequest::create(conn->bot()->GetChannelService().jid,
+      conn->bot()->GetChannelUser().posts_node, conn->bot()->xmpp()->getIQRouter());
+  request->onResponse.connect(bind(&SwiftPostsRequest::HandleResponse, this, _1, _2));
+  request->send();
+}
+
+void SwiftPostsRequest::HandleResponse(Payload::ref payload, ErrorPayload::ref error) {
+  PubsubItemsRequest::ref items = dynamic_pointer_cast<PubsubItemsRequest>(payload);
+  assert(items);
+  vector<shared_ptr<Atom> > atoms = items->getItems()->get();
+  vector<shared_ptr<Atom> >::iterator it;
+  sdc::Posts::Ref posts(new sdc::Posts);
+  for (it = atoms.begin(); it != atoms.end(); ++it) {
+    sdc::Post::Ref post(new sdc::Post);
+    post->SetAuthor((*it)->getAuthor());
+    post->SetContent((*it)->getContent());
+    posts->AddItem(post);
+  }
+  HandleContent(posts);
 }

@@ -136,12 +136,12 @@ void Core::InitUi() {
     conn->SetController(sctrler);
     sctrler->SetConnection(conn);
     // set controller's view and model
-    ServiceViewRef sview = conn->service()->CreateMainView();
+    //ServiceViewRef sview = conn->service()->CreateMainView();
     ServiceModelRef smodel = conn->service()->CreateMainModel();
     sctrler->SetModel(smodel);
-    sctrler->SetView(sview);
-    sview->SetController(sctrler);
-    sview->SetModel(smodel);
+    //sctrler->SetView(sview);
+    //sview->SetController(sctrler);
+    //sview->SetModel(smodel);
     //main_view_->StartUpServiceMainWidget(boost::dynamic_pointer_cast<QWidget>(view));
     sctrler->Initiate();
   }

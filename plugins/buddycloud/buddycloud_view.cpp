@@ -1,5 +1,6 @@
 #include "buddycloud_view.h"
 #include "contact_frame_view.h"
+#include "post_frame_view.h"
 #include <QString>
 
 BuddycloudView::BuddycloudView(BController* controller, QWidget *parent)
@@ -17,6 +18,9 @@ BuddycloudView::~BuddycloudView() {}
 void BuddycloudView::CreateActions() {
   connect(ui.onlineState, SIGNAL(currentIndexChanged(const QString &)),
       controller_, SLOT(SwitchOnlineState(const QString &)));
+  //
+  connect(ui.actionXMPP_Commands, SIGNAL(triggered()),
+      controller_, SLOT(ShowXmppCommandsWindow()));
 }
 
 void BuddycloudView::ShowConnecting() {
@@ -46,4 +50,14 @@ void BuddycloudView::ShowContact(const QString &uid, const QString &name) {
   cframe->setVisible(true);
   contacts_.append(cframe);
   ui.contactPanelLayout->addWidget(cframe);
+}
+
+void BuddycloudView::ShowPost(const QString &author, const QString &content) {
+  PostFrameView* pframe = new PostFrameView(ui.contentFrame);
+  pframe->SetAuthor(author);
+  pframe->SetContent(content);
+  pframe->setEnabled(true);
+  pframe->setVisible(true);
+  posts_.append(pframe);
+  ui.contentPanelLayout->addWidget(pframe);
 }

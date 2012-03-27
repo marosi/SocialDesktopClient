@@ -41,6 +41,7 @@ class Log {
     ERROR,
     WARNING,
     INFO,
+    TRACE,
     DEBUG,
     DEBUG1,
     DEBUG2,
