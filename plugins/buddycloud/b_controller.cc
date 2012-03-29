@@ -11,21 +11,26 @@
 #include "buddycloud_connection.h"
 #include "buddycloud_view.h"
 #include "contact_frame_view.h"
+#include "posts_controller.h"
 #include "swift_commands.h"
 #include "boost/bind.hpp"
 
 using namespace boost;
 using std::string;
 
-BController::BController() : xmpp_commands_view_(0) {
+BController::BController() : xmpp_commands_view_(0), posts_controller_(new PostsController(this)) {
   channel_view_ = new BuddycloudView(this);
   ConnectView();
   channel_view_->show();
+
+  posts_controller_->CreateView(channel_view_);
+
 }
 
 BController::~BController() {
   delete channel_view_;
   delete xmpp_commands_view_;
+  delete posts_controller_;
 }
 
 void BController::Initiate() {
@@ -37,8 +42,6 @@ void BController::ConnectView() {
       channel_view_, SLOT(ShowState(const QString &)));
   connect(this, SIGNAL(signalShowContact(const QString &, const QString &)),
       channel_view_, SLOT(ShowContact(const QString &, const QString &)));
-  connect(this, SIGNAL(signalShowPost(const QString &, const QString &)),
-        channel_view_, SLOT(ShowPost(const QString &, const QString &)));
 }
 
 void BController::SwitchOnlineState(const QString &state) {
@@ -103,7 +106,7 @@ void BController::GetRemoteContacts() {
   GetConnection()->Send(request);
 }
 
-void BController::HandleRemoteContacts(sdc::Contacts::Ref contacts) {
+void BController::HandleRemoteContacts(sdc::Items<sdc::Contact>::Ref contacts) {
   contacts->Iterate();
   while(sdc::Contact::Ref contact = contacts->GetNext()) {
     emit signalShowContact(
@@ -118,11 +121,8 @@ void BController::GetPosts() {
   GetConnection()->Send(request);
 }
 
-void BController::HandleGetPosts(sdc::Posts::Ref posts) {
-  posts->Iterate();
-  while(sdc::Post::Ref post = posts->GetNext()) {
-    emit signalShowPost(
-        QString::fromStdString(post->GetAuthor()),
-        QString::fromStdString(post->GetContent()));
-  }
+#include "posts_controller.h"
+
+void BController::HandleGetPosts(sdc::Items<sdc::Post>::Ref posts) {
+  posts_controller_->ShowPosts(posts);
 }

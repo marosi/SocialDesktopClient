@@ -26,7 +26,7 @@ class SwiftGoOnlineRequest : public sdc::GenericRequest<sdc::Content> {
   boost::bsignals::connection signal_connection_;
 };
 
-class SwiftContactsRequest : public sdc::GenericRequest<sdc::Contacts> {
+class SwiftContactsRequest : public sdc::GenericRequest<sdc::Items<sdc::Contact> > {
  public:
   typedef boost::shared_ptr<SwiftContactsRequest> Ref;
 
@@ -34,12 +34,27 @@ class SwiftContactsRequest : public sdc::GenericRequest<sdc::Contacts> {
   void HandleResponse(Swift::Payload::ref payload, Swift::ErrorPayload::ref error);
 };
 
-class SwiftPostsRequest : public sdc::GenericRequest<sdc::Posts> {
+class SwiftPostsRequest : public sdc::GenericRequest<sdc::Items<sdc::Post> > {
  public:
   typedef boost::shared_ptr<SwiftPostsRequest> Ref;
 
   void HandleRequest(sdc::Connection* connection);
   void HandleResponse(Swift::Payload::ref payload, Swift::ErrorPayload::ref error);
+};
+
+class SwiftDeletePostRequest : public sdc::GenericRequest<sdc::Content> { // TODO: Content is not used in this request
+ public:
+  typedef boost::shared_ptr<SwiftDeletePostRequest> Ref;
+
+  SwiftDeletePostRequest(const std::string &id) {
+    id_ = id;
+  }
+
+  void HandleRequest(sdc::Connection* connection);
+  void HandleResponse(Swift::Payload::ref payload, Swift::ErrorPayload::ref error);
+
+ private:
+  std::string id_;
 };
 
 

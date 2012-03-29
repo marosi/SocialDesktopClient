@@ -129,7 +129,7 @@ class AnyParserFactory : public Swift::PayloadParserFactory {
 
 class AtomParser : public Swift::GenericPayloadParser<Atom> {
  public:
-  AtomParser() : level_(EntryLevel), meta_(-1) {}
+  AtomParser() : level_(EntryLevel), meta_(NIL) {}
 
   void handleStartElement(const std::string&  element, const std::string&  ns, const Swift::AttributeMap&  attributes) {
     if (level_ == EntryLevel) {// TopLevel element
@@ -142,6 +142,9 @@ class AtomParser : public Swift::GenericPayloadParser<Atom> {
         inner_text_.clear();
       } else if (element == "object" && ns == "http://activitystrea.ms/spec/1.0/") {
         meta_ = Object;
+      } else if (element == "id") {
+        meta_ = Id;
+        inner_text_.clear();
       }
     } else if (level_ > MetaLevel) {
       if (meta_ == Author) {
@@ -161,11 +164,17 @@ class AtomParser : public Swift::GenericPayloadParser<Atom> {
     if (level_ == MetaLevel) {
       if (meta_ == Content) {
         getPayloadInternal()->setContent(inner_text_);
+        meta_ = NIL;
+      } else if (meta_ == Id) {
+        getPayloadInternal()->setID(inner_text_);
+        meta_ = NIL;
       }
     } else if (level_ > MetaLevel) {
       if (meta_ == Author) {
-        if (element == "name")
+        if (element == "name") {
           getPayloadInternal()->setAuthor(inner_text_);
+          meta_ = NIL;
+        }
         else if (element == "jid")
           ; // nothing so far
         else if (element == "uri")
@@ -183,7 +192,7 @@ class AtomParser : public Swift::GenericPayloadParser<Atom> {
   }
 
   void handleCharacterData(const std::string&  data) {
-    if (level_ >= MetaLevel) {
+    if (level_ > MetaLevel) {
       inner_text_ += data;
     }
   }
@@ -194,9 +203,11 @@ class AtomParser : public Swift::GenericPayloadParser<Atom> {
     MetaLevel = 1
   };
   enum Meta {
+    NIL,
     Author,
     Content,
-    Object
+    Object,
+    Id
   };
   int level_;
   int meta_;

@@ -138,14 +138,6 @@ void BuddycloudBot::handleIQRecieved(boost::shared_ptr<IQ> iq) {
   foreach (const shared_ptr<Payload> p, iq->getPayloads()) {
     LOG(DEBUG) << typeid(*p.get()).name();
   }
-  boost::shared_ptr<Items<Atom> > items = boost::dynamic_pointer_cast<Items<Atom> >(iq->getPayloads().front());
-  if(items)
-    LOG(DEBUG2) << items->get().size();
-
-  Pubsub::ref pubsub(new Pubsub(Pubsub::ITEMS, "cuz"));
-  Payload::ref p = iq->getPayloadOfSameType(pubsub);
-  if(p)
-    LOG(DEBUG2) << typeid(*p.get()).name();
 }
 
 void BuddycloudBot::handleMessageReceived(Message::ref message) {
@@ -209,6 +201,7 @@ void BuddycloudBot::AddParserFactories() {
 void BuddycloudBot::AddSerializers() {
   AddSerializer(new PubsubSerializer);
   AddSerializer(new PubsubItemsRequestSerializer);
+  AddSerializer(new PubsubRetractRequestSerializer);
 }
 
 void BuddycloudBot::AddParserFactory(Swift::PayloadParserFactory* factory) {

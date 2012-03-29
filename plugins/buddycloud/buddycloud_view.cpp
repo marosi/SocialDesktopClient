@@ -1,6 +1,6 @@
 #include "buddycloud_view.h"
 #include "contact_frame_view.h"
-#include "post_frame_view.h"
+#include "posts_frame_view.h"
 #include <QString>
 
 BuddycloudView::BuddycloudView(BController* controller, QWidget *parent)
@@ -52,12 +52,7 @@ void BuddycloudView::ShowContact(const QString &uid, const QString &name) {
   ui.contactPanelLayout->addWidget(cframe);
 }
 
-void BuddycloudView::ShowPost(const QString &author, const QString &content) {
-  PostFrameView* pframe = new PostFrameView(ui.contentFrame);
-  pframe->SetAuthor(author);
-  pframe->SetContent(content);
-  pframe->setEnabled(true);
-  pframe->setVisible(true);
-  posts_.append(pframe);
-  ui.contentPanelLayout->addWidget(pframe);
+void BuddycloudView::CreatePostsView(QObject* controller) {
+  PostsFrameView* posts_frame = new PostsFrameView(controller, ui.contentFrame);
+  emit signalPostsViewCreated(posts_frame);
 }

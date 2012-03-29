@@ -20,12 +20,10 @@
 template<class P>
 class Items : public Swift::Payload {
  public:
+  typedef boost::shared_ptr<Items<P> > ref;
+
   void appendPayload(boost::shared_ptr<P> payload) {
     items_.push_back(payload);
-  }
-
-  ~Items() {
-    LOG(DEBUG) << "DELETING ITEMS";
   }
 
   const std::vector<boost::shared_ptr<P> >& get() const {
@@ -36,38 +34,9 @@ class Items : public Swift::Payload {
   std::vector<boost::shared_ptr<P> > items_;
 };
 
-class Pubsub : public Swift::Payload {
- public:
-  typedef boost::shared_ptr<Pubsub> ref;
-  enum Action { SUBSCRIBE, UNSUBSCRIBE, PUBLISH, RETRACT, ITEMS };
-
-  Pubsub() {} // TODO: set default node and type
-
-  Pubsub(Action type, std::string node) :
-    type_(type),
-    node_(node) {}
-
-  void setPublishItem(Swift::Payload::ref payload) {
-    publish_item_ = payload;
-  }
-
-  Swift::Payload::ref getPublishItem() {
-    return publish_item_;
-  }
-
-  Action getAction() {
-    return type_;
-  }
-
-  std::string getNode() {
-    return node_;
-  }
-
- private:
-  Action type_;
-  std::string node_;
-  Swift::Payload::ref publish_item_;
-};
+/**
+ * Various payloads
+ */
 
 class Atom : public Swift::Payload {
  public:
@@ -75,6 +44,12 @@ class Atom : public Swift::Payload {
   typedef boost::shared_ptr<Atom> ref;
   enum Verb { POST };
   enum ObjectType { NOTE, COMMENT };
+
+  Atom() {}
+
+  void setID(const std::string & id) {
+    id_ = id;
+  }
 
   void setVerb(Verb verb) {
     verb_ = verb;
@@ -84,16 +59,20 @@ class Atom : public Swift::Payload {
     object_type_ = type;
   }
 
-  void setPublished(std::string published) {
+  void setPublished(const std::string & published) {
     published_ = published;
   }
 
-  void setAuthor(std::string author) {
+  void setAuthor(const std::string & author) {
     author_ = author;
   }
 
-  void setContent(std::string content) {
+  void setContent(const std::string & content) {
     content_ = content;
+  }
+
+  std::string getID() {
+    return id_;
   }
 
   Verb getVerb() {
@@ -143,15 +122,53 @@ class Atom : public Swift::Payload {
   std::string published_;
   std::string author_;
   std::string content_;
+  std::string id_;
 };
 
 class Geoloc : Swift::Payload {
   // TODO: As far as this is a desktop client geoloc info are not that important
 };
 
-class PubsubItemsRequest : public Swift::Payload {
+/**
+ * Pubsub payloads
+ */
+
+class Pubsub : public Swift::Payload {
  public:
-  typedef boost::shared_ptr<PubsubItemsRequest> ref;
+  typedef boost::shared_ptr<Pubsub> ref;
+  enum Action { SUBSCRIBE, UNSUBSCRIBE, PUBLISH, RETRACT, ITEMS };
+
+  Pubsub() {} // TODO: set default node and type
+
+  Pubsub(Action type, std::string node) :
+    type_(type),
+    node_(node) {}
+
+  void setPublishItem(Swift::Payload::ref payload) {
+    publish_item_ = payload;
+  }
+
+  Swift::Payload::ref getPublishItem() {
+    return publish_item_;
+  }
+
+  Action getAction() {
+    return type_;
+  }
+
+  std::string getNode() {
+    return node_;
+  }
+
+ private:
+  Action type_;
+  std::string node_;
+  Swift::Payload::ref publish_item_;
+};
+
+class PubsubNode : public Swift::Payload {
+ public:
+  typedef boost::shared_ptr<PubsubNode> ref;
 
   void setNode(const std::string &node) {
     node_ = node;
@@ -161,17 +178,47 @@ class PubsubItemsRequest : public Swift::Payload {
     return node_;
   }
 
-  void setItems(boost::shared_ptr<Items<Atom> > items) {
+ private:
+  std::string node_;
+};
+
+class PubsubNodeItem : public PubsubNode {
+ public:
+  typedef boost::shared_ptr<PubsubNodeItem> ref;
+
+  void setItemID(const std::string &id) {
+    id_ = id;
+  }
+
+  std::string getItemID() {
+    return id_;
+  }
+
+ private:
+  std::string id_;
+};
+
+class PubsubItemsRequest : public PubsubNode {
+ public:
+  typedef boost::shared_ptr<PubsubItemsRequest> ref;
+
+  void setItems(Items<Atom>::ref items) {
     items_ = items;
   }
 
-  boost::shared_ptr<Items<Atom> > getItems() {
+  Items<Atom>::ref getItems() {
     return items_;
   }
 
  private:
-  std::string node_;
-  boost::shared_ptr<Items<Atom> > items_;
+  Items<Atom>::ref items_;
+};
+
+class PubsubRetractRequest : public PubsubNodeItem {
+ public:
+  typedef boost::shared_ptr<PubsubRetractRequest> ref;
+
+  // TODO: this class can also be just a typedef
 };
 
 #endif /* PUBSUB_PAYLOAD_H_ */

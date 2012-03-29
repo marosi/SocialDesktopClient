@@ -374,8 +374,11 @@
 				<externalSettings>
 					<externalSetting>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/OSW"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/buddycloud"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/OSW/Release"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/buddycloud/Release"/>
 						<entry flags="RESOLVED" kind="libraryFile" name="OSW"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="buddycloud"/>
 					</externalSetting>
 				</externalSettings>
 				<extensions>

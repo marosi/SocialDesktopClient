@@ -18,6 +18,7 @@ namespace sdc {
 template<class C>
 class Items : public Content {
  public:
+  typedef boost::shared_ptr<Items<C> > Ref;
   typedef boost::shared_ptr<C> ContentRef;
 
   Items() : ready_to_iterate_(false) {}
@@ -44,6 +45,13 @@ class Items : public Content {
     ContentRef result = *iterator_;
     ++iterator_;
     return result;
+  }
+
+  void Clear() {
+    typename std::list<ContentRef>::iterator it;
+    for (it = items_.begin(); it != items_.end(); ++it) {
+      it->reset();
+    }
   }
 
  private:
@@ -82,21 +90,24 @@ class Contact : public Content {
   std::vector<std::string> groups_;
 };
 
-class Contacts : public Items<Contact> {
- public:
-  typedef boost::shared_ptr<Contacts> Ref;
-};
-
-class Post {
+class Post : public Content {
  public:
   typedef boost::shared_ptr<Post> Ref;
 
-  void SetAuthor(const std::string author) {
+  void SetID(const std::string &id) {
+    id_ = id;
+  }
+
+  void SetAuthor(const std::string &author) {
     author_ = author;
   }
 
   void SetContent(const std::string &content) {
     content_ = content;
+  }
+
+  std::string GetID() {
+    return id_;
   }
 
   std::string GetAuthor() {
@@ -110,11 +121,7 @@ class Post {
  private:
   std::string content_;
   std::string author_;
-};
-
-class Posts : public Items<Post> {
- public:
-  typedef boost::shared_ptr<Posts> Ref;
+  std::string id_;
 };
 
 }  /* namespace sdc */

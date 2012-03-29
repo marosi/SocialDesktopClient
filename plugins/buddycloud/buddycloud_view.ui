@@ -41,54 +41,29 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0">
-        <widget class="QScrollArea" name="scrollArea">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>15</horstretch>
-           <verstretch>1</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="widgetResizable">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QLabel" name="connectingMessage">
+         <property name="enabled">
           <bool>true</bool>
          </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents_3">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>425</width>
-            <height>449</height>
-           </rect>
-          </property>
-          <layout class="QVBoxLayout" name="contentPanelLayout">
-           <item>
-            <widget class="QLabel" name="connectingMessage">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>connecting ...</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>connecting ...</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
         </widget>
        </item>
       </layout>
@@ -124,7 +99,7 @@
    <property name="minimumSize">
     <size>
      <width>250</width>
-     <height>106</height>
+     <height>242</height>
     </size>
    </property>
    <property name="features">

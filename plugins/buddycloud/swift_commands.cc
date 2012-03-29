@@ -40,7 +40,7 @@ void SwiftContactsRequest::HandleResponse(Payload::ref payload, ErrorPayload::re
   assert(roster);
   vector<RosterItemPayload> roster_items = roster->getItems();
   vector<RosterItemPayload>::iterator it;
-  sdc::Contacts::Ref contacts(new sdc::Contacts);
+  sdc::Items<sdc::Contact>::Ref contacts(new sdc::Items<sdc::Contact>);
   for (it = roster_items.begin(); it != roster_items.end(); ++it) {
     sdc::Contact::Ref c(new sdc::Contact);
     c->SetUid(it->getJID().toString());
@@ -64,12 +64,30 @@ void SwiftPostsRequest::HandleResponse(Payload::ref payload, ErrorPayload::ref e
   assert(items);
   vector<shared_ptr<Atom> > atoms = items->getItems()->get();
   vector<shared_ptr<Atom> >::iterator it;
-  sdc::Posts::Ref posts(new sdc::Posts);
+  sdc::Items<sdc::Post>::Ref posts(new sdc::Items<sdc::Post>);
   for (it = atoms.begin(); it != atoms.end(); ++it) {
     sdc::Post::Ref post(new sdc::Post);
+    post->SetID((*it)->getID());
     post->SetAuthor((*it)->getAuthor());
     post->SetContent((*it)->getContent());
     posts->AddItem(post);
   }
   HandleContent(posts);
+}
+
+void SwiftDeletePostRequest::HandleRequest(sdc::Connection* connection) {
+  BuddycloudConnection* conn = polymorphic_downcast<BuddycloudConnection*>(connection);
+  assert(conn);
+  SetPubsubRetractRequest::ref request = SetPubsubRetractRequest::create(
+      id_,
+      conn->bot()->GetChannelUser().posts_node,
+      conn->bot()->GetChannelService().jid,
+      conn->bot()->xmpp()->getIQRouter());
+  request->onResponse.connect(bind(&SwiftDeletePostRequest::HandleResponse, this, _1, _2));
+  request->send();
+  LOG(DEBUG) << "Delete post request send";
+}
+
+void SwiftDeletePostRequest::HandleResponse(Swift::Payload::ref payload, Swift::ErrorPayload::ref error) {
+  LOG(DEBUG) << "Delete post request handled";
 }

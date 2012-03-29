@@ -12,12 +12,24 @@
 #define CORE_CONTENT_H_
 
 #include "boost/shared_ptr.hpp"
+#include <string>
 
 namespace sdc {
 
 class Content {
  public:
   typedef boost::shared_ptr<Content> Ref;
+
+  void SetID(const std::string &id) {
+    id_ = id;
+  }
+
+  std::string GetID() {
+    return id_;
+  }
+
+ private:
+  std::string id_;
 };
 
 }  /* namespace sdc */

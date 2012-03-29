@@ -21,6 +21,13 @@ class PostFrameView : public QFrame {
  public:
   PostFrameView(QWidget* parent = 0) {
     frame.setupUi(this);
+    frame.toolButton->hide();
+    connect(frame.toolButton, SIGNAL(clicked()),
+        this, SLOT(DeletePost()));
+  }
+
+  void SetID(const QString &id) {
+    id_ = id;
   }
 
   void SetAuthor(const QString &info) {
@@ -31,8 +38,31 @@ class PostFrameView : public QFrame {
     frame.content->setText(content);
   }
 
+  /*
+   * Events
+   */
+  void enterEvent(QEvent* event) {
+    frame.toolButton->show();
+  }
+
+  void leaveEvent(QEvent* event) {
+    frame.toolButton->hide();
+  }
+
+  /*
+   * Actions
+   */
+ public slots:
+  void DeletePost() {
+    emit signalDeletePost(id_);
+  }
+
+ signals:
+  void signalDeletePost(QString id);
+
  private:
   Ui::PostFrameView frame;
+  QString id_;
 };
 
 #endif /* POST_FRAME_VIEW_H_ */
