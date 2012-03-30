@@ -88,6 +88,30 @@ void SwiftDeletePostRequest::HandleRequest(sdc::Connection* connection) {
   LOG(DEBUG) << "Delete post request send";
 }
 
-void SwiftDeletePostRequest::HandleResponse(Swift::Payload::ref payload, Swift::ErrorPayload::ref error) {
-  LOG(DEBUG) << "Delete post request handled";
+void SwiftDeletePostRequest::HandleResponse(Payload::ref payload, ErrorPayload::ref error) {
+  LOG(DEBUG) << "Delete post request unhandled so far.";
+}
+
+void SwiftSendPostRequest::HandleRequest(sdc::Connection* connection) {
+  BuddycloudConnection* conn = polymorphic_downcast<BuddycloudConnection*>(connection);
+  assert(conn);
+  PubsubPublishRequest::ref payload(new PubsubPublishRequest);
+  Atom::ref atom(new Atom);
+  atom->setAuthor(post_->GetAuthor());
+  atom->setContent(post_->GetContent());
+  atom->setVerb(Atom::POST);
+  atom->setObjectType(Atom::NOTE);
+  payload->setAtom(atom);
+  payload->setNode(conn->bot()->GetChannelUser().posts_node);
+  SetPubsubPublishRequest::ref request = SetPubsubPublishRequest::create(
+      payload,
+      conn->bot()->GetChannelService().jid,
+      conn->bot()->xmpp()->getIQRouter());
+  request->onResponse.connect(bind(&SwiftSendPostRequest::HandleResponse, this, _1, _2));
+  request->send();
+}
+
+void SwiftSendPostRequest::HandleResponse(PubsubPublishRequest::ref payload, ErrorPayload::ref error) {
+  LOG(DEBUG) << payload->getItemID();
+  post_->SetID(payload->getItemID());
 }

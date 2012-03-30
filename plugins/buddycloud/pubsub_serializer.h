@@ -38,4 +38,9 @@ class PubsubRetractRequestSerializer : public Swift::GenericPayloadSerializer<Pu
   virtual std::string serializePayload(boost::shared_ptr<PubsubRetractRequest> payload) const;
 };
 
+class PubsubPublishRequestSerializer : public Swift::GenericPayloadSerializer<PubsubPublishRequest> {
+ public:
+  virtual std::string serializePayload(boost::shared_ptr<PubsubPublishRequest> payload) const;
+};
+
 #endif /* PUBSUB_PAYLOAD_SERIALIZER_H_ */

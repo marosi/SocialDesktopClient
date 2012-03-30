@@ -265,6 +265,21 @@ class PubsubItemsRequestParser : public Swift::GenericPayloadParser<PubsubItemsR
   ItemParser<Atom> item_parser_;
 };
 
+class PubsubPublishRequestParser : public Swift::GenericPayloadParser<PubsubPublishRequest> {
+ public:
+  virtual void handleStartElement(const std::string& element, const std::string& ns, const Swift::AttributeMap& attributes) {
+    if (element == "publish") {
+      getPayloadInternal()->setNode(attributes.getAttributeValue("node").get_value_or(""));
+    } else if (element == "item") {
+      getPayloadInternal()->setItemID(attributes.getAttributeValue("id").get_value_or(""));
+    }
+  }
+
+  virtual void handleEndElement(const std::string& element, const std::string& ns) {}
+
+  virtual void handleCharacterData(const std::string& data) {}
+};
+
 class PubsubParser : public Swift::PayloadParser {
  public:
   PubsubParser() : parser_(0), level_(TopLevel) {}
@@ -281,7 +296,10 @@ class PubsubParser : public Swift::PayloadParser {
         if (element == "items") {
           type_ = Pubsub::ITEMS;
           parser_ = new PubsubItemsRequestParser;
-        } else { // TODO: parse publish, subscribe, unsubscribe, retract responses
+        } else if (element == "publish") {
+          type_ = Pubsub::PUBLISH;
+          parser_ = new PubsubPublishRequestParser;
+        } else { // TODO: parse subscribe, unsubscribe, retract responses
           parser_ = new LogParser;
         }
       }

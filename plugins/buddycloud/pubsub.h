@@ -221,4 +221,22 @@ class PubsubRetractRequest : public PubsubNodeItem {
   // TODO: this class can also be just a typedef
 };
 
+class PubsubPublishRequest : public PubsubNodeItem {
+ public:
+  typedef boost::shared_ptr<PubsubPublishRequest> ref;
+
+  PubsubPublishRequest() : atom_(new Atom) {}
+
+  void setAtom(Atom::ref atom) {
+    atom_ = atom;
+  }
+
+  Atom::ref& getAtom() {
+    return atom_;
+  }
+
+ private:
+  Atom::ref atom_;
+};
+
 #endif /* PUBSUB_PAYLOAD_H_ */

@@ -202,6 +202,7 @@ void BuddycloudBot::AddSerializers() {
   AddSerializer(new PubsubSerializer);
   AddSerializer(new PubsubItemsRequestSerializer);
   AddSerializer(new PubsubRetractRequestSerializer);
+  AddSerializer(new PubsubPublishRequestSerializer);
 }
 
 void BuddycloudBot::AddParserFactory(Swift::PayloadParserFactory* factory) {

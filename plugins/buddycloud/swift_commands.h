@@ -12,6 +12,7 @@
 #define SWIFT_COMMANDS_H_
 
 #include "sdc.h"
+#include "pubsub.h"
 #include "Swiften/Swiften.h"
 #include "boost/shared_ptr.hpp"
 
@@ -57,5 +58,17 @@ class SwiftDeletePostRequest : public sdc::GenericRequest<sdc::Content> { // TOD
   std::string id_;
 };
 
+class SwiftSendPostRequest : public sdc::GenericRequest<sdc::Post> {
+ public:
+  typedef boost::shared_ptr<SwiftSendPostRequest> Ref;
+
+  SwiftSendPostRequest(sdc::Post::Ref post) : post_(post) {}
+
+  void HandleRequest(sdc::Connection* connection);
+  void HandleResponse(PubsubPublishRequest::ref payload, Swift::ErrorPayload::ref error);
+
+ private:
+  sdc::Post::Ref post_;
+};
 
 #endif /* SWIFT_COMMANDS_H_ */

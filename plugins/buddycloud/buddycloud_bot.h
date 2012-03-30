@@ -86,6 +86,19 @@ class SetPubsubRetractRequest : public Swift::GenericRequest<PubsubRetractReques
         : Swift::GenericRequest<PubsubRetractRequest>(type, reciever, payload, router) {}
 };
 
+class SetPubsubPublishRequest : public Swift::GenericRequest<PubsubPublishRequest> {
+ public:
+  typedef boost::shared_ptr<SetPubsubPublishRequest> ref;
+
+  static ref create(Swift::Payload::ref payload, const std::string &reciever, Swift::IQRouter* router) {
+    return ref(new SetPubsubPublishRequest(Swift::IQ::Set, payload, reciever, router));
+  }
+
+ private:
+  SetPubsubPublishRequest(Swift::IQ::Type type, Swift::Payload::ref payload, const std::string &reciever, Swift::IQRouter* router)
+        : Swift::GenericRequest<PubsubPublishRequest>(type, reciever, payload, router) {}
+};
+
 struct ChannelServiceInfo {
   std::string jid;
   bool is_available;

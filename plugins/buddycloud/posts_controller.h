@@ -74,8 +74,16 @@ class PostsController : public QObject, public sdc::Controller {
         view_, SLOT(ShowPost(const QString &, const QString &, const QString &)));
   }
 
+  void SendNewPost(QString content) {
+    sdc::Post::Ref post(new sdc::Post);
+    post->SetAuthor("Pisticek");
+    post->SetContent(content.toStdString());
+    SwiftSendPostRequest::Ref req(new SwiftSendPostRequest(post));
+    service_controller_->GetConnection<BuddycloudConnection>()->Send(req);
+  }
+
  signals:
-  void signalCreateView(QObject*);
+  void signalCreateView(QObject*); // TODO: probably goes to base class
   void signalShowPost(const QString &id, const QString & author, const QString & content);
 
  private:
