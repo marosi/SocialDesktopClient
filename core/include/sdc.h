@@ -25,6 +25,7 @@
 #include "log.h"
 #include "main_view.h"
 #include "service_controller.h"
+#include "qt_service_controller.h"
 #include "service.h"
 #include "service_model.h"
 #include "service_view.h"

@@ -19,7 +19,7 @@ class BuddycloudView;
 class ContactFrameView;
 class PostsController;
 
-class BController : public QObject, public sdc::ServiceController {
+class BController : public QObject, public sdc::QtServiceController {
 
   Q_OBJECT
 
@@ -60,13 +60,13 @@ class BController : public QObject, public sdc::ServiceController {
   void GetPosts();
   void HandleGetPosts(sdc::Items<sdc::Post>::Ref posts);
 
-  boost::shared_ptr<BModel> model_;
   BuddycloudView* channel_view_;
-
+  // Testing window
   BView* xmpp_commands_view_;
 
-  std::string state_to_be_acknowledged_;
   PostsController* posts_controller_;
+  std::string state_to_be_acknowledged_;
+  boost::shared_ptr<BModel> model_;
 };
 
 #endif /* B_CONTROLLER_H_ */

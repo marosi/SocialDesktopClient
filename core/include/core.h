@@ -10,19 +10,14 @@
 #define CORE_SOCIALDESKTOPCLIENT_H_
 
 #include "common.h"
-#include "mvc_typedefs.h"
 #include "boost/noncopyable.hpp"
 #include "boost/thread.hpp"
 #include "boost/shared_ptr.hpp"
-#include <vector>
-
-class QApplication;
-class MainWindow;
-class TestController;
 
 namespace sdc {
 
 class Message;
+class Ui;
 
 /**
  * @class SocialDesktopClient
@@ -39,15 +34,11 @@ class Core : boost::noncopyable {
 
 	int GetReturnCode() { return return_code_; }
 
-	void RegisterController(ControllerRef controller);
-	void RegisterModel(ModelRef model);
-
 	void Process(boost::shared_ptr<Message> message); // Method that takes care of incomming message processing, it will be probably change to individual manager
 
  private:
 	void Init();
 	void Exec();
-	void InitUi();
 	void ExecUi();
 
 	boost::thread core_;
@@ -55,14 +46,7 @@ class Core : boost::noncopyable {
 	boost::condition_variable gui_unprepared_;
 	bool is_gui_prepared_;
 	//boost::thread ui_; // Qt GUI cannot run in secondary thread
-	QApplication* qt_app_;
-	MainWindow* main_view_;
-
-	boost::shared_ptr<TestController> test_controller_;
-
-	std::vector<ModelRef> models_;
-	std::vector<ViewRef> views_;
-	std::vector<ControllerRef> controllers_;
+  Ui* ui_;
 
 	int return_code_;
 };

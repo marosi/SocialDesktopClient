@@ -4,7 +4,7 @@
 #include <QString>
 
 BuddycloudView::BuddycloudView(BController* controller, QWidget *parent)
-    : QMainWindow(parent),
+    : QWidget(parent),
       controller_(controller)
 {
 	ui.setupUi(this);
@@ -19,7 +19,7 @@ void BuddycloudView::CreateActions() {
   connect(ui.onlineState, SIGNAL(currentIndexChanged(const QString &)),
       controller_, SLOT(SwitchOnlineState(const QString &)));
   //
-  connect(ui.actionXMPP_Commands, SIGNAL(triggered()),
+  connect(ui.avatar, SIGNAL(clicked()),
       controller_, SLOT(ShowXmppCommandsWindow()));
 }
 
@@ -49,7 +49,7 @@ void BuddycloudView::ShowContact(const QString &uid, const QString &name) {
   cframe->setEnabled(true);
   cframe->setVisible(true);
   contacts_.append(cframe);
-  ui.contactPanelLayout->addWidget(cframe);
+  ui.contactPanelLayout->insertWidget(0, cframe);
 }
 
 void BuddycloudView::CreatePostsView(QObject* controller) {

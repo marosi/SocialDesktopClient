@@ -38,7 +38,7 @@ class Service {
   virtual Connection* CreateConnection()=0;
   virtual ServiceModelRef CreateMainModel()=0; // TODO: Implement default
   virtual ServiceViewRef CreateMainView()=0; // TODO: Implement default
-  virtual ServiceControllerRef CreateServiceController()=0;
+  virtual ServiceController* CreateServiceController()=0;
   virtual void InitializeGui(sdc::MainView* main_view)=0;
 
  protected:

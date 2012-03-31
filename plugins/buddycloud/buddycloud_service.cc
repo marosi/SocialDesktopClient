@@ -39,6 +39,6 @@ ServiceModelRef BuddycloudService::CreateMainModel() {
 ServiceViewRef BuddycloudService::CreateMainView() {
   return boost::shared_ptr<BView>(new BView);
 }
-ServiceControllerRef BuddycloudService::CreateServiceController() {
-  return boost::shared_ptr<BController>(new BController);
+ServiceController* BuddycloudService::CreateServiceController() {
+  return new BController;
 }

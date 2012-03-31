@@ -18,8 +18,12 @@
 using namespace boost;
 using std::string;
 
-BController::BController() : xmpp_commands_view_(0), posts_controller_(new PostsController(this)) {
-  channel_view_ = new BuddycloudView(this);
+BController::BController()
+    : channel_view_(new BuddycloudView(this)),
+      xmpp_commands_view_(0),
+      posts_controller_(new PostsController(this)) {
+
+  SetControllersMainView(channel_view_);
   ConnectView();
   channel_view_->show();
 

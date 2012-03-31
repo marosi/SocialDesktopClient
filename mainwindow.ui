@@ -6,39 +6,39 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>320</width>
-    <height>142</height>
+    <width>554</width>
+    <height>399</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Main Window Here - provisionary so far</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>30</y>
-      <width>131</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Some push button</string>
-    </property>
-   </widget>
+  <widget class="QWidget" name="contentPane">
+   <layout class="QGridLayout" name="gridLayout"/>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>320</width>
-     <height>25</height>
+     <width>554</width>
+     <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Menu</string>
+    </property>
+    <addaction name="actionSettings"/>
+   </widget>
+   <addaction name="menuSettings"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

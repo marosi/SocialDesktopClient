@@ -29,7 +29,6 @@ void ConnectionManager::InitServiceConnections() {
 }
 
 void ConnectionManager::ConnectAll() {
-  LOG(INFO) << "Connecting configured services...";
   vector<ConnectionRef>::iterator conn;
   for (conn = connections_.begin(); conn != connections_.end(); ++conn) {
     try {

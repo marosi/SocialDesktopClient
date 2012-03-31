@@ -14,6 +14,11 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void AddServiceWidget(QWidget* service) {
+      ui.contentPane->layout()->addWidget(service);
+    }
+
+    // TODO: DEPRECATED
     void StartUpServiceMainWidget(boost::shared_ptr<QWidget> service_main_view) {
       //service_main_view->show();
       service_views_.push_back(service_main_view);

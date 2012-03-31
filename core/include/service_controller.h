@@ -24,6 +24,7 @@ class ServiceController : public Controller {
   }
 
   void SetConnection(ConnectionRef conn) { connection_ = conn; }
+
   template<class Connection>
   boost::shared_ptr<Connection> GetConnection() {
       return boost::dynamic_pointer_cast<Connection>(connection_);

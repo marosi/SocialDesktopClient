@@ -2,7 +2,11 @@ TEMPLATE = app
 TARGET = social_desktop_client
 QT += core \
     gui
-HEADERS += core/include/commands.h \
+HEADERS += core/include/qt_service_controller.h \
+    core/include/core_anchor.h \
+    core/include/ui.h \
+    core/include/qt_gui.h \
+    core/include/commands.h \
     core/include/contact.h \
     core/include/content.h \
     core/include/core_typedefs.h \
@@ -35,7 +39,8 @@ HEADERS += core/include/commands.h \
     core/include/connection_manager.h \
     core/include/plugin_manager.h \
     mainwindow.h
-SOURCES += core/qt_view.cc \
+SOURCES += core/ui.cc \
+    core/qt_view.cc \
     core/connection.cc \
     core/observer.cc \
     core/model.cc \

@@ -112,6 +112,5 @@ void SwiftSendPostRequest::HandleRequest(sdc::Connection* connection) {
 }
 
 void SwiftSendPostRequest::HandleResponse(PubsubPublishRequest::ref payload, ErrorPayload::ref error) {
-  LOG(DEBUG) << payload->getItemID();
   post_->SetID(payload->getItemID());
 }

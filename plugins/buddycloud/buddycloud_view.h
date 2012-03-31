@@ -11,7 +11,7 @@
 class ContactFrameView;
 class PostsFrameView;
 
-class BuddycloudView : public QMainWindow , public sdc::ServiceView {
+class BuddycloudView : public QWidget , public sdc::ServiceView {
 
   Q_OBJECT
 
