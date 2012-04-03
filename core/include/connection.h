@@ -30,7 +30,7 @@ class Connection {
 
   virtual void Connect() = 0;
   virtual void Disconnect() = 0;
-  virtual void Set(Service::UserConfig* /*user_config*/) = 0; // TODO: change logic for user config and remove header service.h
+
   virtual void Send(RequestRef request);
   virtual void DeleteRequest(RequestRef request);
 

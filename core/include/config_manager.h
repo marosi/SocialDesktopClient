@@ -129,7 +129,6 @@ class ConfigManager : public AbstractManager, public Properties {
   // TODO: Deprecated @{
   void LoadConfig(const std::string &);
   Service* GetService(const PluginSignature &/*signature*/);
-  std::vector<Service::UserConfig*> GetConnectionConfigs();
   // @}
 
   void OnExit();
@@ -143,9 +142,6 @@ class ConfigManager : public AbstractManager, public Properties {
    * Dynamic data
    */
   std::map<PluginSignature, Service*> services_; /// Pluged-in services and their configuration options
-
-  // TODO: DEPRECATED
-  std::vector<Service::UserConfig*> connection_configs_; /// Specific user account/service configuration
 
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version) {

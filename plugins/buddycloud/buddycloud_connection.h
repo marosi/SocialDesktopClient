@@ -16,7 +16,6 @@ class BuddycloudConnection : public sdc::Connection {
   friend class BuddycloudBot;
 
   BuddycloudConnection();
-  void Set(sdc::Service::UserConfig*);
 
   void Run();
   void Connect();

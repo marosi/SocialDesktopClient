@@ -15,7 +15,6 @@
 #include "mvc_typedefs.h"
 #include "core_typedefs.h"
 #include "boost/shared_ptr.hpp"
-#include <map>
 
 namespace sdc {
 
@@ -26,14 +25,11 @@ class ServiceController;
 /// @brief TODO:
 class Service {
  public:
-  class UserConfig;
-
   Service();
 
   std::string name() { return name_; }
   std::string description() { return description_; }
   /// @brief Factory method for user connection.
-  virtual UserConfig* CreateUserConfig(); // TODO: Prototype pattern for userconfig and connection?
   virtual Connection* CreateConnection()=0;
   virtual ServiceModelRef CreateMainModel()=0; // TODO: Delete, has no more sense
   virtual ServiceViewRef CreateMainView()=0; // TODO: Delete, has no more sense
@@ -43,20 +39,6 @@ class Service {
  protected:
   std::string name_;
   std::string description_;
-
-};
-
-/// @class UserConfig
-/// @brief Holds data for specific user connection configuration.
-class Service::UserConfig {
- public:
-  UserConfig(Service* /*service*/);
-  Connection* CreateConnection();
-  void SetTwo(const std::string &/*key*/, const std::string &/*value*/);
-
- private:
-  Service* service_;
-  std::map<std::string, std::string> twos;
 };
 
 }

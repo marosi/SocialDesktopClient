@@ -20,10 +20,6 @@ BuddycloudConnection::BuddycloudConnection() {
   LOG(DEBUG1) << "BuddycloudConnection has been instantiated.";
 }
 
-void BuddycloudConnection::Set(Service::UserConfig* uc) {
-  LOG(DEBUG1) << "Setting user configuration";
-}
-
 void BuddycloudConnection::Run() {
   //Swift::logging = true;
 

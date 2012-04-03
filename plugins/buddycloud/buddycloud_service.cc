@@ -30,9 +30,6 @@ using namespace sdc;
 Connection* BuddycloudService::CreateConnection() {
   return new BuddycloudConnection();
 }
-Service::UserConfig* BuddycloudService::CreateUserConfig() {
-  return new BuddycloudUserConfig(this);
-}
 ServiceModelRef BuddycloudService::CreateMainModel() {
   return boost::shared_ptr<BModel>(new BModel);
 }

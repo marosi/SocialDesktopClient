@@ -75,10 +75,6 @@ void ConfigManager::LoadConfig(const std::string & file_path) {
   conf_file.close();*/
 }
 
-std::vector<Service::UserConfig*> ConfigManager::GetConnectionConfigs() {
-  return connection_configs_;
-}
-
 Service* ConfigManager::GetService(const PluginSignature &signature) {
   return services_[signature];
 }
