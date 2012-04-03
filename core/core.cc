@@ -71,13 +71,11 @@ void Core::Start() {
 }
 
 void Core::Init() {
-  g_config_manager = new ConfigManager;
-  g_connection_manager = new ConnectionManager;
-    g_connection_manager->SetCore(this);
-  g_plugin_manager = new PluginManager;
-  g_event_manager = new EventManager;
-    g_event_manager->SetCore(this);
-  g_data_manager = new DataManager;
+  g_config_manager = new ConfigManager(this);
+  g_connection_manager = new ConnectionManager(this);
+  g_plugin_manager = new PluginManager(this);
+  g_event_manager = new EventManager(this);
+  g_data_manager = new DataManager(this);
 }
 
 void Core::Exec() {
@@ -90,6 +88,10 @@ void Core::Exec() {
 }
 
 void Core::Exit() {
+  g_data_manager->OnExit();
+  g_plugin_manager->OnExit();
+  g_connection_manager->OnExit();
+  g_config_manager->OnExit();
   // stop event loop
   g_event_manager->Stop();
 }

@@ -20,7 +20,6 @@
 namespace sdc {
 
 class Connection;
-class MainView;
 class ServiceController;
 
 // @class Service
@@ -36,10 +35,10 @@ class Service {
   /// @brief Factory method for user connection.
   virtual UserConfig* CreateUserConfig(); // TODO: Prototype pattern for userconfig and connection?
   virtual Connection* CreateConnection()=0;
-  virtual ServiceModelRef CreateMainModel()=0; // TODO: Implement default
-  virtual ServiceViewRef CreateMainView()=0; // TODO: Implement default
+  virtual ServiceModelRef CreateMainModel()=0; // TODO: Delete, has no more sense
+  virtual ServiceViewRef CreateMainView()=0; // TODO: Delete, has no more sense
   virtual ServiceController* CreateServiceController()=0;
-  virtual void InitializeGui(sdc::MainView* main_view)=0;
+  //virtual void InitializeGui(sdc::MainView* main_view)=0; // TODO: Delete, has no more sense
 
  protected:
   std::string name_;

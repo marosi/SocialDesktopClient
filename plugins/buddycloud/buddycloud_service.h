@@ -20,7 +20,7 @@ class BuddycloudService : public sdc::Service {
   sdc::ServiceModelRef CreateMainModel();
   sdc::ServiceViewRef CreateMainView();
   sdc::ServiceController* CreateServiceController();
-  void InitializeGui(sdc::MainView* main_view);
+  //void InitializeGui(sdc::MainView* main_view);
 };
 
 class BuddycloudUserConfig : public sdc::Service::UserConfig {

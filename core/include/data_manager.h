@@ -14,25 +14,14 @@
 #include "abstract_manager.h"
 #include "common.h"
 #include <vector>
-#include "model.h"
 
 namespace sdc {
 
-class DataManager : public AbstractManager, public Model {
+class Core;
+
+class DataManager : public AbstractManager {
  public:
-  DataManager();
-  void AddContent(std::string content);
-
- private:
-  /**
-   * Mechanism for notifying GUI
-   *
-   * At this point SDC core is interconnected with GUI.
-   */
-  void Notify();
-
- private:
-  std::vector<std::string> main_content_;
+  DataManager(Core* core) : AbstractManager(core) {}
 };
 
 } /* namespace sdc */

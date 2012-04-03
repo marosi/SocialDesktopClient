@@ -23,7 +23,6 @@
 #include "qt_view.h"
 #include <QtGui>
 #include "log.h"
-#include "main_view.h"
 #include "service_controller.h"
 #include "qt_service_controller.h"
 #include "service.h"

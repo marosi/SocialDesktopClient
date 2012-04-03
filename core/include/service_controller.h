@@ -17,7 +17,7 @@
 
 namespace sdc {
 
-class ServiceController : public Controller {
+class ServiceController : public virtual Controller {
  public:
   virtual ~ServiceController() {
     LOG(INFO) << "Turning the service controller off.";

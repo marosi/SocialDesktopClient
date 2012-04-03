@@ -117,7 +117,6 @@
 			<storageModule moduleId="org.eclipse.cdt.core.pathentry">
 				<pathentry excluding="include|testing/" kind="src" path="core"/>
 				<pathentry excluding="*" kind="src" path="plugins"/>
-				<pathentry kind="src" path="testing"/>
 				<pathentry kind="src" path="core/include"/>
 				<pathentry excluding="core/include/|include|core/|core/testing/|testing/|plugins/" kind="src" path=""/>
 				<pathentry kind="out" path=""/>

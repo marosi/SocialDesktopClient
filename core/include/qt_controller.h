@@ -11,19 +11,34 @@
 #ifndef QT_CONTROLLER_H_
 #define QT_CONTROLLER_H_
 
-#include "service_controller.h"
+#include "controller.h"
 #include <QObject>
 
 namespace sdc {
 
-class qtcontroller : public QObject, public ServiceController {
+class qtcontroller : public QObject, public virtual Controller {
 
   Q_OBJECT
 
 };
 
 class QtController : public qtcontroller {
-  // TODO: implemenet non-generic controller
+ public:
+  QWidget* GetView() const {
+    return view_;
+  }
+
+ protected:
+  /**
+   * In order to add service view to application layout
+   * child classes MUST set their QWidget
+   */
+  void SetControllersMainView(QWidget* view) {
+    view_ = view;
+  }
+
+ private:
+  QWidget* view_;
 };
 
 template <class M, class V>

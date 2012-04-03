@@ -16,13 +16,13 @@
 
 namespace sdc {
 
-Ui::~Ui() {
+UI::~UI() {
   BOOST_FOREACH (ServiceController* ctrl, controllers_) {
     delete ctrl;
   }
 }
 
-void Ui::Init() {
+void UI::Init() {
   // Launch GUI of each initiated service connection
   std::vector<ConnectionRef> conns;
   core()->connection_manager()->GetAllActiveConnections(conns); // TOOD: connection_manager is more of service_manager...
@@ -33,7 +33,7 @@ void Ui::Init() {
     // create service controller for connection
     ServiceController* service_controller = CreateServiceController(conn->service());
     boost::shared_ptr<ServiceController> tmp(service_controller);
-    conn->SetController(tmp);
+    conn->SetController(tmp); // TODO: Remove shared pointer from SetController method
     service_controller->SetConnection(conn);
     // set controller's view and model
     //ServiceViewRef sview = conn->service()->CreateMainView();
@@ -42,13 +42,14 @@ void Ui::Init() {
     //sctrler->SetView(sview);
     //sview->SetController(sctrler);
     //sview->SetModel(smodel);
-    //main_view_->StartUpServiceMainWidget(boost::dynamic_pointer_cast<QWidget>(view));
     service_controller->Initiate();
   }
 }
 
-ServiceController* Ui::CreateServiceController(Service* service) {
+ServiceController* UI::CreateServiceController(Service* service) {
   LOG(DEBUG) << "Ui::CreateServiceController call";
+  assert(service);
+  LOG(DEBUG) << service;
   ServiceController* result = service->CreateServiceController();
   controllers_.push_back(result);
   return result;

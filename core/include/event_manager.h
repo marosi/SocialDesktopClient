@@ -13,21 +13,21 @@
 
 #include "common.h"
 #include "abstract_manager.h"
-
-#include <vector>
 #include "boost/bind.hpp"
 #include "boost/thread.hpp"
 #include "boost/function.hpp"
+#include <vector>
 
 namespace sdc {
 
+class Core;
 class Message;
 
 class EventManager : public AbstractManager {
  public:
   class Event;
 
-  EventManager();
+  EventManager(Core* core) : AbstractManager(core), is_running_(true) {}
 
   void Run();
 

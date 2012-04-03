@@ -12,13 +12,14 @@
 #define CORE_CONTROLLER_H_
 
 #include "mvc_typedefs.h"
+#include "core_anchor.h"
 #include "boost/make_shared.hpp"
 #include "boost/shared_ptr.hpp"
 #include "boost/enable_shared_from_this.hpp"
 
 namespace sdc {
 
-class Controller {
+class Controller : public CoreAnchor {
  public:
   Controller() {}
   void SetModel(ModelRef model) {

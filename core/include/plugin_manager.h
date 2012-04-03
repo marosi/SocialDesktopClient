@@ -15,8 +15,8 @@
 #define LIB_HANDLE_TYPE void*
 #endif
 
+#include "abstract_manager.h"
 #include "common.h"
-
 #include <map>
 #include <string>
 #include <typeinfo>
@@ -88,9 +88,9 @@ class PluginProvider {
 /// PluginManager acts as a bridge between SDC Core and its extensions.
 /// It handles shared/dynamic libraries and provides interface for the work with plugins. It is accessible through sdc::g_plugin_manager.
 /// It also works as class factory.
-class PluginManager {
+class PluginManager : public AbstractManager {
  public:
-  PluginManager();
+  PluginManager(Core* core);
   ~PluginManager();
   void LoadPlugins(); /// Loads and registers every shared/dynamic library in a specified directory.
   void UnloadPlugins(); /// Frees all loaded libraries.
@@ -145,7 +145,7 @@ std::map<PluginSignature, T*> PluginManager::CreateAllInstances(const PluginType
   for(std::vector<ClassDataRegistration>::iterator it = class_data.begin();
       it != class_data.end(); ++it) {
     inst = provider.CreateInstance(GetClassSignature(*it));
-    instances.insert(std::pair<PluginSignature, T*>(typeid(*inst).name(), inst));
+    instances.insert(std::pair<PluginSignature, T*>(GetClassSignature(*it), inst));
   }
   return instances;
 }

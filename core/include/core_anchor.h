@@ -11,9 +11,9 @@
 #ifndef CORE_ANCHOR_H_
 #define CORE_ANCHOR_H_
 
-namespace sdc {
+#include "core.h"
 
-class Core;
+namespace sdc {
 
 class CoreAnchor {
  public:

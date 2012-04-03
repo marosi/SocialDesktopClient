@@ -17,7 +17,7 @@
 namespace sdc {
 
 class Message;
-class Ui;
+class UI;
 
 /**
  * @class SocialDesktopClient
@@ -46,7 +46,7 @@ class Core : boost::noncopyable {
 	boost::condition_variable gui_unprepared_;
 	bool is_gui_prepared_;
 	//boost::thread ui_; // Qt GUI cannot run in secondary thread
-  Ui* ui_;
+  UI* ui_;
 
 	int return_code_;
 };

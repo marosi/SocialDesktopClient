@@ -23,7 +23,7 @@ class Observer : public boost::enable_shared_from_this<Observer> {
 
   virtual ~Observer();
   void SetModel(ModelRef model);
-  virtual void Update()=0;
+  virtual void Update() {}
 
  private:
   ModelRef model_; // TODO: Unused so far.

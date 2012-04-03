@@ -11,9 +11,6 @@
 
 namespace sdc {
 
-EventManager::EventManager() :
-    is_running_(true) {}
-
 void EventManager::PostEvent(boost::function<void ()> callback) {
   boost::unique_lock<boost::mutex> lock(mutex_);
   Event event(callback);

@@ -8,6 +8,7 @@
 #include "connection_manager.h"
 #include "config_manager.h"
 #include "connection.h"
+#include "boost/foreach.hpp"
 #include "boost/make_shared.hpp"
 #include <exception>
 
@@ -17,10 +18,11 @@ using boost::thread;
 namespace sdc {
 
 void ConnectionManager::InitServiceConnections() {
-  vector<Service::UserConfig*> user_configs = g_config_manager->GetConnectionConfigs();
-  vector<Service::UserConfig*>::iterator u;
-  for (u = user_configs.begin(); u != user_configs.end(); ++u) {
-    ConnectionRef conn((*u)->CreateConnection()); // TODO: Create connection using new construct!!
+  vector<Account> accounts = g_config_manager->GetAccounts();
+  vector<Account>::iterator u;
+  for (u = accounts.begin(); u != accounts.end(); ++u) {
+    ConnectionRef conn(u->GetService()->CreateConnection()); // TODO: Remove shared pointer from connection
+    conn->SetService(u->GetService());
     // add new connection
     connections_.push_back(conn);
     // set connection anchor to Core

@@ -20,6 +20,8 @@ class Core;
 
 class AbstractManager : public boost::noncopyable, public CoreAnchor {
  public:
+  AbstractManager(Core* core) : CoreAnchor(core) {}
+
   virtual void OnExit() {}
 };
 

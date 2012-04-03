@@ -6,25 +6,51 @@
  */
 
 #include "config_manager.h"
-
 #include "plugin_manager.h"
-
+#include "boost/foreach.hpp"
 #include <fstream>
 #include <string>
 
 namespace sdc {
 
+const std::string ConfigManager::kConfFile = "social_desktop_client.conf";
+
 template std::map<PluginSignature, Service*> PluginManager::CreateAllInstances<Service>(const PluginType);
 
 void ConfigManager::Init() {
-  //Load ConfigModel plugins
-  services_ = g_plugin_manager->CreateAllInstances<Service>(SERVICE);
+  // Load configuration
+  std::ifstream file(kConfFile.c_str());
+  if (!file.is_open()) {
+    LOG(ERROR) << "Configuration file: social_desktop_client.conf is not present.";
+    core()->Exit(); // TODO: Exit does nothing so far, this error should be displayed to user
+    return;
+  }
+  {
+    boost::archive::xml_iarchive archive(file);
+    this->serialize(archive, 0);
+  }
+  file.close();
+
+  // Load Services
+  services_ = g_plugin_manager->CreateAllInstances<Service>(SERVICE); // TODO: Change method of getting instances from plugin manager
   std::map<PluginSignature, Service*>::iterator it = services_.begin();
-  LOG(DEBUG) << it->first;
+  for(it = services_.begin(); it != services_.end(); ++it) {
+    LOG(TRACE) << "Services class '" << it->first << "' loaded successfuly.";
+  }
+
+  // Map service object with loaded accounts
+  BOOST_FOREACH(Account &account, accounts_) {
+    Service* service = services_[account.GetServiceSignature()];
+    account.SetService(service);
+  }
 }
 
+
+/*
+ * TODO: DEPRECATED @{
+ */
 void ConfigManager::LoadConfig(const std::string & file_path) {
-  LOG(INFO) << "Loading configuration...";
+/*  LOG(INFO) << "Loading configuration...";
   //TODO: Hide implementation of file parsing code.
   std::ifstream conf_file(file_path.c_str());
   std::string line;
@@ -46,7 +72,7 @@ void ConfigManager::LoadConfig(const std::string & file_path) {
     else if(line.empty()) //user data block finished, next one is coming probably
       is_next = true;
   }
-  conf_file.close();
+  conf_file.close();*/
 }
 
 std::vector<Service::UserConfig*> ConfigManager::GetConnectionConfigs() {
@@ -55,6 +81,18 @@ std::vector<Service::UserConfig*> ConfigManager::GetConnectionConfigs() {
 
 Service* ConfigManager::GetService(const PluginSignature &signature) {
   return services_[signature];
+}
+/*
+ * @}
+ */
+
+void ConfigManager::OnExit() {
+  std::ofstream file(kConfFile.c_str());
+  {
+    boost::archive::xml_oarchive archive(file);
+    this->serialize(archive, 0);
+  }
+  file.close();
 }
 
 }

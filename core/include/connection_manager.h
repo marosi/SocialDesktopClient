@@ -19,12 +19,16 @@
 namespace sdc {
 
 class Connection;
+class Core;
+class Service;
 
 /// @class ConnectionManager
 /// @brief Maintains everything to do with the services connections.
 /// Initiates each user service connection and maintains it.
 class ConnectionManager : public AbstractManager {
  public:
+  ConnectionManager(Core* core) : AbstractManager(core) {}
+
   void InitServiceConnections();
   void ConnectAll();
   void GetAllActiveConnections(std::vector<ConnectionRef> &result) const;

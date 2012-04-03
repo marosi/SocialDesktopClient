@@ -19,7 +19,7 @@ class BuddycloudView;
 class ContactFrameView;
 class PostsController;
 
-class BController : public QObject, public sdc::QtServiceController {
+class BController : public sdc::QtServiceController {
 
   Q_OBJECT
 
