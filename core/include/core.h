@@ -45,6 +45,9 @@ class Core : boost::noncopyable {
 	ConfigManager* data() {
 	  return g_config_manager;
 	}
+	PluginManager* plugins() {
+	  return g_plugin_manager;
+	}
 
 	std::vector<Service*> services();
 	Service* service(const PluginSignature &/* signature */);

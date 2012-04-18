@@ -15,14 +15,12 @@
 #include "buddycloud_connection.h"
 #include "buddycloud_bot.h"
 
-using namespace sdc;
-
 class BuddycloudModel : public sdc::QtServiceModel {
 
     Q_OBJECT
 
  public:
-  BuddycloudModel(AccountData* account)
+  BuddycloudModel(sdc::AccountData* account)
       : QtServiceModel(account),
         account_(account),
         connection_(0),
@@ -30,7 +28,7 @@ class BuddycloudModel : public sdc::QtServiceModel {
     LOG(DEBUG) << "This is buddycloud Service Model!";
   }
 
-  Connection* CreateConnection() {
+  sdc::Connection* CreateConnection() {
     bot_ = new BuddycloudBot(account_->GetUid(), account_->GetPassword());
     connection_ = new BuddycloudConnection(bot_);
     return connection_;
@@ -44,7 +42,7 @@ class BuddycloudModel : public sdc::QtServiceModel {
  signals:
 
  private:
-  AccountData* account_;
+  sdc::AccountData* account_;
   BuddycloudConnection* connection_; // TODO: Rename to ChannelConnection
   BuddycloudBot* bot_; // TODO: Rename to ChannelBot
 };

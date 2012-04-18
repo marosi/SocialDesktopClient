@@ -180,7 +180,7 @@ class BuddycloudBot {
 
     void handleItemsRecieved(boost::shared_ptr<PubsubItemsRequest> items); // TODO: DELETE after test
 
-  private:
+
     void AddParserFactories();
     void AddSerializers();
     void AddParserFactory(Swift::PayloadParserFactory* factory);

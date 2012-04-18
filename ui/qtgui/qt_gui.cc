@@ -26,10 +26,10 @@ void QtGui::Init() {
   this->ConnectCoreSignals();
 
   main_view_ = new MainWindow(this);
-  BOOST_FOREACH (const ServiceController* sc, GetControllers()) {
+  /*BOOST_FOREACH (const ServiceController* sc, GetControllers()) {
     const QtServiceController* qsc = boost::polymorphic_downcast<const QtServiceController*>(sc);
     main_view_->AddServiceWidget(qsc->GetView());
-  }
+  }*/ // TODO: REMOVE there is no controllers
   // show main window finally
   main_view_->show();
 }

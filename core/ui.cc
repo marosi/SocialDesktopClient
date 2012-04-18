@@ -24,7 +24,7 @@ UI::~UI() {
 
 void UI::Init() {
   // Launch GUI of each initiated service connection
-  std::vector<ConnectionRef> conns;
+  /*std::vector<ConnectionRef> conns;
   core()->connections()->GetAllActiveConnections(conns); // TOOD: connection_manager is more of service_manager...
   std::vector<ConnectionRef>::iterator it;
   for(it = conns.begin(); it != conns.end(); ++it) {
@@ -43,6 +43,10 @@ void UI::Init() {
     //sview->SetController(sctrler);
     //sview->SetModel(smodel);
     service_controller->Initiate();
+  }*/
+
+  BOOST_FOREACH (Service* service, core()->services()) {
+    // TODO: Whaaat??
   }
 }
 

@@ -99,8 +99,8 @@ void Core::Start() {
   // Set log reporting level
   Log::SetGlobalLevel(Log::DEBUG4);
   // Initialization
-  g_plugin_manager->LoadPlugins();
-  g_config_manager->Init();
+  plugins()->LoadPlugins();
+  data()->Init();
 
 
   // Load Services
@@ -128,8 +128,7 @@ void Core::Start() {
   data()->onAccountEnabled.connect(bind(&Core::ActivateAccount, this, _1));
   data()->onAccountDisabled.connect(bind(&Core::DeactivateAccount, this, _1));
 
-  g_connection_manager->InitServiceConnections();
-  g_connection_manager->ConnectAll();
+  connections()->ConnectAll();
 
   LOG(INFO) << "Main thread ID: " << boost::this_thread::get_id();
   // execute application core in a non-blocking thread

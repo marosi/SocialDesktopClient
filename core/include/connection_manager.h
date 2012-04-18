@@ -11,8 +11,6 @@
 
 #include "common.h"
 #include "abstract_manager.h"
-#include "core_typedefs.h"
-#include "boost/shared_ptr.hpp"
 #include "boost/thread.hpp"
 #include <vector>
 
@@ -20,7 +18,6 @@ namespace sdc {
 
 class Connection;
 class Core;
-class Service;
 
 /// @class ConnectionManager
 /// @brief Maintains everything to do with the services connections.
@@ -28,18 +25,10 @@ class Service;
 class ConnectionManager : public AbstractManager {
  public:
   ConnectionManager(Core* core) : AbstractManager(core) {}
-
-  void InitServiceConnections();
-  void ConnectAll();
-  void GetAllActiveConnections(std::vector<ConnectionRef> &result) const;
-
   void MakeConnection(Connection* connection);
+  void ConnectAll();
 
  private:
-  void RemoveInactiveConnections() {} // TODO: impelment
-
-
-  std::vector<ConnectionRef> connections_old; // TODO: remove
   std::vector<Connection*> connections_;
   boost::thread_group threads_;
 };
