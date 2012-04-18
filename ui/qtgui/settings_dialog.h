@@ -1,10 +1,13 @@
 #ifndef SETTINGS_DIALOG_H
 #define SETTINGS_DIALOG_H
 
+#include "qt_view.h"
 #include <QtGui/QDialog>
 #include "ui_settings_dialog.h"
 
 namespace sdc {
+
+class Service;
 
 class SettingsListItem : public QListWidgetItem {
  public:
@@ -20,7 +23,7 @@ class SettingsListItem : public QListWidgetItem {
   QWidget* page_;
 };
 
-class SettingsDialog : public QDialog
+class SettingsDialog : public QDialog, public QtView
 {
     Q_OBJECT
 
@@ -28,13 +31,20 @@ class SettingsDialog : public QDialog
   SettingsDialog(QWidget *parent = 0);
   ~SettingsDialog();
 
- public slots:
+ private slots:
   void ChangePage(QListWidgetItem* current, QListWidgetItem* previous);
+  void ShowNewAccountDialog();
+  void RefreshAccountsTable();
+  void ManageAccountsTableDataChanged(QTableWidgetItem* item);
+  void AccountSelected();
+  void DeleteAccount();
+  void EditAccount();
 
  private:
-  void PrepareSettingsDialog();
+  void Prepare();
 
   Ui::SettingsDialogClass ui;
+  std::vector<Service*> services_;
 };
 
 } /* namespace sdc */

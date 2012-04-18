@@ -13,10 +13,16 @@
 #include "boost/noncopyable.hpp"
 #include "boost/thread.hpp"
 #include "boost/shared_ptr.hpp"
+#include "boost/signals2.hpp"
+#include <vector>
+#include <map>
 
 namespace sdc {
 
+class AccountData;
 class Message;
+class Service;
+class ServiceModel;
 class UI;
 
 /**
@@ -29,12 +35,27 @@ class Core : boost::noncopyable {
 	~Core();
 	void Start();
 	void Exit();
-	EventManager* event_manager() { return g_event_manager; }
-	ConnectionManager* connection_manager() { return g_connection_manager; }
+
+	EventManager* event_manager() {
+	  return g_event_manager;
+	}
+	ConnectionManager* connections() {
+	  return g_connection_manager;
+	}
+	ConfigManager* data() {
+	  return g_config_manager;
+	}
+
+	std::vector<Service*> services();
+	Service* service(const PluginSignature &/* signature */);
 
 	int GetReturnCode() { return return_code_; }
-
-	void Process(boost::shared_ptr<Message> message); // Method that takes care of incomming message processing, it will be probably change to individual manager
+	// Method that takes care of incomming message processing, it will be probably change to individual manager
+	void Process(boost::shared_ptr<Message> message);
+	/**
+   * Signals
+   */
+  boost::signals2::signal0<void>  onGuiPrepared;
 
  private:
 	void Init();
@@ -47,8 +68,15 @@ class Core : boost::noncopyable {
 	bool is_gui_prepared_;
 	//boost::thread ui_; // Qt GUI cannot run in secondary thread
   UI* ui_;
-
 	int return_code_;
+	/**
+	 * Data
+	 */
+	void ActivateAccount(AccountData* data);
+	void DeactivateAccount(AccountData* data);
+
+  std::vector<ServiceModel*> service_models_;
+  std::map<PluginSignature, Service*> services_; /// Pluged-in services and their configuration options
 };
 
 }

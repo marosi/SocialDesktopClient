@@ -2,13 +2,18 @@
 TARGET = social_desktop_client
 QT += core \
     gui
-HEADERS += ui/qtgui/mainwindow.h \
+HEADERS += ui/qtgui/new_account_widget.h \
+    ui/qtgui/qt_service.h \
+    ui/qtgui/new_account_dialog.h \
+    ui/qtgui/qt_service_model.h \
+    core/include/account_data.h \
+    ui/qtgui/settings_dialog_controller.h \
+    ui/qtgui/qt_view.h \
+    ui/qtgui/qt_gui.h \
+    ui/qtgui/mainwindow.h \
     ui/qtgui/settings_dialog.h \
-    core/include/qt_settings_controller.h \
-    core/include/qt_service_controller.h \
     core/include/core_anchor.h \
     core/include/ui.h \
-    core/include/qt_gui.h \
     core/include/commands.h \
     core/include/contact.h \
     core/include/content.h \
@@ -16,10 +21,8 @@ HEADERS += ui/qtgui/mainwindow.h \
     core/include/service_view.h \
     core/include/service_model.h \
     core/include/service_controller.h \
-    core/include/qt_controller.h \
     core/include/mvc_typedefs.h \
     core/include/connection.h \
-    core/include/qt_view.h \
     core/include/observer.h \
     core/include/model.h \
     core/include/view.h \
@@ -34,10 +37,11 @@ HEADERS += ui/qtgui/mainwindow.h \
     core/include/config_manager.h \
     core/include/connection_manager.h \
     core/include/plugin_manager.h
-SOURCES += ui/qtgui/settings_dialog.cc \
-    core/qt_gui.cc \
+SOURCES += ui/qtgui/new_account_dialog.cpp \
+    ui/qtgui/qt_gui.cc \
+    ui/qtgui/qt_view.cc \
+    ui/qtgui/settings_dialog.cc \
     core/ui.cc \
-    core/qt_view.cc \
     core/connection.cc \
     core/observer.cc \
     core/model.cc \
@@ -51,7 +55,8 @@ SOURCES += ui/qtgui/settings_dialog.cc \
     core/connection_manager.cc \
     core/plugin_manager.cc \
     main.cpp
-FORMS += ui/qtgui/mainwindow.ui \
+FORMS += ui/qtgui/new_account_dialog.ui \
+    ui/qtgui/mainwindow.ui \
     ui/qtgui/settings_dialog.ui
 RESOURCES += 
 INCLUDEPATH += core/include \

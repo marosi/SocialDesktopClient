@@ -6,7 +6,10 @@
  */
 
 #include "core.h"
+#include "account_data.h"
 #include "core_typedefs.h"
+#include "connection.h"
+#include "service_model.h"
 #include "ui.h"
 #include "qt_gui.h"
 // Managers
@@ -17,9 +20,58 @@
 #include "data_manager.h"
 // Boost
 #include "boost/shared_ptr.hpp"
+#include "boost/foreach.hpp"
+#include "boost/bind.hpp"
+#include <algorithm>
+
+using namespace boost;
+using namespace std;
 
 namespace sdc {
 
+template std::map<PluginSignature, Service*> PluginManager::CreateAllInstances<Service>(const PluginType);
+
+/**
+ * Public interface
+ */
+std::vector<Service*> Core::services() {
+  std::vector<Service*> result;
+  std::map<PluginSignature, Service*>::iterator it;
+  for(it = services_.begin(); it != services_.end(); ++it) {
+    result.push_back(it->second);
+  }
+  return result;
+}
+
+Service* Core::service(const PluginSignature &signature) {
+  return services_[signature];
+}
+
+void Core::Process(boost::shared_ptr<Message> message) {
+  //test_controller_->PrintMessageFromPlugin(message);
+}
+
+/**
+ * Private interface
+ */
+void Core::ActivateAccount(AccountData* account) {
+  ServiceModel* sam = account->GetService()->CreateServiceModel(account);
+  account->SetServiceModel(sam);
+  service_models_.push_back(sam);
+  // connection
+  Connection* conn = sam->CreateConnection();
+  connections()->MakeConnection(conn);
+}
+
+void Core::DeactivateAccount(AccountData* account) {
+  ServiceModel* sam = account->GetServiceModel();
+  vector<ServiceModel*>::iterator it = find(service_models_.begin(), service_models_.end(), sam);
+  service_models_.erase(it);
+}
+
+/**
+ * Core initialization
+ */
 // Manager global variables definition
 ConfigManager* g_config_manager;
 ConnectionManager* g_connection_manager;
@@ -44,16 +96,42 @@ Core::~Core() {
 }
 
 void Core::Start() {
-
   // Set log reporting level
   Log::SetGlobalLevel(Log::DEBUG4);
   // Initialization
   g_plugin_manager->LoadPlugins();
   g_config_manager->Init();
-  g_config_manager->LoadConfig("debug/configuration.conf");
+
+
+  // Load Services
+  services_ = g_plugin_manager->CreateAllInstances<Service>(SERVICE); // TODO: Change method of getting instances from plugin manager
+  std::map<PluginSignature, Service*>::iterator it = services_.begin();
+  for(it = services_.begin(); it != services_.end(); ++it) {
+    it->second->SetSignature(it->first);
+    LOG(TRACE) << "Services class '" << it->first << "' loaded successfuly.";
+  }
+
+  // Map service object with loaded accounts
+  BOOST_FOREACH (AccountData* account, data()->accounts()) {
+    if (services_.count(account->GetServiceSignature()) > 0) {
+      Service* service = services_[account->GetServiceSignature()];
+      account->SetService(service);
+    }
+  }
+
+  BOOST_FOREACH (AccountData* account, data()->accounts()) {
+    LOG(DEBUG) << account->IsEnabled();
+    if (account->IsEnabled()) {
+      this->ActivateAccount(account);
+    }
+  }
+  data()->onAccountEnabled.connect(bind(&Core::ActivateAccount, this, _1));
+  data()->onAccountDisabled.connect(bind(&Core::DeactivateAccount, this, _1));
+
   g_connection_manager->InitServiceConnections();
   g_connection_manager->ConnectAll();
 
+  LOG(INFO) << "Main thread ID: " << boost::this_thread::get_id();
   // execute application core in a non-blocking thread
   core_ = boost::thread(&Core::Exec, this);
 
@@ -70,23 +148,6 @@ void Core::Start() {
   core_.join();
 }
 
-void Core::Init() {
-  g_config_manager = new ConfigManager(this);
-  g_connection_manager = new ConnectionManager(this);
-  g_plugin_manager = new PluginManager(this);
-  g_event_manager = new EventManager(this);
-  g_data_manager = new DataManager(this);
-}
-
-void Core::Exec() {
-  { // Core loop should not be started unless the GUI is prepared
-    boost::unique_lock<boost::mutex> lock(mutex_);
-    while(!is_gui_prepared_)
-      gui_unprepared_.wait(lock);
-  }
-  g_event_manager->Run();
-}
-
 void Core::Exit() {
   g_data_manager->OnExit();
   g_plugin_manager->OnExit();
@@ -96,8 +157,23 @@ void Core::Exit() {
   g_event_manager->Stop();
 }
 
-void Core::Process(boost::shared_ptr<Message> message) {
-  //test_controller_->PrintMessageFromPlugin(message);
+void Core::Init() {
+  g_config_manager = new ConfigManager(this);
+  g_connection_manager = new ConnectionManager(this);
+  g_plugin_manager = new PluginManager(this);
+  g_event_manager = new EventManager(this);
+  g_data_manager = new DataManager(this);
+}
+
+void Core::Exec() {
+  LOG(INFO) << "Core thread ID: " << boost::this_thread::get_id();
+  { // Core loop should not be started unless the GUI is prepared
+    boost::unique_lock<boost::mutex> lock(mutex_);
+    while(!is_gui_prepared_)
+      gui_unprepared_.wait(lock);
+  }
+  onGuiPrepared();
+  g_event_manager->Run();
 }
 
 void Core::ExecUi() {

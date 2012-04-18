@@ -3,35 +3,38 @@
 
 #include "log.h"
 #include "ui_mainwindow.h"
-#include "view.h"
+#include "qt_view.h"
+#include "settings_dialog.h"
 #include <QtGui/QMainWindow>
 #include "boost/shared_ptr.hpp"
 
 namespace sdc {
 
-class MainWindow : public QMainWindow, public sdc::View
+class QtGui;
+
+class MainWindow : public QMainWindow, public sdc::QtView
 {
     Q_OBJECT
 
  public:
-  MainWindow(QWidget *parent = 0) {
+  MainWindow(QtGui* qtgui) : QtView(qtgui) { // setting Qt GUI layer object to the main View object
     ui_.setupUi(this);
+
+    connect(ui_.actionSettings, SIGNAL(triggered()),
+        this, SLOT(CreateSettingsView()));
   }
 
   ~MainWindow() {}
 
   void AddServiceWidget(QWidget* service) {
+    service->setParent(this);
     ui_.contentPane->layout()->addWidget(service);
   }
 
-  void SetSettingsView(QWidget* settings) {
-    settings_ = settings;
-    assert(settings_);
-    connect(ui_.actionSettings, SIGNAL(triggered()),
-            settings_, SLOT(show()));
-  }
-
  public slots:
+  void CreateSettingsView() {
+    settings_ = new SettingsDialog(this);
+  }
 
  private:
   Ui::MainWindowClass ui_;

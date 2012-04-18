@@ -20,6 +20,8 @@ namespace sdc {
 
 class Connection;
 class ServiceController;
+class ServiceModel;
+class AccountData;
 
 // @class Service
 /// @brief TODO:
@@ -34,9 +36,20 @@ class Service {
   virtual ServiceModelRef CreateMainModel()=0; // TODO: Delete, has no more sense
   virtual ServiceViewRef CreateMainView()=0; // TODO: Delete, has no more sense
   virtual ServiceController* CreateServiceController()=0;
+  virtual ServiceModel* CreateServiceModel(AccountData*)=0;
   //virtual void InitializeGui(sdc::MainView* main_view)=0; // TODO: Delete, has no more sense
 
+
+  void SetSignature(std::string signature) {
+    signature_ = signature;
+  }
+
+  std::string GetSignature() {
+    return signature_;
+  }
+
  protected:
+  std::string signature_;
   std::string name_;
   std::string description_;
 };

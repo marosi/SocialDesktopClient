@@ -125,7 +125,7 @@ class BuddycloudBot {
   public:
     friend class BuddycloudConnection;
 
-    BuddycloudBot(BuddycloudConnection* connection, Swift::NetworkFactories* networkFactories);
+    BuddycloudBot(const std::string &jid, const std::string &password);
     ~BuddycloudBot();
 
     void SendMessage(std::string msg);
@@ -186,7 +186,11 @@ class BuddycloudBot {
     void AddParserFactory(Swift::PayloadParserFactory* factory);
     void AddSerializer(Swift::PayloadSerializer* serializer);
 
-    BuddycloudConnection* connection_;
+    /**
+     * Switen engine
+     */
+    Swift::SimpleEventLoop* loop_;
+    Swift::NetworkFactories* network_;
     Swift::Client* client_;
     Swift::ClientXMLTracer* tracer_;
 

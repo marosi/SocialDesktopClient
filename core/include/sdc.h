@@ -32,6 +32,8 @@
 #include "commands.h"
 #include "content.h"
 #include "contact.h"
-
+#include "qt_service_model.h"
+#include "qt_service.h"
+#include "new_account_widget.h"
 
 #endif /* SDC_H_ */

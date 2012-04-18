@@ -12,19 +12,19 @@
 #define CORE_CONNECTION_H_
 
 #include "service.h"
+#include "core_anchor.h"
 #include "core_typedefs.h"
 #include <list>
 
 namespace sdc {
 
 class Message;
-class Core;
 class Service;
 class ServiceController;
 
 /// @class Connection
 /// @brief TODO:comment
-class Connection {
+class Connection : public CoreAnchor {
  public:
   friend class ConnectionManager;
 
@@ -34,6 +34,7 @@ class Connection {
   virtual void Send(RequestRef request);
   virtual void DeleteRequest(RequestRef request);
 
+  /// @{ DEPRECATED
   bool IsActive() const {
     return is_active_;
   }
@@ -43,12 +44,11 @@ class Connection {
   void SetController(ServiceControllerRef ctrler) {
     controller_ = ctrler;
   }
-
+  /// @}
   /// @{
   virtual void SendMessage(boost::shared_ptr<Message> message) = 0;
-  virtual void RecieveMessage(boost::shared_ptr<Message> message);
   /// @}
-
+  /// @{ DEPRECATED
   template<class Controller>
   boost::shared_ptr<Controller> GetController() {
       return boost::dynamic_pointer_cast<Controller>(controller_);
@@ -57,23 +57,15 @@ class Connection {
   Service* service() const {
     return service_;
   }
-
- protected:
-  Core* core() const {
-    return core_;
-  }
+  /// @}
 
  private:
-  void SetCore(Core* core) {
-    core_ = core;
-  }
   /**
    * Connection thread method callback
    */
   void DoRun();
   virtual void Run() = 0;
 
-  Core* core_;
   Service* service_;
   boost::shared_ptr<ServiceController> controller_;
   bool is_active_;

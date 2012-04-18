@@ -23,7 +23,7 @@ class ServiceController;
 class UI : public CoreAnchor { // TODO: Abstract manager holds anchor to Core, should Ui be Manager or should AbstractManager be kind of Core referent
  public:
   UI(Core* core) : CoreAnchor(core) {}
-  ~UI();
+  virtual ~UI();
 
   virtual void Init();
 
@@ -40,13 +40,6 @@ class UI : public CoreAnchor { // TODO: Abstract manager holds anchor to Core, s
   }
 
   virtual ServiceController* CreateServiceController(Service* service);
-  template<class C>
-  C* CreateController() {
-    C* result = new C;
-    Controller* controller = result;
-    controller->SetCore(this->GetCore());
-    return result;
-  }
 
  private:
   std::vector<ServiceController*> controllers_;

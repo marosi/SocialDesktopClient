@@ -19,13 +19,18 @@ namespace sdc {
 class QtSettingsController;
 class MainWindow;
 
-class QtGui : public UI {
+/**
+ * Kind of a main controller in MVC abstraction and also Manager in Core abstraction.
+ */
+class QtGui : public QObject, public UI {
+
+    Q_OBJECT
+
  public:
   QtGui(Core* core, int argc, char* argv[])
       : UI(core),
         app_(argc, argv),
-        main_view_(0),
-        settings_controller_(0) {}
+        main_view_(0) {}
 
   void Init();
 
@@ -36,10 +41,21 @@ class QtGui : public UI {
  private:
   QApplication app_;
   MainWindow* main_view_;
-  /*
-   * Controllers
-   */
-  QtSettingsController* settings_controller_;
+
+ /**
+  * Qt compatibility core layer
+  */
+  void ConnectCoreSignals();
+
+  void OnAccountsChanged() {
+    emit accountsChanged();
+  }
+  void OnGuiPrepared() {
+    emit guiPrepared();
+  }
+ signals:
+  void accountsChanged();
+  void guiPrepared();
 };
 
 } /* namespace sdc */

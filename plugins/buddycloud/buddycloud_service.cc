@@ -10,6 +10,8 @@
 #include "b_model.h"
 #include "b_view.h"
 #include "buddycloud_connection.h"
+#include "buddycloud_model.h"
+#include "bc_new_account_widget.h"
 
 using namespace sdc;
 
@@ -38,4 +40,10 @@ ServiceViewRef BuddycloudService::CreateMainView() {
 }
 ServiceController* BuddycloudService::CreateServiceController() {
   return new BController;
+}
+ServiceModel* BuddycloudService::CreateServiceModel(AccountData* account_data) {
+  return new BuddycloudModel(account_data);
+}
+NewAccountWidget* BuddycloudService::CreateNewAccountPane() {
+  return new BcNewAccountWidget;
 }

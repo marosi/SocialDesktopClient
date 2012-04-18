@@ -33,11 +33,14 @@ class ConnectionManager : public AbstractManager {
   void ConnectAll();
   void GetAllActiveConnections(std::vector<ConnectionRef> &result) const;
 
+  void MakeConnection(Connection* connection);
+
  private:
   void RemoveInactiveConnections() {} // TODO: impelment
 
 
-  std::vector<ConnectionRef> connections_;
+  std::vector<ConnectionRef> connections_old; // TODO: remove
+  std::vector<Connection*> connections_;
   boost::thread_group threads_;
 };
 

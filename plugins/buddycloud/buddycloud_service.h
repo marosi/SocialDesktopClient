@@ -13,13 +13,16 @@
 
 #include "sdc.h"
 
-class BuddycloudService : public sdc::Service {
+class BuddycloudService : public sdc::QtService {
  public:
   sdc::Connection* CreateConnection();
   sdc::ServiceModelRef CreateMainModel();
   sdc::ServiceViewRef CreateMainView();
   sdc::ServiceController* CreateServiceController();
   //void InitializeGui(sdc::MainView* main_view);
+  sdc::ServiceModel* CreateServiceModel(sdc::AccountData* account_data);
+
+  sdc::NewAccountWidget* CreateNewAccountPane();
 };
 
 #endif /* BUDDYCLOUD_SERVICE_H_ */

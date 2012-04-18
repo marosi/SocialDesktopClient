@@ -9,15 +9,14 @@
 #ifndef CORE_CONFIGMANAGER_H_
 #define CORE_CONFIGMANAGER_H_
 
+#include "account_data.h"
 #include "common.h"
 #include "abstract_manager.h"
-#include "service.h"
-#include "boost/archive/xml_iarchive.hpp"
-#include "boost/archive/xml_oarchive.hpp"
 #include "boost/serialization/nvp.hpp"
 #include "boost/serialization/map.hpp"
 #include "boost/serialization/string.hpp"
 #include "boost/serialization/vector.hpp"
+#include "boost/signals2.hpp"
 #include <string>
 #include <vector>
 #include <map>
@@ -41,6 +40,7 @@ class Properties {
 
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version) {
+    if (version) {}
     ar & BOOST_SERIALIZATION_NVP(props_);
   }
 };
@@ -55,58 +55,9 @@ class Library {
 
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version) {
-      ar & BOOST_SERIALIZATION_NVP(enabled_);
-      ar & BOOST_SERIALIZATION_NVP(filename_);
-  }
-};
-
-class Account {
- public:
-  friend class boost::serialization::access;
-
-  void SetUid(const std::string &uid) {
-    uid_ = uid;
-  }
-
-  void SetPassword(const std::string &password) {
-    password_ = password;
-  }
-
-  void SetServiceSignature(const PluginSignature &signature) {
-    service_ = signature;
-  }
-
-  void SetService(Service* service) {
-    service_ptr_ = service;
-  }
-
-  std::string GetUid() {
-    return uid_;
-  }
-
-  std::string GetPassword() {
-    return password_;
-  }
-
-  PluginSignature GetServiceSignature() {
-    return service_;
-  }
-
-  Service* GetService() {
-    return service_ptr_;
-  }
-
- private:
-  Service* service_ptr_;
-  PluginSignature service_;
-  std::string uid_;
-  std::string password_;
-
-  template<class Archive>
-  void serialize(Archive & ar, const unsigned int version) {
-      ar & BOOST_SERIALIZATION_NVP(service_);
-      ar & BOOST_SERIALIZATION_NVP(uid_);
-      ar & BOOST_SERIALIZATION_NVP(password_);
+    if (version) {}
+    ar & BOOST_SERIALIZATION_NVP(enabled_);
+    ar & BOOST_SERIALIZATION_NVP(filename_);
   }
 };
 
@@ -115,40 +66,69 @@ class Account {
 class ConfigManager : public AbstractManager, public Properties {
  public:
   friend class boost::serialization::access;
+  friend class Core;
+
   ConfigManager(Core* core) : AbstractManager(core) {}
   void Init();
 
-  void AddAccount(const Account &account) {
-    accounts_.push_back(account);
+  void SetEnabledAccount(int index, bool is_enabled) {
+    LOG(DEBUG) << accounts_[index]->GetUid();
+    accounts_[index]->SetEnabled(is_enabled);
+    onAccountsChanged();
+    if (is_enabled) {
+      onAccountEnabled(accounts_[index]);
+    } else {
+      onAccountDisabled(accounts_[index]);
+    }
   }
 
-  const std::vector<Account> GetAccounts() const {
+  void AddAccount(AccountData* account) {
+    accounts_.push_back(account);
+    onAccountsChanged();
+  }
+
+  void SetAccount(int index, AccountData* data) {
+    accounts_[index] = data;
+    onAccountsChanged();
+  }
+
+  void RemoveAccount(int index) {
+    accounts_.erase(accounts_.begin() + index);
+    onAccountsChanged();
+  }
+
+  AccountData* GetAccount(int index) {
+    return accounts_[index];
+  }
+
+  std::vector<AccountData*> GetAccounts() const {
     return accounts_;
   }
-
-  // TODO: Deprecated @{
-  void LoadConfig(const std::string &);
-  Service* GetService(const PluginSignature &/*signature*/);
-  // @}
 
   void OnExit();
 
   //void RegisterConnection(ConnectionRegistration*); //HAHA 111st design approach
+
+  boost::signals2::signal0<void> onAccountsChanged;
+  boost::signals2::signal1<void, AccountData*> onAccountEnabled;
+  boost::signals2::signal1<void, AccountData*> onAccountDisabled;
+
  private:
+  std::vector<AccountData*>& accounts() {
+    return accounts_;
+  }
+
   static const std::string kConfFile;
   std::vector<Library> libraries_;
-  std::vector<Account> accounts_;
-  /*
-   * Dynamic data
-   */
-  std::map<PluginSignature, Service*> services_; /// Pluged-in services and their configuration options
+  std::vector<AccountData*> accounts_;
 
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version) {
-      //ar & boost::serialization::base_object<Properties>(*this);
-      ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Properties);
-      ar & BOOST_SERIALIZATION_NVP(libraries_);
-      ar & BOOST_SERIALIZATION_NVP(accounts_);
+    //ar & boost::serialization::base_object<Properties>(*this);
+    if (version) {}
+    ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Properties);
+    ar & BOOST_SERIALIZATION_NVP(libraries_);
+    ar & BOOST_SERIALIZATION_NVP(accounts_);
   }
 };
 

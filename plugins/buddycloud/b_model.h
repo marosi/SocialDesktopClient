@@ -19,6 +19,8 @@ class BModel : public sdc::ServiceModel {
 
   BModel() : online_state_(OFFLINE) {}
 
+  sdc::Connection* CreateConnection() {}
+
   void SetOnlineState(std::string state) {
     if(state == "offline") {
       online_state_ = OFFLINE;

@@ -17,12 +17,14 @@ namespace sdc {
 
 class CoreAnchor {
  public:
-  CoreAnchor() {} // TODO: Remove this together with SetCore() method
+  CoreAnchor() : core_(0) {} // TODO: Remove this together with SetCore() method
   CoreAnchor(Core* core) {
     core_ = core;
   }
+  virtual ~CoreAnchor() {}
 
-  void SetCore(Core* core) { // TODO: Modify so the core would be set in ctor in every manager.
+  void SetCore(Core* core) {// TODO: Modify so the core would be set in ctor in every manager.
+    assert(core);
     core_ = core;
   }
 

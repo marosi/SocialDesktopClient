@@ -144,8 +144,10 @@ std::map<PluginSignature, T*> PluginManager::CreateAllInstances(const PluginType
   T* inst;
   for(std::vector<ClassDataRegistration>::iterator it = class_data.begin();
       it != class_data.end(); ++it) {
-    inst = provider.CreateInstance(GetClassSignature(*it));
-    instances.insert(std::pair<PluginSignature, T*>(GetClassSignature(*it), inst));
+
+    std::string signature = GetClassSignature(*it);
+    inst = provider.CreateInstance(signature);
+    instances.insert(std::pair<PluginSignature, T*>(signature, inst));
   }
   return instances;
 }

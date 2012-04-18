@@ -12,18 +12,27 @@
 #define QT_CONTROLLER_H_
 
 #include "controller.h"
-#include <QObject>
+#include "core_anchor.h"
+#include "qt_view.h"
 
 namespace sdc {
 
-class qtcontroller : public QObject, public virtual Controller {
-
-  Q_OBJECT
-
+class qtcontroller : public virtual Controller {
 };
 
-class QtController : public qtcontroller {
+class QtController : public QObject, public qtcontroller {
  public:
+  QtController() {
+    LOG(WARNING)
+        << "Controller object of type "
+        << typeid(this).name()
+        << " is without anchor to core so far!";
+  }
+
+  QtController(QtView* view) : CoreAnchor(*view) {
+
+  }
+
   QWidget* GetView() const {
     return view_;
   }

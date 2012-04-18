@@ -6,7 +6,6 @@
  */
 
 #include "buddycloud_bot.h"
-#include "buddycloud_connection.h"
 #include "boost/shared_ptr.hpp"
 
 using namespace Swift;
@@ -14,24 +13,29 @@ using namespace boost;
 using std::string;
 using std::vector;
 
-BuddycloudBot::BuddycloudBot(BuddycloudConnection* connection, NetworkFactories* networkFactories)
-    : connection_(connection) {
-  //client = new Client("sdc_test@jabbim.com", "sdc_test", networkFactories);
-  //client = new Client("maros@buddycloud.org", "udsampia", networkFactories);
-  client_ = new Client("pista@localhost", "pista", networkFactories); // TODO: take uid and password to SDC logic
-  //client = new Client("test_subject@buddycloud.org", "test", networkFactories);
+BuddycloudBot::BuddycloudBot(const string &jid, const string &password) {
+  //Swift::logging = true;
+  loop_ = new SimpleEventLoop;
+  network_ = new BoostNetworkFactories(loop_);
+  //client_ = new Client("sdc_test@jabbim.com", "sdc_test", network_);
+  //client_ = new Client("maros@buddycloud.org", "udsampia", network_);
+  //client_ = new Client("pista@localhost", "pista", network_);
+  //client_ = new Client("test_subject@buddycloud.org", "test", network_);
+  client_ = new Client(jid, password, network_);
+
   client_->setAlwaysTrustCertificates();
-  client_->onConnected.connect(bind(&BuddycloudBot::handleConnected, this));
+  client_->onConnected.connect(
+      bind(&BuddycloudBot::handleConnected, this));
   client_->onMessageReceived.connect(
       bind(&BuddycloudBot::handleMessageReceived, this, _1));
   client_->onPresenceReceived.connect(
       bind(&BuddycloudBot::handlePresenceReceived, this, _1));
   client_->onDataRead.connect( // TODO :: remove
       bind(&BuddycloudBot::handleDataRecieved, this, _1));
+  client_->getStanzaChannel()->onIQReceived.connect(
+      bind(&BuddycloudBot::handleIQRecieved, this, _1));
   // Tracer
   tracer_ = new ClientXMLTracer(client_);
-  // Just playing
-  client_->getStanzaChannel()->onIQReceived.connect(bind(&BuddycloudBot::handleIQRecieved, this, _1));
   // Add parsers and serializers
   AddParserFactories();
   AddSerializers();
@@ -129,7 +133,6 @@ void BuddycloudBot::handleConnected() {
   DiscoverChannelService();
   // Discover user channel
   DiscoverUserSelfChannel();
-  connection_->OnConnected();
 }
 
 void BuddycloudBot::handleIQRecieved(boost::shared_ptr<IQ> iq) {
@@ -158,11 +161,6 @@ void BuddycloudBot::handleMessageReceived(Message::ref message) {
 
     //boost::shared_ptr<IQ> iq = new boost::make_shared()
     //client->getIQRouter()->sendIQ()
-
-    // Transform message into SDC core message format
-
-    // Post message onto EventLoop queue
-    //connection_->RecieveMessage(message->getBody());
   }
 }
 
@@ -190,7 +188,7 @@ void BuddycloudBot::handleRosterReceived(ErrorPayload::ref error) {
 void BuddycloudBot::handleDataRecieved(const SafeByteArray &byte_array) {
   /* WARNING! This breaks the safety of the data in the safe byte array.
      * Do not use in modes that require data safety. */
-  connection_->RecieveMessage(safeByteArrayToString(byte_array));
+  //LOG(DEBUG) << safeByteArrayToString(byte_array));
 }
 
 void BuddycloudBot::AddParserFactories() {

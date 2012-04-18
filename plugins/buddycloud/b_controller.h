@@ -27,16 +27,14 @@ class BController : public sdc::QtServiceController {
   BController();
   ~BController();
   void Initiate();
-
   void SynchronizeContacts() {}
+
 
   /// XMPP testing @{
   void SendDiscoInfo(const std::string &to_attribute, const std::string &node_attribute);
   void SendDiscoItems(const std::string &to_attribute, const std::string &node_attribute);
   void DoSomeThing(const std::string &param);
   /// @}
-
-  // Qt signal wrappers
 
  public slots:
   void SwitchOnlineState(const QString &state);

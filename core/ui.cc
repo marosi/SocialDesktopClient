@@ -25,7 +25,7 @@ UI::~UI() {
 void UI::Init() {
   // Launch GUI of each initiated service connection
   std::vector<ConnectionRef> conns;
-  core()->connection_manager()->GetAllActiveConnections(conns); // TOOD: connection_manager is more of service_manager...
+  core()->connections()->GetAllActiveConnections(conns); // TOOD: connection_manager is more of service_manager...
   std::vector<ConnectionRef>::iterator it;
   for(it = conns.begin(); it != conns.end(); ++it) {
     ConnectionRef conn = (*it);
@@ -47,7 +47,6 @@ void UI::Init() {
 }
 
 ServiceController* UI::CreateServiceController(Service* service) {
-  LOG(DEBUG) << "Ui::CreateServiceController call";
   assert(service);
   LOG(DEBUG) << service;
   ServiceController* result = service->CreateServiceController();

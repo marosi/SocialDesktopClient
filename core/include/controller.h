@@ -11,17 +11,17 @@
 #ifndef CORE_CONTROLLER_H_
 #define CORE_CONTROLLER_H_
 
-#include "mvc_typedefs.h"
 #include "core_anchor.h"
+#include "log.h"
+#include "mvc_typedefs.h"
 #include "boost/make_shared.hpp"
 #include "boost/shared_ptr.hpp"
 #include "boost/enable_shared_from_this.hpp"
 
 namespace sdc {
 
-class Controller : public CoreAnchor {
+class Controller : virtual public CoreAnchor {
  public:
-  Controller() {}
   void SetModel(ModelRef model) {
     model_ = model;
   }

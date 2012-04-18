@@ -12,9 +12,14 @@
 #define QT_VIEW_H_
 
 #include "view.h"
+#include "core_anchor.h"
+#include "qt_gui.h"
 #include <QtGui/QWidget>
+#include "boost/cast.hpp"
 
 namespace sdc {
+
+class Core;
 
 class qtview : public QWidget, public View {
 
@@ -31,8 +36,29 @@ class qtview : public QWidget, public View {
   void update();
 };
 
-class QtView : public qtview {
- // TODO: implement non-generic qt view
+class QtView : public CoreAnchor {
+ public:
+  QtView(QtGui* qt)
+      : CoreAnchor(*qt), // called CoreAnchor copy constructor, therefore this view should have its own anchor to Core
+        parent_(0),
+        root_(qt) {}
+  QtView(QtView* view)
+      : CoreAnchor(*view),
+        parent_(view),
+        root_(parent_->qtgui()) {}
+  QtView(QWidget* view)
+      : CoreAnchor(*boost::polymorphic_cast<QtView*>(view)),
+        parent_(boost::polymorphic_cast<QtView*>(view)),
+        root_(parent_->qtgui()) {}
+  virtual ~QtView() {}
+
+  QtGui* qtgui() {
+    return root_;
+  }
+
+ private:
+  QtView* parent_;
+  QtGui* root_;
 };
 
 template<class Controller, class Model>
