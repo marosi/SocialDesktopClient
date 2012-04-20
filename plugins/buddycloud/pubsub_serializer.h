@@ -19,14 +19,14 @@ class AtomSerializer : public Swift::GenericPayloadSerializer<Atom> {
   std::string serializePayload(boost::shared_ptr<Atom> payload) const;
 };
 
-class PubsubSerializer : public Swift::GenericPayloadSerializer<Pubsub> {
+/*class PubsubSerializer : public Swift::GenericPayloadSerializer<Pubsub> {
  public:
   PubsubSerializer();
   virtual std::string serializePayload(boost::shared_ptr<Pubsub> payload) const;
 
  private:
   Swift::PayloadSerializerCollection serializers_;
-};
+};*/
 
 class PubsubItemsRequestSerializer : public Swift::GenericPayloadSerializer<PubsubItemsRequest> {
  public:

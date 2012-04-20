@@ -36,14 +36,6 @@ void BuddycloudConnection::Disconnect() {
 }
 
 /// Testing @{
-void BuddycloudConnection::SendMessage(shared_ptr<sdc::Message> msg) {
-  bot_->SendMessage(msg->GetText());
-}
-
-void BuddycloudConnection::SendMessage(const string &msg) {
-  shared_ptr<sdc::Message> message = boost::make_shared<sdc::Message>(msg);
-  SendMessage(message);
-}
 
 void BuddycloudConnection::HandleSendDiscoInfo(const string &to_attribute, const string &node_attribute) {
   bot_->SendDiscoInfo(to_attribute, node_attribute);

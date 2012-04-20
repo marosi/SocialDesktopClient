@@ -61,12 +61,19 @@ void Core::ActivateAccount(AccountData* account) {
   // connection
   Connection* conn = sam->CreateConnection();
   connections()->MakeConnection(conn);
+  // hook model with its service and connection
+  sam->service_ = account->GetService();
+  sam->connection_ = conn;
+  // emit signal
+  onAccountActivated(account);
 }
 
 void Core::DeactivateAccount(AccountData* account) {
   ServiceModel* sam = account->GetServiceModel();
   vector<ServiceModel*>::iterator it = find(service_models_.begin(), service_models_.end(), sam);
   service_models_.erase(it);
+  // emit signal
+  onAccountDeactivated(account);
 }
 
 /**
@@ -120,7 +127,6 @@ void Core::Start() {
   }
 
   BOOST_FOREACH (AccountData* account, data()->accounts()) {
-    LOG(DEBUG) << account->IsEnabled();
     if (account->IsEnabled()) {
       this->ActivateAccount(account);
     }
@@ -128,7 +134,10 @@ void Core::Start() {
   data()->onAccountEnabled.connect(bind(&Core::ActivateAccount, this, _1));
   data()->onAccountDisabled.connect(bind(&Core::DeactivateAccount, this, _1));
 
-  connections()->ConnectAll();
+  BOOST_FOREACH (ServiceModel* model, service_models_) {
+    if (model->GetAccount()->GetStatus()) // status == 0 is offline status
+      model->Connect();
+  }
 
   LOG(INFO) << "Main thread ID: " << boost::this_thread::get_id();
   // execute application core in a non-blocking thread

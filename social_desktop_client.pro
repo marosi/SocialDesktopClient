@@ -2,7 +2,8 @@
 TARGET = social_desktop_client
 QT += core \
     gui
-HEADERS += ui/qtgui/new_account_widget.h \
+HEADERS += ui/qtgui/account_button.h \
+    ui/qtgui/new_account_widget.h \
     ui/qtgui/qt_service.h \
     ui/qtgui/new_account_dialog.h \
     ui/qtgui/qt_service_model.h \
@@ -15,7 +16,6 @@ HEADERS += ui/qtgui/new_account_widget.h \
     core/include/core_anchor.h \
     core/include/ui.h \
     core/include/commands.h \
-    core/include/contact.h \
     core/include/content.h \
     core/include/core_typedefs.h \
     core/include/service_view.h \
@@ -37,7 +37,11 @@ HEADERS += ui/qtgui/new_account_widget.h \
     core/include/config_manager.h \
     core/include/connection_manager.h \
     core/include/plugin_manager.h
-SOURCES += ui/qtgui/new_account_dialog.cpp \
+SOURCES += ui/qtgui/qt_service_model.cc \
+    ui/qtgui/qt_service.cc \
+    ui/qtgui/account_button.cpp \
+    core/service_model.cc \
+    ui/qtgui/new_account_dialog.cpp \
     ui/qtgui/qt_gui.cc \
     ui/qtgui/qt_view.cc \
     ui/qtgui/settings_dialog.cc \
@@ -55,7 +59,8 @@ SOURCES += ui/qtgui/new_account_dialog.cpp \
     core/connection_manager.cc \
     core/plugin_manager.cc \
     main.cpp
-FORMS += ui/qtgui/new_account_dialog.ui \
+FORMS += ui/qtgui/account_button.ui \
+    ui/qtgui/new_account_dialog.ui \
     ui/qtgui/mainwindow.ui \
     ui/qtgui/settings_dialog.ui
 RESOURCES += 

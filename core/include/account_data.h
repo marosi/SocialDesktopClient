@@ -24,10 +24,18 @@ class AccountData {
  public:
   friend class boost::serialization::access;
 
+  enum Status {
+    Offline = 0,
+    Online = 1
+  };
+
   AccountData()
       : service_ptr_(0),
         service_model_ptr_(0) {}
 
+  /*
+   * Setters
+   */
   void SetUid(const std::string &uid) {
     uid_ = uid;
   }
@@ -56,6 +64,13 @@ class AccountData {
     data_index_ = index;
   }
 
+  void SetStatus(int status) {
+    status_ = status;
+  }
+
+  /*
+   * Getters
+   */
   std::string GetUid() const {
     return uid_;
   }
@@ -86,6 +101,10 @@ class AccountData {
     return data_index_;
   }
 
+  int GetStatus() const {
+    return status_;
+  }
+
  private:
   Service* service_ptr_;  // service instance
   ServiceModel* service_model_ptr_; // service model instance
@@ -95,6 +114,7 @@ class AccountData {
   std::string uid_;
   std::string password_;
   bool is_enabled_;
+  int status_;
 
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version) {
@@ -103,6 +123,7 @@ class AccountData {
     ar & BOOST_SERIALIZATION_NVP(is_enabled_);
     ar & BOOST_SERIALIZATION_NVP(uid_);
     ar & BOOST_SERIALIZATION_NVP(password_);
+    ar & BOOST_SERIALIZATION_NVP(status_);
   }
 };
 

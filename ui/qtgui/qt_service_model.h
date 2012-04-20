@@ -12,6 +12,8 @@
 #define QT_SERVICE_MODEL_H_
 
 #include "service_model.h"
+#include "content.h"
+#include "qt_service.h"
 #include <QObject>
 
 namespace sdc {
@@ -22,6 +24,14 @@ class QtServiceModel : public QObject, public ServiceModel {
 
  public:
   QtServiceModel(AccountData* account) : ServiceModel(account) {}
+
+  QtService* GetQtService();
+
+  //Items<Contact::Ref>::Ref GetContacts() {}
+
+ public slots:
+
+ signals:
 
  private:
 };

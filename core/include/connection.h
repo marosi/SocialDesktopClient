@@ -45,9 +45,6 @@ class Connection : public CoreAnchor {
     controller_ = ctrler;
   }
   /// @}
-  /// @{
-  virtual void SendMessage(boost::shared_ptr<Message> message) = 0;
-  /// @}
   /// @{ DEPRECATED
   template<class Controller>
   boost::shared_ptr<Controller> GetController() {

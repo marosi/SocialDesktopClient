@@ -12,7 +12,7 @@
 #define SWIFT_COMMANDS_H_
 
 #include "sdc.h"
-#include "pubsub.h"
+#include "pubsub_requests.h"
 #include "Swiften/Swiften.h"
 #include "boost/shared_ptr.hpp"
 

@@ -48,9 +48,12 @@ class Core : boost::noncopyable {
 	PluginManager* plugins() {
 	  return g_plugin_manager;
 	}
-
 	std::vector<Service*> services();
 	Service* service(const PluginSignature &/* signature */);
+
+	std::vector<ServiceModel*> GetModels() {
+	  return service_models_;
+	}
 
 	int GetReturnCode() { return return_code_; }
 	// Method that takes care of incomming message processing, it will be probably change to individual manager
@@ -59,6 +62,8 @@ class Core : boost::noncopyable {
    * Signals
    */
   boost::signals2::signal0<void>  onGuiPrepared;
+  boost::signals2::signal1<void, AccountData*> onAccountActivated;
+  boost::signals2::signal1<void, AccountData*> onAccountDeactivated;
 
  private:
 	void Init();

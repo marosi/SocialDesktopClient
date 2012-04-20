@@ -46,6 +46,7 @@ std::string AtomSerializer::serializePayload(boost::shared_ptr<Atom> payload) co
   return entry.serialize();
 }
 
+/*
 PubsubSerializer::PubsubSerializer() {
   serializers_.addSerializer(new AtomSerializer);
 }
@@ -96,6 +97,7 @@ std::string PubsubSerializer::serializePayload(boost::shared_ptr<Pubsub> payload
   }
   return pubsub.serialize();
 }
+*/
 
 std::string PubsubItemsRequestSerializer::serializePayload(boost::shared_ptr<PubsubItemsRequest> payload) const {
   XMLElement pubsub("pubsub", "http://jabber.org/protocol/pubsub");

@@ -11,11 +11,11 @@
 #ifndef PUBSUB_PAYLOAD_H_
 #define PUBSUB_PAYLOAD_H_
 
+#include "sdc.h"
 #include "Swiften/Swiften.h"
 #include "boost/shared_ptr.hpp"
 #include <string>
 #include <vector>
-#include "sdc.h"
 
 template<class P>
 class Items : public Swift::Payload {
@@ -133,39 +133,6 @@ class Geoloc : Swift::Payload {
  * Pubsub payloads
  */
 
-class Pubsub : public Swift::Payload {
- public:
-  typedef boost::shared_ptr<Pubsub> ref;
-  enum Action { SUBSCRIBE, UNSUBSCRIBE, PUBLISH, RETRACT, ITEMS };
-
-  Pubsub() {} // TODO: set default node and type
-
-  Pubsub(Action type, std::string node) :
-    type_(type),
-    node_(node) {}
-
-  void setPublishItem(Swift::Payload::ref payload) {
-    publish_item_ = payload;
-  }
-
-  Swift::Payload::ref getPublishItem() {
-    return publish_item_;
-  }
-
-  Action getAction() {
-    return type_;
-  }
-
-  std::string getNode() {
-    return node_;
-  }
-
- private:
-  Action type_;
-  std::string node_;
-  Swift::Payload::ref publish_item_;
-};
-
 class PubsubNode : public Swift::Payload {
  public:
   typedef boost::shared_ptr<PubsubNode> ref;
@@ -198,6 +165,9 @@ class PubsubNodeItem : public PubsubNode {
   std::string id_;
 };
 
+/**
+ * Pubsub request payloads
+ */
 class PubsubItemsRequest : public PubsubNode {
  public:
   typedef boost::shared_ptr<PubsubItemsRequest> ref;
@@ -237,6 +207,12 @@ class PubsubPublishRequest : public PubsubNodeItem {
 
  private:
   Atom::ref atom_;
+};
+
+class PubsubSubscribeRequest : public PubsubNode {
+ public:
+  typedef boost::shared_ptr<PubsubSubscribeRequest> ref;
+
 };
 
 #endif /* PUBSUB_PAYLOAD_H_ */

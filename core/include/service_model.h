@@ -12,23 +12,38 @@
 #define CORE_SERVICE_MODEL_H_
 
 #include "model.h"
-#include "account_data.h"
 
 namespace sdc {
 
+class AccountData;
 class Connection;
+class Service;
 
 class ServiceModel : public Model {
  public:
+  friend class Core;
+
   ServiceModel() {} // TODO: REMOVE
-  ServiceModel(AccountData* account_data) {
-    account_ = account_data;
+  ServiceModel(AccountData* account) {
+    account_ = account;
+  }
+
+  const AccountData* GetAccount() const {
+    return account_;
+  }
+
+  Service* GetService() const {
+    return service_;
   }
 
   virtual Connection* CreateConnection()=0;
+  void Connect();
+  void Disconnect();
 
  protected:
   AccountData* account_;
+  Service* service_; // set in Core class
+  Connection* connection_; // set in Core class
 };
 
 }  /* namespace sdc */

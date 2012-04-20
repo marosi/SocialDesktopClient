@@ -282,7 +282,7 @@ class PubsubPublishRequestParser : public Swift::GenericPayloadParser<PubsubPubl
 
 class PubsubParser : public Swift::PayloadParser {
  public:
-  PubsubParser() : parser_(0), level_(TopLevel) {}
+  PubsubParser() : level_(TopLevel), parser_(0) {}
 
   ~PubsubParser() {
     delete parser_;
@@ -294,10 +294,10 @@ class PubsubParser : public Swift::PayloadParser {
       if(!parser_) {
         LOG(DEBUG) << element;
         if (element == "items") {
-          type_ = Pubsub::ITEMS;
+          type_ = Items;
           parser_ = new PubsubItemsRequestParser;
         } else if (element == "publish") {
-          type_ = Pubsub::PUBLISH;
+          type_ = Publish;
           parser_ = new PubsubPublishRequestParser;
         } else { // TODO: parse subscribe, unsubscribe, retract responses
           parser_ = new LogParser;
@@ -332,9 +332,12 @@ class PubsubParser : public Swift::PayloadParser {
     TopLevel = 0,
     PayloadLevel = 1
   };
-  Pubsub::Action type_;
-  PayloadParser* parser_;
   int level_;
+  enum Pubsub {
+    Items,
+    Publish
+  } type_;
+  PayloadParser* parser_;
   //boost::shared_ptr<Swift::Payload> payload_;
 };
 

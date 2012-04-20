@@ -34,10 +34,15 @@ class BuddycloudModel : public sdc::QtServiceModel {
     return connection_;
   }
 
+
+
   // TODO: Event loop testing
   void TestEventLoop() {
     //core()->event_manager()->PostEvent(boost::bind(&Core::Process, core(), message));
   }
+
+ public slots:
+
 
  signals:
 
