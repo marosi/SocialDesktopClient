@@ -56,9 +56,19 @@ class QtView : public CoreAnchor {
     return root_;
   }
 
+  void SetFingerprint(ServiceModel* fingerprint) {
+    fingerprint_ = fingerprint;
+  }
+
+  bool IsMatching(ServiceModel* fingerprint) {
+    return fingerprint_ == fingerprint;
+  }
+
  private:
   QtView* parent_;
   QtGui* root_;
+
+  ServiceModel* fingerprint_;
 };
 
 template<class Controller, class Model>

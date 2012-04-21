@@ -2,7 +2,8 @@
 TARGET = social_desktop_client
 QT += core \
     gui
-HEADERS += ui/qtgui/account_button.h \
+HEADERS += ui/qtgui/contact_widget.h \
+    ui/qtgui/account_button.h \
     ui/qtgui/new_account_widget.h \
     ui/qtgui/qt_service.h \
     ui/qtgui/new_account_dialog.h \
@@ -37,7 +38,8 @@ HEADERS += ui/qtgui/account_button.h \
     core/include/config_manager.h \
     core/include/connection_manager.h \
     core/include/plugin_manager.h
-SOURCES += ui/qtgui/qt_service_model.cc \
+SOURCES += ui/qtgui/contact_widget.cpp \
+    ui/qtgui/qt_service_model.cc \
     ui/qtgui/qt_service.cc \
     ui/qtgui/account_button.cpp \
     core/service_model.cc \
@@ -59,7 +61,8 @@ SOURCES += ui/qtgui/qt_service_model.cc \
     core/connection_manager.cc \
     core/plugin_manager.cc \
     main.cpp
-FORMS += ui/qtgui/account_button.ui \
+FORMS += ui/qtgui/contact_widget.ui \
+    ui/qtgui/account_button.ui \
     ui/qtgui/new_account_dialog.ui \
     ui/qtgui/mainwindow.ui \
     ui/qtgui/settings_dialog.ui

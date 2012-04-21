@@ -131,7 +131,7 @@ void BuddycloudBot::handleConnected() {
   // Request the roster
   GetRosterRequest::ref rosterRequest = GetRosterRequest::create(client_->getIQRouter());
   rosterRequest->onResponse.connect(
-      bind(&BuddycloudBot::handleRosterReceived, this, _2));
+      bind(&BuddycloudBot::handleRosterReceived, this, _1, _2));
   rosterRequest->send();
 
   // Discover channel service
@@ -184,12 +184,13 @@ void BuddycloudBot::handlePresenceReceived(Presence::ref presence) {
   }
 }
 
-void BuddycloudBot::handleRosterReceived(ErrorPayload::ref error) {
+void BuddycloudBot::handleRosterReceived(RosterPayload::ref payload, ErrorPayload::ref error) {
   if (error) {
     std::cerr << "Error receiving roster. Continuing anyway.";
   }
   // Send initial available presence
   client_->sendPresence(Presence::create("Send me a message"));
+  onRosterReady(payload);
 }
 
 void BuddycloudBot::handleDataRecieved(const SafeByteArray &byte_array) {

@@ -12,10 +12,13 @@
 #define CORE_CONTENT_H_
 
 #include "boost/shared_ptr.hpp"
-#include <string>
 #include <list>
+#include <string>
+#include <vector>
 
 namespace sdc {
+
+class ServiceModel;
 
 class Content {
  public:
@@ -25,7 +28,7 @@ class Content {
     id_ = id;
   }
 
-  std::string GetID() {
+  std::string GetID() const {
     return id_;
   }
 

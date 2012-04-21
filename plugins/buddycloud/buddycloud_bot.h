@@ -74,13 +74,14 @@ class BuddycloudBot {
     };
 
     boost::signals2::signal1<void, Error> onError;
+    boost::signals2::signal1<void, Swift::RosterPayload::ref> onRosterReady;
 
   private:
     void handleConnected();
     void handleIQRecieved(boost::shared_ptr<Swift::IQ> iq);
     void handleMessageReceived(Swift::Message::ref message);
     void handlePresenceReceived(Swift::Presence::ref presence);
-    void handleRosterReceived(Swift::ErrorPayload::ref error);
+    void handleRosterReceived(Swift::RosterPayload::ref payload, Swift::ErrorPayload::ref error);
     void handleDataRecieved(const Swift::SafeByteArray &byte_array);
     void handleRegisterChannel() {}
 

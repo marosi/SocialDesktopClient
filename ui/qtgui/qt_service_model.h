@@ -27,11 +27,12 @@ class QtServiceModel : public QObject, public ServiceModel {
 
   QtService* GetQtService();
 
-  //Items<Contact::Ref>::Ref GetContacts() {}
+  virtual std::vector<Contact::Ref> GetContacts() const=0;
 
  public slots:
 
  signals:
+  void contactsChanged();
 
  private:
 };
