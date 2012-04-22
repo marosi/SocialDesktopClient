@@ -29,6 +29,13 @@ class BuddycloudModel : public sdc::QtServiceModel {
     LOG(DEBUG) << "This is buddycloud Service Model!";
   }
 
+  ~BuddycloudModel() {
+    LOG(TRACE) << "Buddycloud service model is destroying";
+    BOOST_FOREACH (sdc::Contact::Ref &contact, contacts_) {
+      core()->RemoveContent(contact);
+    }
+  }
+
   sdc::Connection* CreateConnection() {
     bot_ = new BuddycloudBot(account_->GetUid(), account_->GetPassword());
     connection_ = new BuddycloudConnection(bot_);
@@ -60,7 +67,10 @@ class BuddycloudModel : public sdc::QtServiceModel {
       sdc::Contact::Ref contact(new sdc::Contact);
       contact->SetUid(item.getJID());
       contact->SetName(item.getName());
+      contact->SetViewable(true);;
       contacts_.push_back(contact);
+      LOG(DEBUG) << "CUUUZ";
+      core()->PushContent(contact);
     }
     emit contactsChanged();
   }

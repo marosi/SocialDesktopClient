@@ -12,6 +12,7 @@
 #define CORE_CONTENT_H_
 
 #include "boost/shared_ptr.hpp"
+#include "boost/signals2.hpp"
 #include <list>
 #include <string>
 #include <vector>
@@ -24,16 +25,46 @@ class Content {
  public:
   typedef boost::shared_ptr<Content> Ref;
 
+  virtual ~Content() {}
+
   void SetID(const std::string &id) {
     id_ = id;
+    onChange();
   }
 
   std::string GetID() const {
     return id_;
   }
 
+  void SetViewable(bool is_viewable) {
+    is_viewable_ = is_viewable;
+    onChange();
+  }
+
+  bool IsViewable() {
+    return is_viewable_;
+  }
+
+  void SetServiceModel(ServiceModel* model) {
+    model_ = model;
+    onChange();
+  }
+
+  ServiceModel* GetServiceModel() {
+    return model_;
+  }
+
+  void Remove() {
+    onRemove();
+  }
+
+  boost::signals2::signal0<void> onChange;
+  boost::signals2::signal0<void> onRemove;
+
  private:
   std::string id_;
+  bool is_viewable_;
+  ServiceModel* model_;
 };
 
 template<class C>
@@ -84,6 +115,8 @@ class Items : public Content {
 class Contact : public Content {  // TODO: Contact should'n be treated as content... Subject class?
  public:
   typedef boost::shared_ptr<Contact> Ref;
+
+  virtual ~Contact() {}
 
   void SetName(const std::string &name) {
     name_ = name;

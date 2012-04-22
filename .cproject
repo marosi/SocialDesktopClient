@@ -96,37 +96,6 @@
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
 			<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
-			<storageModule moduleId="org.eclipse.cdt.core.pathentry">
-				<pathentry excluding="include|testing/" kind="src" path="core"/>
-				<pathentry excluding="*" kind="src" path="plugins"/>
-				<pathentry kind="src" path="core/include"/>
-				<pathentry excluding="core/include/|include|core/|core/testing/|testing/|plugins/" kind="src" path=""/>
-				<pathentry kind="out" path=""/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtSql" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtDeclarative" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtGui" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="phonon" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtOpenGL" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtHelp" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtMultimedia" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtXml" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtDBus" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtScript" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtWebKit" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="Qt" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtNetwork" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtScriptTools" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtSvg" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtXmlPatterns" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtTest" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtDesigner" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="Qt3Support" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtCore" kind="inc" path="" system="true"/>
-				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtUiTools" kind="inc" path="" system="true"/>
-				<pathentry include="/usr/include/c++/4.5" kind="inc" path="" system="true"/>
-				<pathentry include="/home/xangel/boost_1_47_0" kind="inc" path="" system="true"/>
-			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
 				<buildTargets>
 					<target name="Qt Release Build" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
@@ -154,6 +123,37 @@
 						<runAllBuilders>true</runAllBuilders>
 					</target>
 				</buildTargets>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.pathentry">
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtSql" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtDeclarative" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtGui" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="phonon" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtOpenGL" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtHelp" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtMultimedia" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtXml" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtDBus" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtScript" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtWebKit" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="Qt" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtNetwork" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtScriptTools" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtSvg" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtXmlPatterns" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtTest" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtDesigner" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="Qt3Support" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtCore" kind="inc" path="" system="true"/>
+				<pathentry base-path="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include" include="QtUiTools" kind="inc" path="" system="true"/>
+				<pathentry include="/usr/include/c++/4.5" kind="inc" path="" system="true"/>
+				<pathentry include="/home/xangel/boost_1_47_0" kind="inc" path="" system="true"/>
+				<pathentry excluding="include|testing/" kind="src" path="core"/>
+				<pathentry excluding="*" kind="src" path="plugins"/>
+				<pathentry kind="src" path="core/include"/>
+				<pathentry excluding="core/include/|include|core/|core/testing/|testing/|plugins/" kind="src" path=""/>
+				<pathentry kind="out" path=""/>
 			</storageModule>
 		</cconfiguration>
 	</storageModule>

@@ -12,6 +12,7 @@
 #define QT_GUI_H_
 
 #include "ui.h"
+#include "content.h"
 #include <QApplication>
 
 namespace sdc {
@@ -19,6 +20,7 @@ namespace sdc {
 class MainWindow;
 class QtSettingsController;
 class QtServiceModel;
+class WidgetFactory;
 
 /**
  * Kind of a main controller in MVC abstraction and also Manager in Core abstraction.
@@ -32,6 +34,7 @@ class QtGui : public QObject, public UI {
       : UI(core),
         app_(argc, argv),
         main_view_(0) {}
+  ~QtGui();
 
   void Init();
 
@@ -42,6 +45,8 @@ class QtGui : public QObject, public UI {
  private:
   QApplication app_;
   MainWindow* main_view_;
+  std::vector<WidgetFactory*> factories_;
+  std::vector<QWidget*> content_widgets_;
 
  /**
   * Qt compatibility core layer
@@ -54,12 +59,19 @@ class QtGui : public QObject, public UI {
   }
   void OnAccountActivated(AccountData* model);
   void OnAccountDeactivated(AccountData* model);
+  void OnContentView(Content::Ref content) {
+    emit contentView(content);
+  }
+
+ private slots:
+  void HandleContentView(Content::Ref content);
 
  signals:
   void accountsChanged();
   void guiPrepared();
   void accountActivated(QtServiceModel* account);
-  void accountDeactivated(QtServiceModel* account);
+  void accountDeactivated(AccountData* account);
+  void contentView(Content::Ref content);
 };
 
 } /* namespace sdc */

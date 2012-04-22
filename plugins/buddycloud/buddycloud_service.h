@@ -23,6 +23,8 @@ class BuddycloudService : public sdc::QtService {
   sdc::ServiceModel* CreateServiceModel(sdc::AccountData* account_data);
 
   sdc::NewAccountWidget* CreateNewAccountPane();
+
+  std::vector<sdc::WidgetFactory*> CreateWidgetFactories();
 };
 
 #endif /* BUDDYCLOUD_SERVICE_H_ */

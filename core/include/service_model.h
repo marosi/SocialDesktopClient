@@ -12,6 +12,7 @@
 #define CORE_SERVICE_MODEL_H_
 
 #include "model.h"
+#include "core_anchor.h"
 
 namespace sdc {
 
@@ -19,7 +20,7 @@ class AccountData;
 class Connection;
 class Service;
 
-class ServiceModel : public Model {
+class ServiceModel : public Model, public CoreAnchor {
  public:
   friend class Core;
 
@@ -27,6 +28,7 @@ class ServiceModel : public Model {
   ServiceModel(AccountData* account) {
     account_ = account;
   }
+  virtual ~ServiceModel() {}
 
   const AccountData* GetAccount() const {
     return account_;

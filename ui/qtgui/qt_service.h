@@ -22,6 +22,7 @@ class NewAccountWidget;
 class ContactWidget;
 class PostWidget;
 class QtServiceModel;
+class WidgetFactory;
 
 class QtService : public Service {
  public:
@@ -29,6 +30,7 @@ class QtService : public Service {
   virtual AccountButton* CreateAccountButton(QWidget* parent, QtServiceModel* model);
   virtual ContactWidget* CreateContactWidget(QWidget* parent, Contact::Ref contact);
   //virtual PostWidget* CreatePostWidget()=0;
+  virtual std::vector<WidgetFactory*> CreateWidgetFactories()=0;
 };
 
 } /* namespace sdc */

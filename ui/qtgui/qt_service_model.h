@@ -24,6 +24,7 @@ class QtServiceModel : public QObject, public ServiceModel {
 
  public:
   QtServiceModel(AccountData* account) : ServiceModel(account) {}
+  virtual ~QtServiceModel() {}
 
   QtService* GetQtService();
 

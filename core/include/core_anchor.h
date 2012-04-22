@@ -30,7 +30,10 @@ class CoreAnchor {
 
  protected:
   Core* GetCore() { return core_; }
-  Core* core()  { return core_; }
+  Core* core()  {
+    assert(core_);
+    return core_;
+  }
 
  private:
   Core* core_;

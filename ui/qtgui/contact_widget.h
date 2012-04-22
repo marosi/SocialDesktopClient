@@ -16,8 +16,22 @@ class ContactWidget : public QWidget, public QtView {
   ContactWidget(QWidget *parent, Contact::Ref contact);
   ~ContactWidget();
 
+ signals:
+  void remove();
+
+ private slots:
+  void Remove() {
+    this->close();
+  }
+
  private:
+  void OnRemove() {
+    emit remove();
+  }
+
+  Contact::Ref model_;
   Ui::ContactWidgetClass ui;
+  MainWindow* parent_;
 };
 
 } /* namespace sdc */

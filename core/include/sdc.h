@@ -34,5 +34,6 @@
 #include "qt_service_model.h"
 #include "qt_service.h"
 #include "new_account_widget.h"
+#include "widget_factory.h"
 
 #endif /* SDC_H_ */

@@ -10,6 +10,7 @@
 #define CORE_SOCIALDESKTOPCLIENT_H_
 
 #include "common.h"
+#include "content.h"
 #include "boost/noncopyable.hpp"
 #include "boost/thread.hpp"
 #include "boost/shared_ptr.hpp"
@@ -55,6 +56,9 @@ class Core : boost::noncopyable {
 	  return service_models_;
 	}
 
+	void PushContent(Content::Ref content);
+	void RemoveContent(Content::Ref content);
+
 	int GetReturnCode() { return return_code_; }
 	// Method that takes care of incomming message processing, it will be probably change to individual manager
 	void Process(boost::shared_ptr<Message> message);
@@ -64,6 +68,8 @@ class Core : boost::noncopyable {
   boost::signals2::signal0<void>  onGuiPrepared;
   boost::signals2::signal1<void, AccountData*> onAccountActivated;
   boost::signals2::signal1<void, AccountData*> onAccountDeactivated;
+  boost::signals2::signal1<void, Content::Ref> onContentView;
+
 
  private:
 	void Init();
@@ -85,6 +91,8 @@ class Core : boost::noncopyable {
 
   std::vector<ServiceModel*> service_models_;
   std::map<PluginSignature, Service*> services_; /// Pluged-in services and their configuration options
+
+  std::vector<Content::Ref> contents_;
 };
 
 }

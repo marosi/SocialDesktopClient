@@ -7,7 +7,7 @@
 
 namespace sdc {
 
-class QtServiceModel;
+class ServiceModel;
 
 class AccountButton : public QWidget, public QtView {
     Q_OBJECT
@@ -16,7 +16,7 @@ class AccountButton : public QWidget, public QtView {
   AccountButton(QWidget *parent, QtServiceModel* model);
   ~AccountButton();
 
-  bool isThis(QtServiceModel* model) {
+  bool isThis(ServiceModel* model) {
     return model == model_;
   }
 
@@ -29,7 +29,7 @@ class AccountButton : public QWidget, public QtView {
   Ui::AccountButtonClass ui;
   QMenu* menu_;
 
-  QtServiceModel* model_;
+  ServiceModel* model_; // TODO: Temporary, change to some other account fingerprint
 };
 
 } /* namespace sdc */

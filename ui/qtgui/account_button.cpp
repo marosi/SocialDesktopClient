@@ -29,7 +29,6 @@ void AccountButton::ShowMenu() {
 }
 
 void AccountButton::GoOnline() {
-  LOG(DEBUG) << "CUUUUZ";
   model_->Connect();
 }
 

@@ -24,6 +24,9 @@
 #include "boost/bind.hpp"
 #include <algorithm>
 
+#include "qt_service.h"
+#include "boost/cast.hpp"
+
 using namespace boost;
 using namespace std;
 
@@ -47,6 +50,24 @@ Service* Core::service(const PluginSignature &signature) {
   return services_[signature];
 }
 
+void Core::PushContent(Content::Ref content) {
+  contents_.push_back(content);
+  if (content->IsViewable()) {
+    onContentView(content);
+  }
+}
+
+void Core::RemoveContent(Content::Ref content) { // TODO: make more effective way to remove content
+  vector<Content::Ref>::iterator it;
+  for (it = contents_.begin(); it != contents_.end(); ++it) {
+    if (content.get() == it->get()) {
+      (*it)->Remove();
+      contents_.erase(it);
+      break; // TODO: this must be break, because after erasing from vector iterators change!!!
+    }
+  }
+}
+
 void Core::Process(boost::shared_ptr<Message> message) {
   //test_controller_->PrintMessageFromPlugin(message);
 }
@@ -56,6 +77,7 @@ void Core::Process(boost::shared_ptr<Message> message) {
  */
 void Core::ActivateAccount(AccountData* account) {
   ServiceModel* sam = account->GetService()->CreateServiceModel(account);
+  sam->SetCore(this);
   account->SetServiceModel(sam);
   service_models_.push_back(sam);
   // connection
@@ -71,6 +93,7 @@ void Core::ActivateAccount(AccountData* account) {
 void Core::DeactivateAccount(AccountData* account) {
   ServiceModel* sam = account->GetServiceModel();
   vector<ServiceModel*>::iterator it = find(service_models_.begin(), service_models_.end(), sam);
+  delete (*it);
   service_models_.erase(it);
   // emit signal
   onAccountDeactivated(account);

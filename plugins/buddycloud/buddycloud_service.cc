@@ -47,3 +47,8 @@ ServiceModel* BuddycloudService::CreateServiceModel(AccountData* account_data) {
 NewAccountWidget* BuddycloudService::CreateNewAccountPane() {
   return new BcNewAccountWidget;
 }
+
+std::vector<WidgetFactory*> BuddycloudService::CreateWidgetFactories() {
+  std::vector<WidgetFactory*> factories;
+  return factories;
+}

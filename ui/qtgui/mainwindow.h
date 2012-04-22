@@ -11,6 +11,7 @@
 #include <QtGui/QMainWindow>
 #include "ui_mainwindow.h"
 #include <QToolButton>
+#include <QSettings>
 #include "boost/shared_ptr.hpp"
 #include "boost/foreach.hpp"
 
@@ -28,9 +29,20 @@ class MainWindow : public QMainWindow, public sdc::QtView
 
     connect(ui.actionSettings, SIGNAL(triggered()),
         this, SLOT(CreateSettingsView()));
+
+    QSettings settings;
+    //LOG(DEBUG) << "QSettings testing :: " << settings.value("another").toString().toStdString();
+
   }
 
-  ~MainWindow() {}
+  ~MainWindow() {
+    QSettings settings;
+    //settings.setValue("another", "buuuu");
+  }
+
+  void AddContact(ContactWidget* contact) {
+    ui.contactPanelLayout->insertWidget(0, contact);
+  }
 
  public slots:
   void CreateSettingsView() {
@@ -44,20 +56,24 @@ class MainWindow : public QMainWindow, public sdc::QtView
     AccountButton* button = model->GetQtService()->CreateAccountButton(this, model);
     ui.accountsPane->layout()->addWidget(button);
     buttons_ << button;
-    /*
+/*
      * Load contacts
-     */
+
     LoadContacts(model);
     connect(model, SIGNAL(contactsChanged()),
-        this, SLOT(OnContactsChanged()));
+        this, SLOT(RefreshContacts()));
+
+     * Load content panels
+     */
+
   }
 
-  void DeactivateAccount(QtServiceModel* model) {
+  void DeactivateAccount(AccountData* account) {
     /*
      * Remove account button
      */
-    for (int i = 0; i < buttons_.size(); ++i) {
-      if (buttons_.at(i)->isThis(model)) {
+    for (int i = 0; i < buttons_.size(); ++i) {// TODO: model does not exists here anymore, using it will lead to SEGFAULT, think of different approach of removing Account ICON
+      if (buttons_.at(i)->isThis(account->GetServiceModel())) {  // TODO: change to fingerprint
         delete buttons_.at(i);
         buttons_.removeAt(i);
       }
@@ -65,12 +81,12 @@ class MainWindow : public QMainWindow, public sdc::QtView
     /*
      * Remove contacts
      */
-    ClearContacts(model);
+    //ClearContacts(model);
   }
 
-  void OnContactsChanged() {
+  void RefreshContacts() {
     /*
-     * Clear account contacts from common panel
+     * Clear account contacts from common panel and load
      */
     QtServiceModel* model = boost::polymorphic_cast<QtServiceModel*>(sender());
     ClearContacts(model);

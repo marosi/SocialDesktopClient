@@ -10,7 +10,7 @@ BuddycloudView::BuddycloudView(BController* controller, QWidget *parent)
 	ui.setupUi(this);
 	CreateActions();
 	// initiate ui components
-	ui.connectingMessage->setVisible(false);
+	//ui.connectingMessage->setVisible(false);
 }
 
 BuddycloudView::~BuddycloudView() {}
@@ -24,7 +24,7 @@ void BuddycloudView::CreateActions() {
 }
 
 void BuddycloudView::ShowConnecting() {
-  ui.connectingMessage->setVisible(true);
+  //ui.connectingMessage->setVisible(true);
 }
 
 void BuddycloudView::ShowState(const QString &state) {
@@ -36,7 +36,7 @@ void BuddycloudView::ShowState(const QString &state) {
   for (int i = 0; i < item_count; ++i) {
     if (ui.onlineState->itemText(i) == upper) {
       ui.onlineState->setCurrentIndex(i);
-      ui.connectingMessage->setVisible(false); // hide connecting ...
+      //ui.connectingMessage->setVisible(false); // hide connecting ...
       return;
     }
   }
@@ -44,15 +44,15 @@ void BuddycloudView::ShowState(const QString &state) {
 }
 
 void BuddycloudView::ShowContact(const QString &uid, const QString &name) {
-  ContactFrameView* cframe = new ContactFrameView(ui.contactPanel);
+/*  ContactFrameView* cframe = new ContactFrameView(ui.contactPanel);
   cframe->SetInfo(name);
   cframe->setEnabled(true);
   cframe->setVisible(true);
   contacts_.append(cframe);
-  ui.contactPanelLayout->insertWidget(0, cframe);
+  ui.contactPanelLayout->insertWidget(0, cframe);*/
 }
 
 void BuddycloudView::CreatePostsView(QObject* controller) {
-  PostsFrameView* posts_frame = new PostsFrameView(controller, ui.contentFrame);
-  emit signalPostsViewCreated(posts_frame);
+  /*PostsFrameView* posts_frame = new PostsFrameView(controller, ui.contentFrame);
+  emit signalPostsViewCreated(posts_frame);*/
 }
