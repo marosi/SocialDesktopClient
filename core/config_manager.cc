@@ -20,8 +20,8 @@ void ConfigManager::Init() {
   // Load configuration
   std::ifstream file(kConfFile.c_str());
   if (!file.is_open()) {
-    LOG(ERROR) << "Configuration file: social_desktop_client.conf is not present.";
-    core()->Exit(); // TODO: Exit does nothing so far, this error should be displayed to user
+    LOG(WARNING) << "Configuration file: sdc.xml is not present.";
+    //core()->Exit(); // TODO: Exit does nothing so far, this error should be displayed to user
     return;
   }
   {
