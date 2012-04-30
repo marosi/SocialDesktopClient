@@ -9,9 +9,20 @@ namespace sdc {
 AccountButton::AccountButton(QWidget* parent, QtServiceModel* model)
     : QWidget(parent), QtView(parent), model_(model) {
 	ui.setupUi(this);
-	ui.toolButton->setText(QString::fromStdString(model->GetAccount()->GetUid()));
 
-	menu_ = new QMenu(QString::fromStdString(model_->GetAccount()->GetUid()), this);
+	QString account_name = QString::fromStdString(model_->GetAccount()->GetUid());
+
+	QColor color;
+	color.setNamedColor("sienna");
+	QPalette palette;
+	palette.setColor(QPalette::Button, color);
+	ui.toolButton->setPalette(palette);
+	ui.toolButton->setToolTip(account_name);
+
+	menu_ = new QMenu(account_name, this);
+	QAction* title = menu_->addAction(QString::fromStdString(model->GetAccount()->GetUid()));
+	title->setEnabled(false);
+	menu_->addSeparator();
 	connect(menu_->addAction("Online"), SIGNAL(triggered()),
 	    this, SLOT(GoOnline()));
 	connect(menu_->addAction("Offline"), SIGNAL(triggered()),

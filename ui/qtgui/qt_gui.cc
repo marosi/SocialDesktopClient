@@ -107,9 +107,26 @@ void QtGui::Init() {
   main_view_->show();
 }
 
+QWidget* QtGui::CreateContentWidget(Content::Ref content, QWidget* parent) {
+  vector<WidgetFactory*>::reverse_iterator it;
+  QWidget* widget = 0;
+  for (it = factories_.rbegin(); it != factories_.rend(); ++it) {
+    if ((*it)->CanCreate(content)) {
+      // create widget for this specific content
+      if (parent)
+        widget = (*it)->Create(parent, content);
+      else
+        widget = (*it)->Create(main_view_, content);
+      content_widgets_.push_back(widget);
+      // No more widget can be created
+      break;
+    }
+  }
+  assert(widget);
+  return widget;
+}
 
 void QtGui::OnAccountActivated(AccountData* account) {
-  LOG(DEBUG)<< "qtgui : account actiovated";
   QtServiceModel* qt_model = dynamic_cast<QtServiceModel*>(account->GetServiceModel());
   if (qt_model)
     emit accountActivated(qt_model);
@@ -118,16 +135,7 @@ void QtGui::OnAccountDeactivated(AccountData* account) {
   emit accountDeactivated(account);
 }
 void QtGui::HandleContentView(Content::Ref content) {
-  vector<WidgetFactory*>::reverse_iterator it;
-  for (it = factories_.rbegin(); it != factories_.rend(); ++it) {
-    if ((*it)->CanCreate(content)) {
-      // create widget for this specific content
-      QWidget* widget = (*it)->Create(main_view_, content);
-      content_widgets_.push_back(widget);
-      // No more widget can be created
-      break;
-    }
-  }
+  this->CreateContentWidget(content);
 }
 
 } /* namespace sdc */

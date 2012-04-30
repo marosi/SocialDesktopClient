@@ -50,36 +50,38 @@ Service* Core::service(const PluginSignature &signature) {
   return services_[signature];
 }
 
-void Core::PushContent(Content::Ref content) {
-  contents_.push_back(content);
-  if (content->IsViewable()) {
+void Core::PushContent(ServiceModel* model, Content::Ref content) { // TODO: Find some way to fingerprint each content with its model creator, other than passing model as argument
+  content->SetServiceModel(model);
+  pair<set<Content::Ref>::iterator, bool> result = contents_.insert(content);
+  if (/*result.second &&*/ content->IsViewable()) { // TODO: for the channel to be showed again after it has been closed the bool is temporarily commented
     onContentView(content);
   }
 }
 
 void Core::RemoveContent(Content::Ref content) { // TODO: make more effective way to remove content
-  vector<Content::Ref>::iterator it;
+  content->Remove();
+  contents_.erase(content);
+  /*vector<Content::Ref>::iterator it;
   for (it = contents_.begin(); it != contents_.end(); ++it) {
     if (content.get() == it->get()) {
       (*it)->Remove();
       contents_.erase(it);
       break; // TODO: this must be break, because after erasing from vector iterators change!!!
     }
-  }
-}
-
-void Core::Process(boost::shared_ptr<Message> message) {
-  //test_controller_->PrintMessageFromPlugin(message);
+  }*/
 }
 
 /**
  * Private interface
  */
 void Core::ActivateAccount(AccountData* account) {
-  ServiceModel* sam = account->GetService()->CreateServiceModel(account);
+  Service* s = service(account->GetServiceSignature());
+  account->SetService(s);
+  ServiceModel* sam = s->CreateServiceModel(account);
   sam->SetCore(this);
   account->SetServiceModel(sam);
   service_models_.push_back(sam);
+  account_models_.insert(AccountModelsMap::value_type(account->GetId(), sam));
   // connection
   Connection* conn = sam->CreateConnection();
   connections()->MakeConnection(conn);
@@ -92,8 +94,21 @@ void Core::ActivateAccount(AccountData* account) {
 
 void Core::DeactivateAccount(AccountData* account) {
   ServiceModel* sam = account->GetServiceModel();
+  if (!sam)
+    return;
+  account_models_.erase(account->GetId());
+  vector<Content::Ref> to_be_removed; // TODO: this is just a workaround to content-widget removal find more elegant solution
+  BOOST_FOREACH (Content::Ref c, contents_) {
+    if (c->GetServiceModel() == sam)
+      to_be_removed.push_back(c);
+  }
+  BOOST_FOREACH (Content::Ref c, to_be_removed) {
+    c->Remove();
+    contents_.erase(c);
+  }
+
   vector<ServiceModel*>::iterator it = find(service_models_.begin(), service_models_.end(), sam);
-  delete (*it);
+  //delete (*it);
   service_models_.erase(it);
   // emit signal
   onAccountDeactivated(account);

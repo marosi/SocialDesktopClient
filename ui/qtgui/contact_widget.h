@@ -17,21 +17,20 @@ class ContactWidget : public QWidget, public QtView {
   ~ContactWidget();
 
  signals:
-  void remove();
+  void _close();
 
- private slots:
-  void Remove() {
-    this->close();
-  }
+ protected slots:
+  virtual void Remove() {}
 
  private:
-  void OnRemove() {
-    emit remove();
+  void Close() {
+    emit _close();
   }
 
   Contact::Ref model_;
   Ui::ContactWidgetClass ui;
   MainWindow* parent_;
+  QToolButton* close_button_;
 };
 
 } /* namespace sdc */

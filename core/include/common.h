@@ -16,7 +16,7 @@
 /*
  * Application data elements, ...
  */
-#include "message.h"
+
 
 /*
  * Commonly used data structures

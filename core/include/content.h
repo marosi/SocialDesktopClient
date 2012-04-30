@@ -25,6 +25,7 @@ class Content {
  public:
   typedef boost::shared_ptr<Content> Ref;
 
+  Content() : is_viewable_(true) {}
   virtual ~Content() {}
 
   void SetID(const std::string &id) {
@@ -130,6 +131,10 @@ class Contact : public Content {  // TODO: Contact should'n be treated as conten
     groups_ = groups;
   }
 
+  const std::vector<std::string>& GetGroups() const {
+    return groups_;
+  }
+
   std::string GetName() {
     return name_;
   }
@@ -167,7 +172,6 @@ class Post : public Content {
  private:
   std::string content_;
   std::string author_;
-  std::string id_;
 };
 
 }  /* namespace sdc */

@@ -39,8 +39,8 @@ class ServiceModel : public Model, public CoreAnchor {
   }
 
   virtual Connection* CreateConnection()=0;
-  void Connect();
-  void Disconnect();
+  virtual void Connect();
+  virtual void Disconnect();
 
  protected:
   AccountData* account_;

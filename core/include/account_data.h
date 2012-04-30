@@ -93,7 +93,6 @@ class AccountData {
   }
 
   ServiceModel* GetServiceModel() const {
-    assert(service_model_ptr_);
     return service_model_ptr_;
   }
 
@@ -103,6 +102,10 @@ class AccountData {
 
   int GetStatus() const {
     return status_;
+  }
+
+  std::string GetId() const {
+    return service_ + uid_;
   }
 
  private:

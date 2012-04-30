@@ -35,14 +35,12 @@ class SettingsDialog : public QDialog, public QtView
   void ChangePage(QListWidgetItem* current, QListWidgetItem* previous);
   void ShowNewAccountDialog();
   void RefreshAccountsTable();
-  void ManageAccountsTableDataChanged(QTableWidgetItem* item);
+  void SetEnabledAccount(QTableWidgetItem* item);
   void AccountSelected();
   void DeleteAccount();
   void EditAccount();
 
  private:
-  void Prepare();
-
   Ui::SettingsDialogClass ui;
   std::vector<Service*> services_;
 };

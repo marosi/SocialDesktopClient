@@ -17,7 +17,6 @@
 #include "model.h"
 #include "view.h"
 #include "controller.h"
-#include "message.h"
 #include "mvc_typedefs.h"
 #include "qt_controller.h"
 #include "qt_view.h"
@@ -34,6 +33,10 @@
 #include "qt_service_model.h"
 #include "qt_service.h"
 #include "new_account_widget.h"
+#include "new_contact_widget.h"
 #include "widget_factory.h"
+#include "generic_widget_factory.h"
+#include "content_panel.h"
+#include "contact_widget.h"
 
 #endif /* SDC_H_ */

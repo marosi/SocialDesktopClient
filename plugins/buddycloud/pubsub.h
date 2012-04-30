@@ -71,19 +71,19 @@ class Atom : public Swift::Payload {
     content_ = content;
   }
 
-  std::string getID() {
+  std::string getID() const {
     return id_;
   }
 
-  Verb getVerb() {
+  Verb getVerb() const {
     return verb_;
   }
 
-  ObjectType getObjectType() {
+  ObjectType getObjectType() const {
     return object_type_;
   }
 
-  std::string getVerbString() {
+  std::string getVerbString() const {
     switch (verb_) {
       case POST:
         return "post";
@@ -92,7 +92,7 @@ class Atom : public Swift::Payload {
     }
   }
 
-  std::string getObjectTypeString() {
+  std::string getObjectTypeString() const {
     switch (object_type_) {
       case NOTE:
         return "note";
@@ -103,15 +103,15 @@ class Atom : public Swift::Payload {
     }
   }
 
-  std::string getPublished() {
+  std::string getPublished() const {
     return published_;
   }
 
-  std::string getAuthor() {
+  std::string getAuthor() const {
     return author_;
   }
 
-  std::string getContent() {
+  std::string getContent() const {
     return content_;
   }
 
@@ -213,6 +213,38 @@ class PubsubSubscribeRequest : public PubsubNode {
  public:
   typedef boost::shared_ptr<PubsubSubscribeRequest> ref;
 
+  PubsubSubscribeRequest() : subscription_(Unset) {}
+
+  enum Subscription { Unset, Subscribed };
+
+  void setSubscribersJID(const Swift::JID &jid) {
+    jid_ = jid;
+  }
+
+  std::string getSubscribersJID() {
+    return jid_.toString();
+  }
+
+  void setSubscription(Subscription type) {
+    subscription_ = type;
+  }
+
+  Subscription getSubscription() {
+    return subscription_;
+  }
+
+ private:
+  Subscription subscription_;
+  Swift::JID jid_;
+};
+
+/**
+ * Event pubsub payload, usually comming to pubsub node subscribers on node update.
+ * It is so far identical to PubsubItemsRequest therefore only shared_ptr typedef is added.
+ */
+class EventPayload : public PubsubItemsRequest {
+ public:
+  typedef boost::shared_ptr<EventPayload> ref;
 };
 
 #endif /* PUBSUB_PAYLOAD_H_ */

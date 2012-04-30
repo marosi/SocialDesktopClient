@@ -42,6 +42,8 @@ class QtGui : public QObject, public UI {
     return app_.exec();
   }
 
+  QWidget* CreateContentWidget(Content::Ref, QWidget* parent = 0);
+
  private:
   QApplication app_;
   MainWindow* main_view_;

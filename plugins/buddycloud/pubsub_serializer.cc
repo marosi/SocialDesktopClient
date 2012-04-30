@@ -135,3 +135,12 @@ std::string PubsubPublishRequestSerializer::serializePayload(boost::shared_ptr<P
   pubsub.addNode(publish);
   return pubsub.serialize();
 }
+
+std::string PubsubSubscribeRequestSerializer::serializePayload(boost::shared_ptr<PubsubSubscribeRequest> payload) const {
+  XMLElement pubsub("pubsub", "http://jabber.org/protocol/pubsub");
+  XMLElement::ref subscribe(new XMLElement("subscribe"));
+  subscribe->setAttribute("node", payload->getNode());
+  subscribe->setAttribute("jid", payload->getSubscribersJID());
+  pubsub.addNode(subscribe);
+  return pubsub.serialize();
+}

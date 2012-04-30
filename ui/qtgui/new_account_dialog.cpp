@@ -18,7 +18,13 @@ NewAccountDialog::NewAccountDialog(QWidget *parent)
 	ui.setupUi(this);
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
-	int i = 0;
+	// interactions
+	connect(ui.servicesComboBox, SIGNAL(currentIndexChanged(int)),
+	      this, SLOT(ChangeServicePane(int)));
+
+	ui.servicesComboBox->insertSeparator(1);
+	// load available services
+	int i = 2;
   BOOST_FOREACH (Service* s, core()->services()) {
     QString signature = QString::fromStdString(s->GetSignature());
     QVariant data(signature);
@@ -27,27 +33,23 @@ NewAccountDialog::NewAccountDialog(QWidget *parent)
     NewAccountWidget* pane = qs->CreateNewAccountPane();
     pane->setParent(this);
     pane->hide();
+    ui.layout->insertWidget(i, pane);
     service_panes_[signature] = pane;
     combobox_service_index_[signature] = i;
     ++i;
   }
+  current_pane_ = *service_panes_.begin();
 
-	// interactions
-	connect(ui.servicesComboBox, SIGNAL(activated(int)),
-	    this, SLOT(ChangeServicePane(int)));
-	connect(ui.servicesComboBox, SIGNAL(currentIndexChanged(int)),
-	    this, SLOT(ChangeServicePane(int)));
-	connect(ui.servicesComboBox, SIGNAL(highlighted(int)),
-	      this, SLOT(ChangeServicePane(int)));
-	// finally
-	this->show();
+
+
+  show();
 }
 
 NewAccountDialog::~NewAccountDialog() {}
 
 void NewAccountDialog::SetAccountForEditing(AccountData* account) {
   QString signature = QString::fromStdString(account->GetServiceSignature());
-  ChangeServicePane(combobox_service_index_[signature]);
+  ui.servicesComboBox->setCurrentIndex(combobox_service_index_[signature]);
   service_panes_[signature]->BindDataFrom(account);
   account_ = account;
   action_ = EDIT;
@@ -71,12 +73,14 @@ void NewAccountDialog::accept() {
 
 void NewAccountDialog::ChangeServicePane(int index) {
   LOG(DEBUG2) << "Changing service pane";
-  QVariant data = ui.servicesComboBox->itemData(index);
   //int at = this->layout()->indexOf(ui.currentServiceWidget);
-  ui.layout->removeWidget(current_pane_);  // TODO: Test when second plugin will be available
-  current_pane_ = service_panes_[data.toString()];
-  ui.layout->insertWidget(2, current_pane_);
-  current_pane_->show();
+  //ui.layout->removeWidget(current_pane_);
+  current_pane_->hide();
+  if (index > 1) {
+    QVariant data = ui.servicesComboBox->itemData(index);
+    current_pane_ = service_panes_[data.toString()];
+    current_pane_->show();
+  }
 }
 
 } /* namespace sdc */

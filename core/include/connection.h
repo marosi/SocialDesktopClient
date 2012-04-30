@@ -18,7 +18,6 @@
 
 namespace sdc {
 
-class Message;
 class Service;
 class ServiceController;
 

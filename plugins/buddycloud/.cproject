@@ -40,6 +40,7 @@
 									<listOptionValue builtIn="false" value="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include/QtCore"/>
 									<listOptionValue builtIn="false" value="/home/xangel/projects/social_desktop_client/core/include"/>
 									<listOptionValue builtIn="false" value="/home/xangel/projects/social_desktop_client/ui/qtgui"/>
+									<listOptionValue builtIn="false" value="/home/xangel/projects/social_desktop_client/"/>
 									<listOptionValue builtIn="false" value="/home/xangel/projects/swift"/>
 									<listOptionValue builtIn="false" value="/home/xangel/projects/swift/3rdParty/LibIDN/src"/>
 									<listOptionValue builtIn="false" value="/usr/include/libxml2"/>
@@ -396,11 +397,27 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.so.release.1713174490." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.so.release.1180628815" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.so.release">
 							<targetPlatform id="cdt.managedbuild.target.gnu.platform.so.release.1163719802" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.so.release"/>
-							<builder buildPath="${workspace_loc:/OSW/Release}" id="cdt.managedbuild.target.gnu.builder.so.release.1567268824" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.so.release"/>
+							<builder arguments="-j 4" buildPath="${workspace_loc:/OSW/Release}" command="make" id="cdt.managedbuild.target.gnu.builder.so.release.1567268824" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.so.release"/>
 							<tool id="cdt.managedbuild.tool.gnu.archiver.base.1056614890" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.so.release.1970193614" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.so.release">
 								<option id="gnu.cpp.compiler.so.release.option.optimization.level.1647904319" name="Optimization Level" superClass="gnu.cpp.compiler.so.release.option.optimization.level" value="gnu.cpp.compiler.optimization.level.most" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.so.release.option.debugging.level.2136242832" name="Debug Level" superClass="gnu.cpp.compiler.so.release.option.debugging.level" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.include.paths.56166143" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include"/>
+									<listOptionValue builtIn="false" value="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include/QtGui"/>
+									<listOptionValue builtIn="false" value="/home/xangel/QtSDK/Desktop/Qt/473/gcc/include/QtCore"/>
+									<listOptionValue builtIn="false" value="/home/xangel/projects/social_desktop_client/core/include"/>
+									<listOptionValue builtIn="false" value="/home/xangel/projects/social_desktop_client/ui/qtgui"/>
+									<listOptionValue builtIn="false" value="/home/xangel/projects/social_desktop_client/"/>
+									<listOptionValue builtIn="false" value="/home/xangel/projects/swift"/>
+									<listOptionValue builtIn="false" value="/home/xangel/projects/swift/3rdParty/LibIDN/src"/>
+									<listOptionValue builtIn="false" value="/usr/include/libxml2"/>
+									<listOptionValue builtIn="false" value="/home/xangel/projects/boost_1_48_0"/>
+								</option>
+								<option id="gnu.cpp.compiler.option.other.other.147124724" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 -fPIC -DBOOST_ALL_NO_LIB -DBOOST_SYSTEM_NO_DEPRECATED -DBOOST_FILESYSTEM_VERSION=2 -DIDNA_STATIC -DXML_STATIC" valueType="string"/>
+								<option id="gnu.cpp.compiler.option.preprocessor.def.938816918" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="LOG_PRODUCER=Buddycloud"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1269454509" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.so.release.857716469" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.so.release">
@@ -413,6 +430,26 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.so.release.209669063" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.so.release">
 								<option defaultValue="true" id="gnu.cpp.link.so.release.option.shared.1084892359" name="Shared (-shared)" superClass="gnu.cpp.link.so.release.option.shared" valueType="boolean"/>
+								<option id="gnu.cpp.link.option.paths.2017593381" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
+									<listOptionValue builtIn="false" value="/home/xangel/projects/swift/Swiften"/>
+									<listOptionValue builtIn="false" value="/home/xangel/projects/swift/3rdParty/Boost"/>
+									<listOptionValue builtIn="false" value="/home/xangel/projects/swift/3rdParty/LibIDN"/>
+								</option>
+								<option id="gnu.cpp.link.option.libs.1989412756" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
+									<listOptionValue builtIn="false" value="Swiften"/>
+									<listOptionValue builtIn="false" value="Swiften_Boost"/>
+									<listOptionValue builtIn="false" value="Swiften_IDN"/>
+									<listOptionValue builtIn="false" value="z"/>
+									<listOptionValue builtIn="false" value="ssl"/>
+									<listOptionValue builtIn="false" value="crypto"/>
+									<listOptionValue builtIn="false" value="xml2"/>
+									<listOptionValue builtIn="false" value="resolv"/>
+									<listOptionValue builtIn="false" value="pthread"/>
+									<listOptionValue builtIn="false" value="dl"/>
+									<listOptionValue builtIn="false" value="m"/>
+									<listOptionValue builtIn="false" value="c"/>
+									<listOptionValue builtIn="false" value="stdc++"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1586681923" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>

@@ -17,11 +17,11 @@
 #include "boost/signals2.hpp"
 #include <vector>
 #include <map>
+#include <set>
 
 namespace sdc {
 
 class AccountData;
-class Message;
 class Service;
 class ServiceModel;
 class UI;
@@ -32,6 +32,8 @@ class UI;
  */
 class Core : boost::noncopyable {
  public:
+  typedef std::map<std::string, ServiceModel*> AccountModelsMap;
+
 	Core(int argc, char* argv[]);
 	~Core();
 	void Start();
@@ -56,12 +58,18 @@ class Core : boost::noncopyable {
 	  return service_models_;
 	}
 
-	void PushContent(Content::Ref content);
+	AccountModelsMap models() {
+	  return account_models_;
+	}
+
+	ServiceModel* model(const std::string &account_id) {
+	  return account_models_[account_id];
+	}
+
+	void PushContent(ServiceModel* model, Content::Ref content);
 	void RemoveContent(Content::Ref content);
 
 	int GetReturnCode() { return return_code_; }
-	// Method that takes care of incomming message processing, it will be probably change to individual manager
-	void Process(boost::shared_ptr<Message> message);
 	/**
    * Signals
    */
@@ -90,9 +98,10 @@ class Core : boost::noncopyable {
 	void DeactivateAccount(AccountData* data);
 
   std::vector<ServiceModel*> service_models_;
+  AccountModelsMap account_models_;
   std::map<PluginSignature, Service*> services_; /// Pluged-in services and their configuration options
 
-  std::vector<Content::Ref> contents_;
+  std::set<Content::Ref> contents_;
 };
 
 }

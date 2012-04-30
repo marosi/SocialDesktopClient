@@ -27,15 +27,6 @@ class QtServiceModel : public QObject, public ServiceModel {
   virtual ~QtServiceModel() {}
 
   QtService* GetQtService();
-
-  virtual std::vector<Contact::Ref> GetContacts() const=0;
-
- public slots:
-
- signals:
-  void contactsChanged();
-
- private:
 };
 
 } /* namespace sdc */

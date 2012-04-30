@@ -33,7 +33,6 @@ class EventManager : public AbstractManager {
 
   void PostEvent(boost::function<void ()> callback);
   //void PostCommand(Command* command);
-  void PostMessage(Message* message);
 
   void Stop();
 

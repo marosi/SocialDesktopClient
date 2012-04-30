@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>336</width>
-    <height>154</height>
+    <width>305</width>
+    <height>144</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,10 +41,16 @@
    <item>
     <widget class="QTextBrowser" name="content">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+      <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>100</height>
+      </size>
      </property>
     </widget>
    </item>

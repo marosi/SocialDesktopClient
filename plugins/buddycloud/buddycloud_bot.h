@@ -11,13 +11,17 @@
 #ifndef BUDDYCLOUD_BOT_H_
 #define BUDDYCLOUD_BOT_H_
 
+#include "buddycloud_connection.h"
+#include "bc_contact.h"
+#include "channel.h"
 #include "pubsub.h"
+
 #include "sdc.h"
 #include "Swiften/Swiften.h"
 #include "boost/bind.hpp"
 #include "boost/signals2.hpp"
-
-class BuddycloudConnection;
+#include <vector>
+#include <set>
 
 struct ChannelServiceInfo {
   Swift::JID jid;
@@ -41,31 +45,94 @@ struct ChannelUserInfo {
       : is_user_channel_registered(is_user_channel_registered) {}
 };
 
-class BuddycloudBot {
+class ChannelController {
+ public:
+  friend class BuddycloudBot;
+  typedef boost::shared_ptr<ChannelController> ref; // TODO: shared ptr or not
+
+  ChannelController(sdc::Contact::Ref contact, BuddycloudBot* bot);
+  void Start();
+  void GetChannelContent() {
+    GetNodeItems(posts_node_);
+  }
+  void Send(Post1::Ref post);
+  void Delete(Post1::Ref post);
+
+  void print() {
+    LOG(DEBUG) << "priniting from controller";
+  }
+
+  enum Error {
+    ChannelsServiceUnavailable,
+    UserChannelNotPresent
+  };
+
+
+  boost::signals2::signal1<void, ChannelController*> onReady;
+  boost::signals2::signal1<void, Error> onError;
+  boost::signals2::signal1<void, ChannelServiceInfo> onChannelsServiceAvailable;
+  boost::signals2::signal0<void> onChannelAvailable;
+ private:
+  void handleDomainItems(boost::shared_ptr<Swift::DiscoItems> payload, Swift::ErrorPayload::ref error);
+  void handleDomainItemInfo(Swift::DiscoInfo::ref payload, Swift::ErrorPayload::ref error, boost::shared_ptr<Swift::DiscoItems> items, std::vector<Swift::DiscoItems::Item>::const_iterator it);
+  void handleUserChannelDiscovery(Swift::DiscoInfo::ref payload, Swift::ErrorPayload::ref error);
+
+  void GetNodeItems(const std::string &node);
+  void handleNodeItems(PubsubItemsRequest::ref items, Swift::ErrorPayload::ref error);
+
+  void handleSend(Post1::Ref post, PubsubPublishRequest::ref publish, Swift::ErrorPayload::ref error);
+  void handleDelete(Post1::Ref post, PubsubRetractRequest::ref retract, Swift::ErrorPayload::ref error);
+
+  Channel::Ref channel_;
+  std::string posts_node_;
+  Swift::JID contact_jid_;
+  sdc::Contact::Ref contact_;
+  ChannelServiceInfo service_;
+  Swift::IQRouter* router_;
+  BuddycloudBot* bot_;
+};
+
+class BuddycloudBot : public sdc::QtServiceModel {
   public:
     friend class BuddycloudConnection;
+    friend class ChannelController;
 
-    BuddycloudBot(const std::string &jid, const std::string &password);
+    BuddycloudBot(sdc::AccountData* account);
     ~BuddycloudBot();
+    sdc::Connection* CreateConnection() {
+      connection_ = new BuddycloudConnection(this);
+      return connection_;
+    }
+    virtual void Connect() {
+      if (!connected_)
+        connection_->Connect();
+    }
 
     /// @{ TODO: testing REMOVE
     void SendDiscoInfo(const std::string &to_attribute, const std::string &node_attribute);
     void SendDiscoItems(const std::string &to_attribute, const std::string &node_attribute);
     void DoSomething(const std::string &param);
     /// @}
-
     Swift::Client* xmpp() {
       return client_;
     }
-
     const ChannelUserInfo& GetChannelUser() const {
       return channel_user_;
     }
-
     const ChannelServiceInfo& GetChannelService() const {
       return channel_service_;
     }
-
+    /**
+     * Content interface
+     */
+    BcContact::Ref GetContact(const Swift::JID &jid);
+    void GetContactChannel(sdc::Contact::Ref contact);
+    void AddNewContact(BcContact::Ref contact);
+    void RemoveContact(BcContact::Ref contact);
+    /**
+     * Translations
+     */
+    Post1::Ref TranslateAtom(const Atom::ref atom);
     /**
      * Errors
      */
@@ -78,33 +145,70 @@ class BuddycloudBot {
 
   private:
     void handleConnected();
-    void handleIQRecieved(boost::shared_ptr<Swift::IQ> iq);
+    void handleDisconnected(boost::optional<Swift::ClientError> error);
+    /*
+     * Permanent stanza handling
+     */
+    void handleIQRecieved(Swift::IQ::ref iq);
     void handleMessageReceived(Swift::Message::ref message);
     void handlePresenceReceived(Swift::Presence::ref presence);
-    void handleRosterReceived(Swift::RosterPayload::ref payload, Swift::ErrorPayload::ref error);
     void handleDataRecieved(const Swift::SafeByteArray &byte_array);
-    void handleRegisterChannel() {}
-
-    void handleItemsRecieved(boost::shared_ptr<PubsubItemsRequest> items); // TODO: DELETE after test
-
-
+    /*
+     * On request
+     */
+    void GetRoster();
+    void handleRosterReceived(Swift::RosterPayload::ref payload, Swift::ErrorPayload::ref error);
+    /*
+     * Ready channels handling
+     */
+    void handleContactChannel(ChannelController* controller);
+    void handleOwnChannel(ChannelController* controller);
+    void handleOwnChannelErrors(ChannelController::Error error);
+    void handleOwnChannelRegistration(Swift::Payload::ref payload, Swift::ErrorPayload::ref error);
+    /*
+     * Parsers and serializers
+     */
     void AddParserFactories();
     void AddSerializers();
     void AddParserFactory(Swift::PayloadParserFactory* factory);
     void AddSerializer(Swift::PayloadSerializer* serializer);
-
     /**
-     * Channel handling
+     * Channel handling ... moved to ChannelController TODO: remove
      */
     void handleServerDiscoItems(boost::shared_ptr<Swift::DiscoItems> payload, Swift::ErrorPayload::ref error);
     void handleServerDiscoItemInfo(Swift::DiscoInfo::ref payload, Swift::ErrorPayload::ref error, boost::shared_ptr<Swift::DiscoItems> items, std::vector<Swift::DiscoItems::Item>::const_iterator it);
-    void UserChannelDiscovery();
+      void UserChannelDiscovery(const Swift::JID &service_jid, const std::string &post_node);
     void handleUserChannelDiscovery(Swift::DiscoInfo::ref payload, Swift::ErrorPayload::ref error);
-    void handleChannelRegistration(Swift::Payload::ref payload, Swift::ErrorPayload::ref error);
+    void handleNodeItems(PubsubItemsRequest::ref items, Swift::ErrorPayload::ref error);
+    /*
+     * Miscellaneous
+     */
+    void handleChannelsServiceInfo(ChannelServiceInfo info);
+    void GetServerInfo();
+    void handleServerInfo(Swift::DiscoInfo::ref payload, Swift::ErrorPayload::ref error);
+
+    void handleJidAdded(const Swift::JID &jid);
+    void handleJidRemove(const Swift::JID &jid);
+    void handleJidUpdated(const Swift::JID &jid, const std::string &name, const std::vector<std::string> &groups);
     /**
      * Signals
      */
-
+    /**
+     * SDC data
+     */
+    sdc::AccountData* account_;
+    sdc::Contact::Ref me_;
+    BuddycloudConnection* connection_; // TODO: Rename to ChannelConnection
+    std::vector<BcContact::Ref> contacts_;
+    /**
+     * Domain server stuff
+     */
+    Swift::DiscoInfo::ref server_info_;
+    /**
+     * Channels
+     */
+    ChannelController* my_channel_;
+    std::set<ChannelController*> channel_controllers_;
     /**
      * Channel client data
      */
@@ -119,12 +223,12 @@ class BuddycloudBot {
     Swift::NetworkFactories* network_;
     Swift::Client* client_;
     Swift::ClientXMLTracer* tracer_;
+    bool connected_;
     /**
      * Serializers & Parsers
      */
     std::vector<Swift::PayloadParserFactory*> parsers_;
     std::vector<Swift::PayloadSerializer*> serializers_;
 };
-
 
 #endif /* BUDDYCLOUD_BOT_H_ */

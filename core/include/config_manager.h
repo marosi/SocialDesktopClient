@@ -72,18 +72,20 @@ class ConfigManager : public AbstractManager, public Properties {
   void Init();
 
   void SetEnabledAccount(int index, bool is_enabled) {
-    LOG(DEBUG) << accounts_[index]->GetUid();
-    accounts_[index]->SetEnabled(is_enabled);
-    onAccountsChanged();
-    if (is_enabled) {
-      onAccountEnabled(accounts_[index]);
-    } else {
-      onAccountDisabled(accounts_[index]);
+    if (accounts_[index]->IsEnabled() != is_enabled) {
+      accounts_[index]->SetEnabled(is_enabled);
+      onAccountsChanged();
+      if (is_enabled) {
+        onAccountEnabled(accounts_[index]);
+      } else {
+        onAccountDisabled(accounts_[index]);
+      }
     }
   }
 
   void AddAccount(AccountData* account) {
     accounts_.push_back(account);
+    SetEnabledAccount(accounts_.size() - 1, true);
     onAccountsChanged();
   }
 
@@ -93,6 +95,7 @@ class ConfigManager : public AbstractManager, public Properties {
   }
 
   void RemoveAccount(int index) {
+    onAccountDisabled(accounts_[index]);
     accounts_.erase(accounts_.begin() + index);
     onAccountsChanged();
   }

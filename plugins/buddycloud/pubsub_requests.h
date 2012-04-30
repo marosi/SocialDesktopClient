@@ -26,10 +26,10 @@ class GetPubsubItemsRequest : public Swift::GenericRequest<PubsubItemsRequest> {
     return ref(new GetPubsubItemsRequest(Swift::IQ::Get, payload, reciever, router));
   }
 
-  virtual void handleResponse(boost::shared_ptr<Swift::Payload> payload, Swift::ErrorPayload::ref error) {
+  /*virtual void handleResponse(boost::shared_ptr<Swift::Payload> payload, Swift::ErrorPayload::ref error) {
     LOG(DEBUG) << "GetPubsubItemsRequest response object: " << typeid(*payload.get()).name();
     Swift::GenericRequest<PubsubItemsRequest>::handleResponse(payload, error);
-  }
+  }*/
 
  private:
   GetPubsubItemsRequest(Swift::IQ::Type type, Swift::Payload::ref payload, const std::string &reciever, Swift::IQRouter* router)
@@ -78,7 +78,7 @@ class SetPubsubSubscribeRequest : public Swift::GenericRequest<PubsubSubscribeRe
  public:
   typedef boost::shared_ptr<SetPubsubSubscribeRequest> ref;
 
-  static ref create(Swift::Payload::ref payload, const std::string &node, const Swift::JID &reciever, Swift::IQRouter* router) {
+  static ref create(Swift::Payload::ref payload, const Swift::JID &reciever, Swift::IQRouter* router) {
     return ref(new SetPubsubSubscribeRequest(payload, reciever, router));
   }
 

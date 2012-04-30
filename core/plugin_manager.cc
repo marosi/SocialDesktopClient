@@ -16,8 +16,13 @@
 #endif
 #endif
 
+#include <dirent.h>
+#include <stdio.h>
 #include <iostream>
 #include <sstream>
+
+using std::vector;
+using std::string;
 
 namespace sdc {
 
@@ -32,18 +37,46 @@ void PluginManager::LoadPlugins() {
   LOG(INFO) << "Loading plugins...";
   //TODO: loop it for a certain directory
   //TODO: implement try catch block
-  std::string lib_filename = "libbuddycloud.so";
-  std::string path = "/home/xangel/projects/social_desktop_client/plugins/";
-  LIB_HANDLE_TYPE lib_handle = LoadLibrary(path + lib_filename);
-  registerLibrary* fn_register = (registerLibrary*) LoadLibrarySymbol(lib_handle, "registerLibrary");
-  Registration* registration = fn_register();
-  LOG(INFO) << registration->name_ << " plugin loaded.";
-  LibSignature lib_sig = GetLibrarySignature(lib_filename);
-  lib_handles_[lib_sig] = lib_handle;
-  for(std::vector<ClassDataRegistration>::iterator it = registration->new_plugins_.begin();
-      it != registration->new_plugins_.end(); ++it) {
-    it->lib_signature = lib_sig;
-    class_data_[GetClassSignature(*it)] = (*it); // @anchor regFriend
+
+  /**
+   * Each plugin MUST be in plugins dir relative to sdc executable.
+   */
+  const string plugin_dir = "./plugins";
+  vector<string> libnames;
+  DIR *d;
+  struct dirent *dir;
+  d = opendir(plugin_dir.c_str());
+  if (d) {
+    while ((dir = readdir(d)) != NULL)
+    {
+      char* name = dir->d_name;
+      int i = 0;
+      while ( name[i] != '\0' ) {
+        ++i;
+      }
+      if (i > 3 && name[i-3] == '.' && name[i-2] == 's' && name[i-1] == 'o') {
+        libnames.push_back(name);
+      }
+    }
+    closedir(d);
+  }
+
+  vector<string>::iterator it;
+  for (it = libnames.begin(); it != libnames.end(); ++it) {
+    string path = plugin_dir + '/' + *it;
+    LOG(TRACE) << "Trying to load library: " << path;
+    LIB_HANDLE_TYPE lib_handle = LoadLibrary(path);
+    registerLibrary* fn_register = (registerLibrary*) LoadLibrarySymbol(lib_handle, "registerLibrary");
+    Registration* registration = fn_register();
+    LOG(INFO) << registration->name_ << " plugin loaded.";
+    LibSignature lib_sig = GetLibrarySignature(*it);
+    lib_handles_[lib_sig] = lib_handle;
+    for(std::vector<ClassDataRegistration>::iterator it = registration->new_plugins_.begin();
+        it != registration->new_plugins_.end(); ++it) {
+      it->lib_signature = lib_sig;
+      class_data_[GetClassSignature(*it)] = (*it); // @anchor regFriend
+    }
+    delete registration;
   }
 }
 

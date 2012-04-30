@@ -15,6 +15,11 @@
 
 class BuddycloudService : public sdc::QtService {
  public:
+  BuddycloudService() {
+    name_ = "Buddycloud";
+    description_ = "Buddycloud channels service.";
+  }
+
   sdc::Connection* CreateConnection();
   sdc::ServiceModelRef CreateMainModel();
   sdc::ServiceViewRef CreateMainView();
@@ -23,6 +28,7 @@ class BuddycloudService : public sdc::QtService {
   sdc::ServiceModel* CreateServiceModel(sdc::AccountData* account_data);
 
   sdc::NewAccountWidget* CreateNewAccountPane();
+  sdc::NewContactWidget* CreateNewContactWidget();
 
   std::vector<sdc::WidgetFactory*> CreateWidgetFactories();
 };

@@ -56,7 +56,6 @@ class ItemParser : public Swift::GenericPayloadParser<Items<Payload> > {
     if (level_ == TopLevel && element == "item") {
       // push back handled payload in item element
       assert(curr_parser_);
-
       getPayloadInternal()->appendPayload(boost::dynamic_pointer_cast<Payload>(curr_parser_->getPayload())); // FIX: not efficient
       LOG(DEBUG4) << "@@@@@@@@@ adding payload to items";
       // reset variables
@@ -228,6 +227,8 @@ class PubsubItemsRequestParser : public Swift::GenericPayloadParser<PubsubItemsR
   virtual void handleStartElement(const std::string& element, const std::string& ns, const Swift::AttributeMap& attributes) {
     if (level_ == TopLevel) {
       if (element == "items") {
+        getPayloadInternal()->setNode(attributes.getAttributeValue("node").get_value_or("___NODE___"));
+        LOG(DEBUG) << "ITEMS LEVEL" << getPayloadInternal()->getNode();
         is_parsing_items_ = true;
       }
     } else {
@@ -242,6 +243,7 @@ class PubsubItemsRequestParser : public Swift::GenericPayloadParser<PubsubItemsR
     --level_;
     if (level_ == TopLevel) {
       if (element == "items") {
+        LOG(DEBUG) << "Settings items";
         getPayloadInternal()->setItems(item_parser_.getPayloadInternal());
         is_parsing_items_ = false;
       }
@@ -280,6 +282,24 @@ class PubsubPublishRequestParser : public Swift::GenericPayloadParser<PubsubPubl
   virtual void handleCharacterData(const std::string& data) {}
 };
 
+class PubsubSubscribeRequestParser : public Swift::GenericPayloadParser<PubsubSubscribeRequest> {
+ public:
+  virtual void handleStartElement(const std::string& element, const std::string& ns, const Swift::AttributeMap& attributes) {
+    if (element == "subscription") {
+      getPayloadInternal()->setNode(attributes.getAttributeValue("node").get_value_or(""));
+      getPayloadInternal()->setSubscribersJID(attributes.getAttributeValue("jid").get_value_or(""));
+      std::string subscr = attributes.getAttributeValue("subscription").get_value_or("");
+      if (subscr == "subscribed") {
+        getPayloadInternal()->setSubscription(PubsubSubscribeRequest::Subscribed);
+      }
+    }
+  }
+
+  virtual void handleEndElement(const std::string& element, const std::string& ns) {}
+
+  virtual void handleCharacterData(const std::string& data) {}
+};
+
 class PubsubParser : public Swift::PayloadParser {
  public:
   PubsubParser() : level_(TopLevel), parser_(0) {}
@@ -292,13 +312,12 @@ class PubsubParser : public Swift::PayloadParser {
     if (level_ == TopLevel) {
     } else {
       if(!parser_) {
-        LOG(DEBUG) << element;
         if (element == "items") {
-          type_ = Items;
           parser_ = new PubsubItemsRequestParser;
         } else if (element == "publish") {
-          type_ = Publish;
           parser_ = new PubsubPublishRequestParser;
+        } else if (element == "subscription") {
+          parser_ = new PubsubSubscribeRequestParser;
         } else { // TODO: parse subscribe, unsubscribe, retract responses
           parser_ = new LogParser;
         }
@@ -341,9 +360,75 @@ class PubsubParser : public Swift::PayloadParser {
   //boost::shared_ptr<Swift::Payload> payload_;
 };
 
-class PubsubParserFactory : public Swift::GenericPayloadParserFactory<PubsubParser> {
+class EventPayloadParser : public Swift::GenericPayloadParser<EventPayload> {
  public:
-  PubsubParserFactory() : Swift::GenericPayloadParserFactory<PubsubParser>("pubsub", "http://jabber.org/protocol/pubsub") {}
+  EventPayloadParser() : type_(Unknown), level_(TopLevel), parser_(0) {}
+
+  ~EventPayloadParser() {
+    delete parser_;
+  }
+
+  void handleStartElement(const std::string&  element, const std::string&  ns, const Swift::AttributeMap&  attributes) {
+    if (level_ == TopLevel) {
+    } else {
+      if(!parser_) {
+        if (element == "items") {
+          type_ = Items;
+          items_parser_ = new PubsubItemsRequestParser;
+          parser_ = items_parser_;
+        } else {  // subscription, retract
+          parser_ = new LogParser;
+        }
+      }
+      assert(parser_);
+      parser_->handleStartElement(element, ns, attributes);
+
+    }
+    ++level_;
+  }
+
+  void handleEndElement(const std::string&  element, const std::string&  ns) {
+    --level_;
+    if (parser_) {
+      parser_->handleEndElement(element, ns);
+    }
+    if (level_ == PayloadLevel) {
+      if (type_ == Items && element == "items") {
+        getPayloadInternal()->setNode(items_parser_->getPayloadInternal()->getNode());
+        getPayloadInternal()->setItems(items_parser_->getPayloadInternal()->getItems());
+        LOG(DEBUG) << "Gettings EventPayload from " << items_parser_->getPayloadInternal()->getNode();
+        //LOG(DEBUG) << "...with contents ...  " << items_parser_->getPayloadInternal()->getItems()->get().front();
+      } else {
+
+      }
+    }
+  }
+
+  void handleCharacterData(const std::string& data) {
+    if (parser_) {
+      parser_->handleCharacterData(data);
+    }
+  }
+
+  virtual boost::shared_ptr<Swift::Payload> getPayload() const {
+    return getPayloadInternal();
+  }
+
+ private:
+  enum Level {
+    TopLevel = 0,
+    PayloadLevel = 1
+  };
+  enum Type {
+    Unknown,
+    Items,
+    Subscription,
+    Retract
+  } type_;
+  int level_;
+  PubsubItemsRequestParser* items_parser_;
+  PayloadParser* parser_;
+  //boost::shared_ptr<Swift::Payload> payload_;
 };
 
 #endif /* PUBSUB_PAYLOAD_PARSER_H_ */

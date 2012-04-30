@@ -1,8 +1,10 @@
-<`TEMPLATE = app
+TEMPLATE = app
 TARGET = social_desktop_client
 QT += core \
     gui
-HEADERS += ui/qtgui/generic_widget_factory.h \
+HEADERS += ui/qtgui/new_contact_widget.h \
+    ui/qtgui/new_contact_dialog.h \
+    ui/qtgui/generic_widget_factory.h \
     ui/qtgui/widget_factory.h \
     ui/qtgui/content_panel.h \
     ui/qtgui/contact_widget.h \
@@ -41,7 +43,8 @@ HEADERS += ui/qtgui/generic_widget_factory.h \
     core/include/config_manager.h \
     core/include/connection_manager.h \
     core/include/plugin_manager.h
-SOURCES += ui/qtgui/content_panel.cpp \
+SOURCES += ui/qtgui/new_contact_dialog.cpp \
+    ui/qtgui/content_panel.cpp \
     ui/qtgui/contact_widget.cpp \
     ui/qtgui/qt_service_model.cc \
     ui/qtgui/qt_service.cc \
@@ -65,7 +68,8 @@ SOURCES += ui/qtgui/content_panel.cpp \
     core/connection_manager.cc \
     core/plugin_manager.cc \
     main.cpp
-FORMS += ui/qtgui/content_panel.ui \
+FORMS += ui/qtgui/new_contact_dialog.ui \
+    ui/qtgui/content_panel.ui \
     ui/qtgui/contact_widget.ui \
     ui/qtgui/account_button.ui \
     ui/qtgui/new_account_dialog.ui \
