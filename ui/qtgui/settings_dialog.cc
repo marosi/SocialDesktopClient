@@ -90,9 +90,9 @@ void SettingsDialog::RefreshAccountsTable() {
 }
 
 void SettingsDialog::SetEnabledAccount(QTableWidgetItem* item) {
-  if (ui.accountsTableWidget->currentColumn() != 1)
+  if (item->column() != 1)
     return;
-  int id = ui.accountsTableWidget->currentRow();
+  int id = item->row();
   if (item->checkState() == Qt::Checked) {
     core()->data()->SetEnabledAccount(id, true);
   } else if (item->checkState() == Qt::Unchecked) {
