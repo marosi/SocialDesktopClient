@@ -12,7 +12,7 @@
 #define BC_CONTACT_WIDGET_H_
 
 #include "sdc.h"
-#include "bc_contact.h"
+#include "content/bc_contact.h"
 
 class BcContactWidget : public sdc::ContactWidget {
  public:

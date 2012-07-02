@@ -13,8 +13,8 @@
 
 #include "sdc.h"
 #include "buddycloud_bot.h"
-#include "channel.h"
-#include "post.h"
+#include "content/channel.h"
+#include "content/post.h"
 #include "ui_new_post_widget.h"
 #include "boost/bind.hpp"
 #include "boost/foreach.hpp"

@@ -12,9 +12,11 @@
 #define BUDDYCLOUD_BOT_H_
 
 #include "buddycloud_connection.h"
-#include "bc_contact.h"
-#include "channel.h"
-#include "pubsub.h"
+
+#include "content/bc_contact.h"
+#include "content/channel.h"
+
+#include "payloads/pubsub.h"
 
 #include "sdc.h"
 #include "Swiften/Swiften.h"

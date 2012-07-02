@@ -11,7 +11,7 @@
 #ifndef PUBSUB_REQUESTS_H_
 #define PUBSUB_REQUESTS_H_
 
-#include "pubsub.h"
+#include "payloads/pubsub.h"
 
 /**
  * Pubsub <items> request

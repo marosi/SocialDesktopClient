@@ -9,12 +9,9 @@
 #include "buddycloud_connection.h"
 #include "buddycloud_bot.h"
 #include "bc_new_account_widget.h"
-#include "bc_contact.h"
 #include "bc_contact_widget.h"
 #include "bc_new_contact_widget.h"
-#include "channel.h"
 #include "channel_widget.h"
-#include "post.h"
 #include "post_widget.h"
 
 using namespace sdc;

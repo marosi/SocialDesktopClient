@@ -46,59 +46,6 @@ std::string AtomSerializer::serializePayload(boost::shared_ptr<Atom> payload) co
   return entry.serialize();
 }
 
-/*
-PubsubSerializer::PubsubSerializer() {
-  serializers_.addSerializer(new AtomSerializer);
-}
-
-std::string PubsubSerializer::serializePayload(boost::shared_ptr<Pubsub> payload) const {
-  XMLElement pubsub("pubsub", "http://jabber.org/protocol/pubsub");
-  switch (payload->getAction()) {
-    case Pubsub::SUBSCRIBE: {
-      XMLElement::ref subscribe(new XMLElement("subscribe"));
-      subscribe->setAttribute("node", payload->getNode());
-      pubsub.addNode(subscribe);
-      break;
-    }
-    case Pubsub::UNSUBSCRIBE: {
-      XMLElement::ref unsubscribe(new XMLElement("unsubscribe"));
-      unsubscribe->setAttribute("node", payload->getNode());
-      pubsub.addNode(unsubscribe);
-      break;
-    }
-    case Pubsub::PUBLISH: {
-      XMLElement::ref publish(new XMLElement("publish"));
-      publish->setAttribute("node", payload->getNode());
-      Payload::ref item = payload->getPublishItem();
-      if(item) {
-        PayloadSerializer* serializer =  serializers_.getPayloadSerializer(item);
-        assert(serializer);
-        XMLElement::ref item_elem(new XMLElement("item"));
-        item_elem->addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(serializer->serialize(item))));
-        publish->addNode(item_elem);
-      }
-      pubsub.addNode(publish);
-      break;
-    }
-    case Pubsub::RETRACT: {
-      XMLElement::ref retract(new XMLElement("retract"));
-      retract->setAttribute("node", payload->getNode());
-      pubsub.addNode(retract);
-      break;
-    }
-    case Pubsub::ITEMS: {
-      XMLElement::ref items(new XMLElement("items"));
-      items->setAttribute("node", payload->getNode());
-      pubsub.addNode(items);
-      break;
-    }
-    default:
-      assert(false);
-  }
-  return pubsub.serialize();
-}
-*/
-
 std::string PubsubItemsRequestSerializer::serializePayload(boost::shared_ptr<PubsubItemsRequest> payload) const {
   XMLElement pubsub("pubsub", "http://jabber.org/protocol/pubsub");
   XMLElement::ref items(new XMLElement("items"));
@@ -142,5 +89,13 @@ std::string PubsubSubscribeRequestSerializer::serializePayload(boost::shared_ptr
   subscribe->setAttribute("node", payload->getNode());
   subscribe->setAttribute("jid", payload->getSubscribersJID());
   pubsub.addNode(subscribe);
+  return pubsub.serialize();
+}
+
+std::string PubsubUnsubscribeRequestSerializer::serializePayload(boost::shared_ptr<PubsubUnsubscribeRequest> payload) const {
+  XMLElement pubsub("pubsub", "http://jabber.org/protocol/pubsub");
+  XMLElement::ref unsubscribe(new XMLElement("unsubscribe"));
+  unsubscribe->setAttribute("node", payload->getNode());
+  pubsub.addNode(unsubscribe);
   return pubsub.serialize();
 }

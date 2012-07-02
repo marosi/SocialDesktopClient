@@ -238,6 +238,10 @@ class PubsubSubscribeRequest : public PubsubNode {
   Swift::JID jid_;
 };
 
+class PubsubUnsubscribeRequest : public PubsubNode {
+
+};
+
 /**
  * Event pubsub payload, usually comming to pubsub node subscribers on node update.
  * It is so far identical to PubsubItemsRequest therefore only shared_ptr typedef is added.

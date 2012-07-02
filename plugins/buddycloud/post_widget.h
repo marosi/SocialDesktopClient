@@ -1,8 +1,8 @@
 #ifndef POST_WIDGET_H
 #define POST_WIDGET_H
 
-#include "channel.h"
-#include "post.h"
+#include "content/channel.h"
+#include "content/post.h"
 #include "sdc.h"
 #include <QtGui/QWidget>
 #include "ui_post_widget.h"

@@ -2,7 +2,7 @@
 #define BC_NEW_CONTACT_WIDGET_H
 
 #include "sdc.h"
-#include "bc_contact.h"
+#include "content/bc_contact.h"
 #include "buddycloud_bot.h"
 #include <QtGui/QWidget>
 #include "ui_bc_new_contact_widget.h"
