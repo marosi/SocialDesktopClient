@@ -39,8 +39,6 @@ class UI : public CoreAnchor { // TODO: Abstract manager holds anchor to Core, s
     return controllers_;
   }
 
-  virtual ServiceController* CreateServiceController(Service* service);
-
  private:
   std::vector<ServiceController*> controllers_;
 };

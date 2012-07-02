@@ -7,7 +7,6 @@
 
 #include "buddycloud_connection.h"
 #include "buddycloud_bot.h"
-#include "b_controller.h"
 #include "boost/shared_ptr.hpp"
 #include "boost/pointer_cast.hpp"
 
@@ -34,18 +33,3 @@ void BuddycloudConnection::Disconnect() {
   bot_->client_->disconnect();
   LOG(TRACE) << "Disconnecting Swiften XMPP client.";
 }
-
-/// Testing @{
-
-void BuddycloudConnection::HandleSendDiscoInfo(const string &to_attribute, const string &node_attribute) {
-  bot_->SendDiscoInfo(to_attribute, node_attribute);
-}
-
-void BuddycloudConnection::HandleSendDiscoItems(const string &to_attribute, const string &node_attribute) {
-  bot_->SendDiscoItems(to_attribute, node_attribute);
-}
-
-void BuddycloudConnection::HandleSomething(const string &param) {
-  bot_->DoSomething(param);
-}
-/// @}

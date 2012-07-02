@@ -78,7 +78,7 @@ class Channel : public sdc::Content {
     return controller_;
   }
 
-  boost::signals2::signal1<void, Post1::Ref> onPostAdded;
+  boost::signals2::signal<void (Post1::Ref)> onPostAdded;
 
  private:
   sdc::Contact::Ref contact_;

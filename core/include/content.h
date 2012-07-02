@@ -12,7 +12,7 @@
 #define CORE_CONTENT_H_
 
 #include "boost/shared_ptr.hpp"
-#include "boost/signals2.hpp"
+#include "boost/signals2/signal.hpp"
 #include <list>
 #include <string>
 #include <vector>
@@ -59,8 +59,8 @@ class Content {
     onRemove();
   }
 
-  boost::signals2::signal0<void> onChange;
-  boost::signals2::signal0<void> onRemove;
+  boost::signals2::signal<void ()> onChange;
+  boost::signals2::signal<void ()> onRemove;
 
  private:
   std::string id_;

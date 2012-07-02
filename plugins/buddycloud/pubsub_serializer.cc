@@ -111,7 +111,7 @@ std::string PubsubRetractRequestSerializer::serializePayload(boost::shared_ptr<P
   XMLElement pubsub("pubsub", "http://jabber.org/protocol/pubsub");
   XMLElement::ref retract(new XMLElement("retract"));
   retract->setAttribute("node", payload->getNode());
-  retract->setAttribute("notify", "1");
+  retract->setAttribute("notify", "true");
   XMLElement::ref item(new XMLElement("item"));
   item->setAttribute("id", payload->getItemID());
   retract->addNode(item);

@@ -73,10 +73,10 @@ class Core : boost::noncopyable {
 	/**
    * Signals
    */
-  boost::signals2::signal0<void>  onGuiPrepared;
-  boost::signals2::signal1<void, AccountData*> onAccountActivated;
-  boost::signals2::signal1<void, AccountData*> onAccountDeactivated;
-  boost::signals2::signal1<void, Content::Ref> onContentView;
+  boost::signals2::signal<void ()>  onGuiPrepared;
+  boost::signals2::signal<void (AccountData*)> onAccountActivated;
+  boost::signals2::signal<void (AccountData*)> onAccountDeactivated;
+  boost::signals2::signal<void (Content::Ref)> onContentView;
 
 
  private:

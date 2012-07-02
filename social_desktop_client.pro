@@ -74,17 +74,22 @@ FORMS += ui/qtgui/new_contact_dialog.ui \
     ui/qtgui/account_button.ui \
     ui/qtgui/new_account_dialog.ui \
     ui/qtgui/mainwindow.ui \
-    ui/qtgui/settings_dialog.ui
+    ui/qtgui/settings_dialog.ui 
 RESOURCES += 
-INCLUDEPATH += core/include \
+INCLUDEPATH += \ 
+    core/include \
     ui/qtgui \ # /home/xangel/projects/Plugins \
     /home/xangel/projects/boost_1_48_0
 
 # testing
-LIBS += -L/home/xangel/projects/boost_1_48_0/stage/lib \ # -L/home/xangel/projects/Plugins \
+LIBS += \
+    -L/home/xangel/projects/boost_1_48_0/stage/lib \
+# -L/home/xangel/projects/Plugins \
 # -lbuddycloud \
     -lboost_system \
     -lboost_thread \
     -lboost_serialization
-QMAKE_LFLAGS += -export-dynamic
-QMAKE_CXXFLAGS += -Wunused
+    
+QMAKE_LFLAGS += -export-dynamic 
+    
+#QMAKE_CXXFLAGS += -fPIE -fPIC

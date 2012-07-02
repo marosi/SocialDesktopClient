@@ -21,12 +21,6 @@ class BuddycloudConnection : public sdc::Connection {
   void Connect();
   void Disconnect();
 
-  /// Testing @{
-  void HandleSendDiscoInfo(const std::string &to_attribute, const std::string &node_attribute);
-  void HandleSendDiscoItems(const std::string &to_attribute, const std::string &node_attribute);
-  void HandleSomething(const std::string &param);
-  /// @}
-
   BuddycloudBot* bot() {
     return bot_;
   }
