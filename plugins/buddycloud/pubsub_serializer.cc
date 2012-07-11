@@ -6,12 +6,14 @@
  */
 
 #include "pubsub_serializer.h"
+#include "Swiften/Serializer/PayloadSerializers/FormSerializer.h"
+#include "Swiften/Serializer/XML/XMLElement.h"
+#include "Swiften/Serializer/XML/XMLRawTextNode.h"
 #include "sdc.h"
 
 using namespace Swift;
 
 std::string AtomSerializer::serializePayload(boost::shared_ptr<Atom> payload) const {
-  LOG(DEBUG) << "get atom element";
   XMLElement entry("entry", "http://www.w3.org/2005/Atom");
   entry.setAttribute("xmlns:activity", "http://activitystrea.ms/spec/1.0/");
 //
@@ -43,6 +45,11 @@ std::string AtomSerializer::serializePayload(boost::shared_ptr<Atom> payload) co
   }
   entry.addNode(activity_object);
 //
+  if (payload->getInReplyTo() != "") {
+    XMLElement::ref in_reply_to(new XMLElement("in-reply-to", "http://purl.org/syndication/thread/1.0"));
+    in_reply_to->setAttribute("ref", payload->getInReplyTo());
+    entry.addNode(in_reply_to);
+  }
   return entry.serialize();
 }
 
@@ -72,8 +79,8 @@ std::string PubsubPublishRequestSerializer::serializePayload(boost::shared_ptr<P
   publish->setAttribute("node", payload->getNode());
 
   AtomSerializer as;
-  assert(as.canSerialize(payload->getAtom()));
-  std::string text_atom = as.serialize(payload->getAtom());
+  assert(as.canSerialize(payload->getPayload()));
+  std::string text_atom = as.serialize(payload->getPayload());
 
   XMLElement::ref item_elem(new XMLElement("item"));
   item_elem->addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(text_atom)));
@@ -97,5 +104,17 @@ std::string PubsubUnsubscribeRequestSerializer::serializePayload(boost::shared_p
   XMLElement::ref unsubscribe(new XMLElement("unsubscribe"));
   unsubscribe->setAttribute("node", payload->getNode());
   pubsub.addNode(unsubscribe);
+  return pubsub.serialize();
+}
+
+std::string PubsubConfigureNodeRequestSerializer::serializePayload(boost::shared_ptr<PubsubConfigureNodeRequest> payload) const {
+  XMLElement pubsub("pubsub", "http://jabber.org/protocol/pubsub");
+  XMLElement::ref create(new XMLElement("create"));
+  create->setAttribute("node", payload->getNode());
+  pubsub.addNode(create);
+  FormSerializer fs;
+  XMLElement::ref configure(new XMLElement("configure"));
+  configure->addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(fs.serialize(payload->getForm()))));
+  pubsub.addNode(configure);
   return pubsub.serialize();
 }

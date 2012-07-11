@@ -10,14 +10,19 @@ namespace sdc {
 class ServiceModel;
 
 class AccountButton : public QWidget, public QtView {
+
     Q_OBJECT
 
  public:
   AccountButton(QWidget *parent, QtServiceModel* model);
-  ~AccountButton();
+  virtual ~AccountButton();
 
   bool isThis(ServiceModel* model) {
     return model == model_;
+  }
+
+  QMenu* menu() {
+    return menu_;
   }
 
  protected slots:

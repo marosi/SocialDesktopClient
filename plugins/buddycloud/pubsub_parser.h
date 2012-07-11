@@ -11,71 +11,38 @@
 #ifndef PUBSUB_PAYLOAD_PARSER_H_
 #define PUBSUB_PAYLOAD_PARSER_H_
 
+#include "payloads/items.h"
 #include "sdc.h"
-#include "Swiften/Swiften.h"
-#include "payloads/pubsub.h"
-
+#include "Swiften/Parser/GenericPayloadParser.h"
+#include "Swiften/Parser/PayloadParser.h"
+#include "Swiften/Parser/PayloadParserFactoryCollection.h"
 #include <string>
 
-template<class Payload>
-class ItemParser : public Swift::GenericPayloadParser<Items<Payload> > {
+class Atom;
+class EventPayload;
+class PubsubItemsRequest;
+class PubsubPublishRequest;
+class PubsubRetractRequest;
+class PubsubSubscribeRequest;
+
+/**
+ *
+ */
+template<class T>
+class ItemParser : public Swift::GenericPayloadParser<Items<T> > {
  public:
-  ItemParser() : level_(TopLevel), curr_parser_(0) {}
+  ItemParser();
 
-  ~ItemParser() {
-    std::vector<Swift::PayloadParserFactory*>::iterator it;
-    for(it = factories_.begin(); it != factories_.end(); ++it) {
-      delete *it;
-    }
-    delete curr_parser_;
-  }
+  ~ItemParser();
 
-  void addPaylodParserFactory(Swift::PayloadParserFactory* parser) {
-    parsers_.addFactory(parser);
-    factories_.push_back(parser);
-  }
+  void addPaylodParserFactory(Swift::PayloadParserFactory* parser);
 
-  virtual void handleStartElement(const std::string& element, const std::string& ns, const Swift::AttributeMap& attributes) {
-    LOG(DEBUG) << "items parser: " << element;
-    if (level_ == TopLevel) { // "item" level
-    } else {
-      if (!curr_parser_) {
-        Swift::PayloadParserFactory* factory = parsers_.getPayloadParserFactory(element, ns, attributes);
-        assert(factory);
-        curr_parser_ = factory->createPayloadParser(); // FIX: each item, new parser is created, is that necessary for ItemParser?
-      }
-      assert(curr_parser_);
-      curr_parser_->handleStartElement(element, ns, attributes);
-    }
-    ++level_;
-  }
+  virtual void handleStartElement(const std::string& element, const std::string& ns, const Swift::AttributeMap& attributes);
 
-  using Swift::GenericPayloadParser<Items<Payload> >::getPayloadInternal;
-  virtual void handleEndElement(const std::string& element, const std::string& ns) {
-    --level_;
-    if (level_ == TopLevel && element == "item") {
-      // push back handled payload in item element
-      assert(curr_parser_);
-      getPayloadInternal()->appendPayload(boost::dynamic_pointer_cast<Payload>(curr_parser_->getPayload())); // FIX: not efficient
-      LOG(DEBUG4) << "@@@@@@@@@ adding payload to items";
-      // reset variables
-      delete curr_parser_;
-      curr_parser_ = 0;
-    } else {
-      assert(curr_parser_);
-      curr_parser_->handleEndElement(element, ns);
-    }
-  }
+  using Swift::GenericPayloadParser<Items<T> >::getPayloadInternal;
+  virtual void handleEndElement(const std::string& element, const std::string& ns);
 
-  virtual void handleCharacterData(const std::string& data) {
-    if (level_ > TopLevel) {
-      assert(curr_parser_);
-      curr_parser_->handleCharacterData(data);
-    }
-    else { // everything else goes to sink
-      character_data_ += data;
-    }
-  }
+  virtual void handleCharacterData(const std::string& data);
 
  private:
   enum Level {
@@ -90,7 +57,7 @@ class ItemParser : public Swift::GenericPayloadParser<Items<Payload> > {
 
 class LogParser : public Swift::PayloadParser {
  public:
-  void handleStartElement(const std::string&  element, const std::string&  ns, const Swift::AttributeMap&  attributes) {
+  void handleStartElement(const std::string&  element, const std::string&  ns, const Swift::AttributeMap&  /*attributes*/) {
     LOG(DEBUG) << "<" << element << " xmlns=" << ns << ">";
   }
 
@@ -109,92 +76,15 @@ class LogParser : public Swift::PayloadParser {
   }
 };
 
-class AnyParserFactory : public Swift::PayloadParserFactory {
- public:
-  AnyParserFactory(Swift::PayloadParser* parser) : parser_(parser) {}
-  ~AnyParserFactory() { delete parser_; }
-
-  virtual bool canParse(const std::string& element, const std::string& ns, const Swift::AttributeMap& attributes) const {
-      return true;
-  }
-
-  virtual Swift::PayloadParser* createPayloadParser() {
-    return parser_;
-  }
-
- private:
-  Swift::PayloadParser* parser_;
-};
-
 class AtomParser : public Swift::GenericPayloadParser<Atom> {
  public:
-  AtomParser() : level_(EntryLevel), meta_(NIL) {}
+  AtomParser();
 
-  void handleStartElement(const std::string&  element, const std::string&  ns, const Swift::AttributeMap&  attributes) {
-    if (level_ == EntryLevel) {// TopLevel element
-    } else if (level_ == MetaLevel) {
-      LOG(DEBUG2) << "<" << element << ">";
-      if (element == "author") {
-        meta_ = Author;
-      } else if (element == "content") {
-        meta_ = Content;
-        inner_text_.clear();
-      } else if (element == "object" && ns == "http://activitystrea.ms/spec/1.0/") {
-        meta_ = Object;
-      } else if (element == "id") {
-        meta_ = Id;
-        inner_text_.clear();
-      }
-    } else if (level_ > MetaLevel) {
-      if (meta_ == Author) {
-        if (element == "name" || element == "jid" || element == "uri")
-          inner_text_.clear();
-      } else if (meta_ == Object) {
-        if (element == "object-type") {
-          inner_text_.clear();
-        }
-      }
-    }
-    ++level_;
-  }
+  void handleStartElement(const std::string&  element, const std::string&  ns, const Swift::AttributeMap&  /*attributes*/);
 
-  void handleEndElement(const std::string&  element, const std::string&  ns) {
-    --level_;
-    if (level_ == MetaLevel) {
-      if (meta_ == Content) {
-        getPayloadInternal()->setContent(inner_text_);
-        meta_ = NIL;
-      } else if (meta_ == Id) {
-        getPayloadInternal()->setID(inner_text_);
-        meta_ = NIL;
-      }
-    } else if (level_ > MetaLevel) {
-      if (meta_ == Author) {
-        if (element == "name") {
-          getPayloadInternal()->setAuthor(inner_text_);
-          meta_ = NIL;
-        }
-        else if (element == "jid")
-          ; // nothing so far
-        else if (element == "uri")
-          ; // nothing so far
-      } else if (meta_ == Object) {
-        if (element == "object-type") {
-          if (inner_text_ == "note") {
-            getPayloadInternal()->setObjectType(Atom::NOTE);
-          } else if (inner_text_ == "comment") {
-            getPayloadInternal()->setObjectType(Atom::COMMENT);
-          }
-        }
-      }
-    }
-  }
+  void handleEndElement(const std::string&  element, const std::string&  /*ns*/);
 
-  void handleCharacterData(const std::string&  data) {
-    if (level_ > MetaLevel) {
-      inner_text_ += data;
-    }
-  }
+  void handleCharacterData(const std::string&  data);
 
  private:
   enum Level {
@@ -213,50 +103,15 @@ class AtomParser : public Swift::GenericPayloadParser<Atom> {
   std::string inner_text_;
 };
 
-class AtomParserFactory : public Swift::GenericPayloadParserFactory<AtomParser> {
- public:
-  AtomParserFactory() : Swift::GenericPayloadParserFactory<AtomParser>("entry", "http://www.w3.org/2005/Atom") {}
-};
-
 class PubsubItemsRequestParser : public Swift::GenericPayloadParser<PubsubItemsRequest> {
  public:
-  PubsubItemsRequestParser() : level_(TopLevel), is_parsing_items_(false) {
-    item_parser_.addPaylodParserFactory(new AtomParserFactory);
-  }
+  PubsubItemsRequestParser();
 
-  virtual void handleStartElement(const std::string& element, const std::string& ns, const Swift::AttributeMap& attributes) {
-    if (level_ == TopLevel) {
-      if (element == "items") {
-        getPayloadInternal()->setNode(attributes.getAttributeValue("node").get_value_or("___NODE___"));
-        LOG(DEBUG) << "ITEMS LEVEL" << getPayloadInternal()->getNode();
-        is_parsing_items_ = true;
-      }
-    } else {
-      if (is_parsing_items_) {
-        item_parser_.handleStartElement(element, ns, attributes);
-      }
-    }
-    ++level_;
-  }
+  virtual void handleStartElement(const std::string& element, const std::string& ns, const Swift::AttributeMap& attributes);
 
-  virtual void handleEndElement(const std::string& element, const std::string& ns) {
-    --level_;
-    if (level_ == TopLevel) {
-      if (element == "items") {
-        LOG(DEBUG) << "Settings items";
-        getPayloadInternal()->setItems(item_parser_.getPayloadInternal());
-        is_parsing_items_ = false;
-      }
-    } else if (level_ > TopLevel && is_parsing_items_) {
-      item_parser_.handleEndElement(element, ns);
-    }
-  }
+  virtual void handleEndElement(const std::string& element, const std::string& ns);
 
-  virtual void handleCharacterData(const std::string& data) {
-    if (level_ > TopLevel && is_parsing_items_) {
-      item_parser_.handleCharacterData(data);
-    }
-  }
+  virtual void handleCharacterData(const std::string& data);
 
  private:
   enum Level {
@@ -269,82 +124,44 @@ class PubsubItemsRequestParser : public Swift::GenericPayloadParser<PubsubItemsR
 
 class PubsubPublishRequestParser : public Swift::GenericPayloadParser<PubsubPublishRequest> {
  public:
-  virtual void handleStartElement(const std::string& element, const std::string& ns, const Swift::AttributeMap& attributes) {
-    if (element == "publish") {
-      getPayloadInternal()->setNode(attributes.getAttributeValue("node").get_value_or(""));
-    } else if (element == "item") {
-      getPayloadInternal()->setItemID(attributes.getAttributeValue("id").get_value_or(""));
-    }
-  }
+  virtual void handleStartElement(const std::string& element, const std::string& /*ns*/, const Swift::AttributeMap& attributes);
 
-  virtual void handleEndElement(const std::string& element, const std::string& ns) {}
+  virtual void handleEndElement(const std::string& /*element*/, const std::string& /*ns*/) {}
 
-  virtual void handleCharacterData(const std::string& data) {}
+  virtual void handleCharacterData(const std::string& /*data*/) {}
 };
+
+//class PubsubRetractRequestParser : public Swift::GenericPayloadParser<PubsubRetractRequest> {
+// public:
+//  virtual void handleStartElement(const std::string& element, const std::string& ns, const Swift::AttributeMap& attributes);
+
+//  virtual void handleEndElement(const std::string& /*element*/, const std::string& /*ns*/) {}
+
+//  virtual void handleCharacterData(const std::string& /*data*/) {}
+//};
 
 class PubsubSubscribeRequestParser : public Swift::GenericPayloadParser<PubsubSubscribeRequest> {
  public:
-  virtual void handleStartElement(const std::string& element, const std::string& ns, const Swift::AttributeMap& attributes) {
-    if (element == "subscription") {
-      getPayloadInternal()->setNode(attributes.getAttributeValue("node").get_value_or(""));
-      getPayloadInternal()->setSubscribersJID(attributes.getAttributeValue("jid").get_value_or(""));
-      std::string subscr = attributes.getAttributeValue("subscription").get_value_or("");
-      if (subscr == "subscribed") {
-        getPayloadInternal()->setSubscription(PubsubSubscribeRequest::Subscribed);
-      }
-    }
-  }
+  virtual void handleStartElement(const std::string& element, const std::string& /*ns*/, const Swift::AttributeMap& attributes);
 
-  virtual void handleEndElement(const std::string& element, const std::string& ns) {}
+  virtual void handleEndElement(const std::string& /*element*/, const std::string& /*ns*/) {}
 
-  virtual void handleCharacterData(const std::string& data) {}
+  virtual void handleCharacterData(const std::string& /*data*/) {}
 };
 
 class PubsubParser : public Swift::PayloadParser {
  public:
-  PubsubParser() : level_(TopLevel), parser_(0) {}
+  PubsubParser();
 
-  ~PubsubParser() {
-    delete parser_;
-  }
+  ~PubsubParser();
 
-  void handleStartElement(const std::string&  element, const std::string&  ns, const Swift::AttributeMap&  attributes) {
-    if (level_ == TopLevel) {
-    } else {
-      if(!parser_) {
-        if (element == "items") {
-          parser_ = new PubsubItemsRequestParser;
-        } else if (element == "publish") {
-          parser_ = new PubsubPublishRequestParser;
-        } else if (element == "subscription") {
-          parser_ = new PubsubSubscribeRequestParser;
-        } else { // TODO: parse subscribe, unsubscribe, retract responses
-          parser_ = new LogParser;
-        }
-      }
-      assert(parser_);
-      parser_->handleStartElement(element, ns, attributes);
-    }
-    ++level_;
-  }
+  void handleStartElement(const std::string&  element, const std::string&  ns, const Swift::AttributeMap&  attributes);
 
-  void handleEndElement(const std::string&  element, const std::string&  ns) {
-    --level_;
-    if (parser_) {
-      parser_->handleEndElement(element, ns);
-    }
-  }
+  void handleEndElement(const std::string&  element, const std::string&  ns);
 
-  void handleCharacterData(const std::string& data) {
-    if (parser_) {
-      parser_->handleCharacterData(data);
-    }
-  }
+  void handleCharacterData(const std::string& data);
 
-  virtual boost::shared_ptr<Swift::Payload> getPayload() const {
-    LOG(DEBUG) << "PubsubParser getPayload() object: " << typeid(*parser_->getPayload().get()).name();
-    return parser_->getPayload();
-  }
+  virtual boost::shared_ptr<Swift::Payload> getPayload() const;
 
  private:
   enum Level {
@@ -357,62 +174,21 @@ class PubsubParser : public Swift::PayloadParser {
     Publish
   } type_;
   PayloadParser* parser_;
-  //boost::shared_ptr<Swift::Payload> payload_;
 };
 
 class EventPayloadParser : public Swift::GenericPayloadParser<EventPayload> {
  public:
-  EventPayloadParser() : type_(Unknown), level_(TopLevel), parser_(0) {}
+  EventPayloadParser();
 
-  ~EventPayloadParser() {
-    delete parser_;
-  }
+  ~EventPayloadParser();
 
-  void handleStartElement(const std::string&  element, const std::string&  ns, const Swift::AttributeMap&  attributes) {
-    if (level_ == TopLevel) {
-    } else {
-      if(!parser_) {
-        if (element == "items") {
-          type_ = Items;
-          items_parser_ = new PubsubItemsRequestParser;
-          parser_ = items_parser_;
-        } else {  // subscription, retract
-          parser_ = new LogParser;
-        }
-      }
-      assert(parser_);
-      parser_->handleStartElement(element, ns, attributes);
+  void handleStartElement(const std::string&  element, const std::string&  ns, const Swift::AttributeMap&  attributes);
 
-    }
-    ++level_;
-  }
+  void handleEndElement(const std::string&  element, const std::string&  ns);
 
-  void handleEndElement(const std::string&  element, const std::string&  ns) {
-    --level_;
-    if (parser_) {
-      parser_->handleEndElement(element, ns);
-    }
-    if (level_ == PayloadLevel) {
-      if (type_ == Items && element == "items") {
-        getPayloadInternal()->setNode(items_parser_->getPayloadInternal()->getNode());
-        getPayloadInternal()->setItems(items_parser_->getPayloadInternal()->getItems());
-        LOG(DEBUG) << "Gettings EventPayload from " << items_parser_->getPayloadInternal()->getNode();
-        //LOG(DEBUG) << "...with contents ...  " << items_parser_->getPayloadInternal()->getItems()->get().front();
-      } else {
+  void handleCharacterData(const std::string& data);
 
-      }
-    }
-  }
-
-  void handleCharacterData(const std::string& data) {
-    if (parser_) {
-      parser_->handleCharacterData(data);
-    }
-  }
-
-  virtual boost::shared_ptr<Swift::Payload> getPayload() const {
-    return getPayloadInternal();
-  }
+  virtual boost::shared_ptr<Swift::Payload> getPayload() const;
 
  private:
   enum Level {
@@ -428,7 +204,6 @@ class EventPayloadParser : public Swift::GenericPayloadParser<EventPayload> {
   int level_;
   PubsubItemsRequestParser* items_parser_;
   PayloadParser* parser_;
-  //boost::shared_ptr<Swift::Payload> payload_;
 };
 
 #endif /* PUBSUB_PAYLOAD_PARSER_H_ */

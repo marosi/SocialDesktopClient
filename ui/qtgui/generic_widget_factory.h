@@ -16,18 +16,18 @@
 
 namespace sdc {
 
-template<class C, class W>
-class GenericWidgetFactory : public WidgetFactory {
- public:
-  virtual bool CanCreate(Content::Ref content) {
-    return boost::dynamic_pointer_cast<C>(content);
-  }
+//template<class C, class W>
+//class GenericWidgetFactory : public WidgetFactory {
+// public:
+//  virtual bool CanCreate(Content::Ref content) {
+//    return boost::dynamic_pointer_cast<C>(content);
+//  }
 
-  virtual QWidget* Create(QWidget* parent, Content::Ref content) {
-    boost::shared_ptr<C> casted = boost::dynamic_pointer_cast<C>(content);
-    return new W(parent, casted);
-  }
-};
+//  virtual QWidget* Create(QWidget* parent, Content::Ref content) {
+//    boost::shared_ptr<C> casted = boost::dynamic_pointer_cast<C>(content);
+//    return new W(parent, casted);
+//  }
+//};
 
 } /* namespace sdc */
 

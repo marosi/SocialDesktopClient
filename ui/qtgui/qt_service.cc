@@ -13,10 +13,6 @@
 
 namespace sdc {
 
-AccountButton* QtService::CreateAccountButton(QWidget* parent, QtServiceModel* model) {
-  return new AccountButton(parent, model);
-}
-
 ContactWidget* QtService::CreateContactWidget(QWidget* parent, Contact::Ref contact) {
   return new ContactWidget(parent, contact);
 }

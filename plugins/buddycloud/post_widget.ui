@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>291</width>
-    <height>184</height>
+    <width>244</width>
+    <height>127</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -114,6 +114,9 @@
        </disabled>
       </palette>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -127,6 +130,16 @@
       <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
      </property>
     </widget>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="commentsLayout">
+     <property name="leftMargin">
+      <number>20</number>
+     </property>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="commentLineEdit"/>
    </item>
   </layout>
  </widget>

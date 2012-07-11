@@ -20,7 +20,9 @@ namespace sdc {
 class MainWindow;
 class QtSettingsController;
 class QtServiceModel;
+class QtService;
 class WidgetFactory;
+class ServicePresenter;
 
 /**
  * Kind of a main controller in MVC abstraction and also Manager in Core abstraction.
@@ -36,44 +38,45 @@ class QtGui : public QObject, public UI {
         main_view_(0) {}
   ~QtGui();
 
-  void Init();
+  void Init(); // TODO: do something with init() and exec() they are accessible from each QtView
 
   int Exec() {
     return app_.exec();
   }
 
-  QWidget* CreateContentWidget(Content::Ref, QWidget* parent = 0);
-
- private:
-  QApplication app_;
-  MainWindow* main_view_;
-  std::vector<WidgetFactory*> factories_;
-  std::vector<QWidget*> content_widgets_;
-
- /**
-  * Qt compatibility core layer
-  */
-  void OnAccountsChanged() {
-    emit accountsChanged();
-  }
-  void OnGuiPrepared() {
-    emit guiPrepared();
-  }
-  void OnAccountActivated(AccountData* model);
-  void OnAccountDeactivated(AccountData* model);
-  void OnContentView(Content::Ref content) {
-    emit contentView(content);
+  QtServiceModel* GetModel(ServicePresenter* presenter) {
+    return presenter_to_model_[presenter];
   }
 
- private slots:
-  void HandleContentView(Content::Ref content);
+  ServicePresenter* GetPresenter(QtServiceModel* model) {
+    return model_to_presenter_[model];
+  }
+
+  QtService* GetService(ServicePresenter* presenter) {
+    return presenter_to_service_[presenter];
+  }
+
+  //QWidget* CreateContentWidget(Content::Ref, QWidget* parent = 0);
 
  signals:
   void accountsChanged();
   void guiPrepared();
   void accountActivated(QtServiceModel* account);
   void accountDeactivated(AccountData* account);
-  void contentView(Content::Ref content);
+  //void contentView(Content::Ref content);
+
+ private:
+  QApplication app_;
+  MainWindow* main_view_;
+  std::vector<WidgetFactory*> factories_;
+  std::vector<QWidget*> content_widgets_;
+  std::map<QtServiceModel*, ServicePresenter*> model_to_presenter_;
+  std::map<ServicePresenter*, QtServiceModel*> presenter_to_model_;
+  std::map<ServicePresenter*, QtService*> presenter_to_service_;
+
+ private slots:
+  //void HandleContentView(Content::Ref content);
+  void OnAccountActivated(QtServiceModel* model);
 };
 
 } /* namespace sdc */

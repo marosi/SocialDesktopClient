@@ -11,7 +11,6 @@
 #ifndef CORE_SERVICE_MODEL_H_
 #define CORE_SERVICE_MODEL_H_
 
-#include "model.h"
 #include "core_anchor.h"
 
 namespace sdc {
@@ -20,7 +19,7 @@ class AccountData;
 class Connection;
 class Service;
 
-class ServiceModel : public Model, public CoreAnchor {
+class ServiceModel : public CoreAnchor {
  public:
   friend class Core;
 

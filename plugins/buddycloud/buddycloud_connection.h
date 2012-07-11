@@ -10,22 +10,22 @@
 #include "sdc.h"
 #include "Swiften/Swiften.h"
 
-class BuddycloudBot;
+class BcModel;
 
 class BuddycloudConnection : public sdc::Connection {
  public:
   BuddycloudConnection() {} // TODO: REMOVE
-  BuddycloudConnection(BuddycloudBot* bot);
+  BuddycloudConnection(BcModel* bot);
 
   void Run();
   void Connect();
   void Disconnect();
 
-  BuddycloudBot* bot() {
+  BcModel* bot() {
     return bot_;
   }
  private:
-  BuddycloudBot* bot_;
+  BcModel* bot_;
 };
 
 #endif /* BUDDYCLOUD_CONNECTION_H_ */

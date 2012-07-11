@@ -26,10 +26,4 @@ void ConnectionManager::MakeConnection(Connection* connection) {
   }
 }
 
-void ConnectionManager::ConnectAll() {
-  BOOST_FOREACH (Connection* conn, connections_) {
-    conn->Connect();
-  }
-}
-
 } /* namespace sdc */

@@ -16,11 +16,11 @@
 
 namespace sdc {
 
-class WidgetFactory {
- public:
-  virtual bool CanCreate(Content::Ref content)=0;
-  virtual QWidget* Create(QWidget* parent, Content::Ref content)=0;
-};
+//class WidgetFactory {
+// public:
+//  virtual bool CanCreate(Content::Ref content)=0;
+//  virtual QWidget* Create(QWidget* parent, Content::Ref content)=0;
+//};
 
 } /* namespace sdc */
 

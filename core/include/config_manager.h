@@ -112,9 +112,9 @@ class ConfigManager : public AbstractManager, public Properties {
 
   //void RegisterConnection(ConnectionRegistration*); //HAHA 111st design approach
 
-  boost::signals2::signal0<void> onAccountsChanged;
-  boost::signals2::signal1<void, AccountData*> onAccountEnabled;
-  boost::signals2::signal1<void, AccountData*> onAccountDisabled;
+  boost::signals2::signal<void ()> onAccountsChanged;
+  boost::signals2::signal<void (AccountData*)> onAccountEnabled;
+  boost::signals2::signal<void (AccountData*)> onAccountDisabled;
 
  private:
   std::vector<AccountData*>& accounts() {

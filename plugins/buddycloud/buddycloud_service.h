@@ -22,7 +22,7 @@ class BuddycloudService : public sdc::QtService {
 
   sdc::Connection* CreateConnection();
   sdc::ServiceModel* CreateServiceModel(sdc::AccountData* account_data);
-
+  sdc::ServicePresenter* CreateServicePresenter();
   sdc::NewAccountWidget* CreateNewAccountPane();
   sdc::NewContactWidget* CreateNewContactWidget();
 

@@ -1,5 +1,5 @@
 #include "contact_widget.h"
-#include "mainwindow.h"
+#include "main_window.h"
 #include "boost/cast.hpp"
 #include "boost/bind.hpp"
 
@@ -12,13 +12,14 @@ ContactWidget::ContactWidget(QWidget* parent, Contact::Ref contact)
 	ui.setupUi(this);
 	model_ = contact;
 
+
 	// TODO: put closing widget on content signal in more common content widget class
-	contact->onRemove.connect(bind(&ContactWidget::Close, this));
+  //contact->onRemove.connect(bind(&ContactWidget::Close, this));
 	connect(this, SIGNAL(_close()),
 	    this, SLOT(close()));
 
 	MainWindow* parent_ = boost::polymorphic_downcast<MainWindow*>(parent);
-	parent_->AddContact(this);
+
 
 	ui.contactInfo->setText(QString::fromStdString(contact->GetUid()));
 

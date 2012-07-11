@@ -1,33 +1,34 @@
 #ifndef POST_WIDGET_H
 #define POST_WIDGET_H
 
-#include "content/channel.h"
-#include "content/post.h"
-#include "sdc.h"
+#include "post.h"
 #include <QtGui/QWidget>
+#include <QList>
 #include "ui_post_widget.h"
 
-class PostWidget : public QWidget, public sdc::QtView {
+class CommentWidget;
+
+class PostWidget : public QWidget {
 
     Q_OBJECT
 
  public:
-  PostWidget(QWidget *parent, Post1::Ref post);
+  PostWidget(Post1* post);
   ~PostWidget();
 
  public slots:
   void DeletePost();
 
- signals:
-  void remove();
+ protected:
+  void mouseReleaseEvent(QMouseEvent *);
+
+ private slots:
+  void PostComment();
 
  private:
-  void OnRemove() {
-    emit remove();
-  }
-
   Ui::PostWidgetClass ui;
-  Post1::Ref post_;
+  Post1* post_;
+  QList<CommentWidget*> comments_;
 };
 
 #endif // POST_WIDGET_H

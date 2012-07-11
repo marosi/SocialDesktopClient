@@ -1,23 +1,42 @@
 #include "post_widget.h"
-#include "boost/bind.hpp"
-#include "buddycloud_bot.h"
+#include "bc_model.h"
+#include "comment_widget.h"
+// from sdc
+#include "bind.h"
 
-PostWidget::PostWidget(QWidget *parent, Post1::Ref post)
-    : QWidget(parent), sdc::QtView(parent), post_(post) {
+PostWidget::PostWidget(Post1* post)
+    : post_(post) {
 	ui.setupUi(this);
-
-	ui.authorLabel->setText(QString::fromStdString(post->GetAuthor()));
-	ui.contentTextEdit->setText(QString::fromStdString(post->GetContent()));
-
+  ui.commentLineEdit->hide();
+  // set post data
+	ui.authorLabel->setText(QString::fromStdString(post_->GetAuthor()));
+	ui.contentTextEdit->setText(QString::fromStdString(post_->GetContent()));
+  // set focusing policy
+  setFocusPolicy(Qt::StrongFocus);
+  setFocusProxy(ui.commentLineEdit);
+  // bindings
 	connect(ui.deleteButton, SIGNAL(clicked()),
 	    this, SLOT(DeletePost()));
-
-	post_->onRemove.connect(boost::bind(&PostWidget::OnRemove, this));
-	connect(this, SIGNAL(remove()),
-	    this, SLOT(close()));
+  connect(ui.commentLineEdit, SIGNAL(returnPressed()),
+          this, SLOT(PostComment()));
+  sdc::bind(post_->onCommentAdded, [&] (Comment* comment) {
+            LOG(DEBUG) << "ADDING COMMENT : PostWidget 1";
+    CommentWidget* cw = new CommentWidget(comment);
+    comments_.append(cw);
+    ui.commentsLayout->addWidget(cw);
+  });
+  // show comments
+  for (Comment* comment : post_->comments()) {
+    CommentWidget* cw = new CommentWidget(comment);
+    comments_.append(cw);
+    ui.commentsLayout->addWidget(cw);
+  }
 }
 
-PostWidget::~PostWidget() {}
+PostWidget::~PostWidget() {
+  for (CommentWidget* widget : comments_)
+    delete widget;
+}
 
 void PostWidget::DeletePost() {
   QMessageBox confirm;
@@ -26,6 +45,16 @@ void PostWidget::DeletePost() {
   confirm.setDefaultButton(QMessageBox::No);
   int result = confirm.exec();
   if (result == QMessageBox::Yes) {
-    post_->controller()->Delete(post_);
+    post_->Delete();
   }
+}
+
+void PostWidget::mouseReleaseEvent(QMouseEvent *) {
+  ui.commentLineEdit->show();
+  setFocus();
+}
+
+void PostWidget::PostComment() {
+  post_->PostComment(ui.commentLineEdit->text().toStdString());
+  ui.commentLineEdit->clear();
 }

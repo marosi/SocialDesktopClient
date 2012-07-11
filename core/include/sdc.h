@@ -11,24 +11,12 @@
 #ifndef SDC_H_
 #define SDC_H_
 
-#include "core_typedefs.h"
 #include "plugin_manager.h" // for the Registration type
 #include "connection.h"
-#include "model.h"
-#include "view.h"
-#include "controller.h"
-#include "mvc_typedefs.h"
-#include "qt_controller.h"
 #include "qt_view.h"
-#include <QtGui>
 #include "log.h"
-#include "service_controller.h"
-#include "qt_service_controller.h"
 #include "service.h"
 #include "service_model.h"
-#include "service_view.h"
-#include <string>
-#include "commands.h"
 #include "content.h"
 #include "qt_service_model.h"
 #include "qt_service.h"
@@ -38,5 +26,8 @@
 #include "generic_widget_factory.h"
 #include "content_panel.h"
 #include "contact_widget.h"
+
+#include <QtGui>
+#include <string>
 
 #endif /* SDC_H_ */

@@ -66,8 +66,8 @@ class Core : boost::noncopyable {
 	  return account_models_[account_id];
 	}
 
-	void PushContent(ServiceModel* model, Content::Ref content);
-	void RemoveContent(Content::Ref content);
+    //void PushContent(ServiceModel* model, Content::Ref content);
+    //void RemoveContent(Content::Ref content);
 
 	int GetReturnCode() { return return_code_; }
 	/**
@@ -76,7 +76,7 @@ class Core : boost::noncopyable {
   boost::signals2::signal<void ()>  onGuiPrepared;
   boost::signals2::signal<void (AccountData*)> onAccountActivated;
   boost::signals2::signal<void (AccountData*)> onAccountDeactivated;
-  boost::signals2::signal<void (Content::Ref)> onContentView;
+  //boost::signals2::signal<void (Content::Ref)> onContentView;
 
 
  private:
@@ -101,7 +101,7 @@ class Core : boost::noncopyable {
   AccountModelsMap account_models_;
   std::map<PluginSignature, Service*> services_; /// Pluged-in services and their configuration options
 
-  std::set<Content::Ref> contents_;
+  //std::set<Content::Ref> contents_;
 };
 
 }

@@ -18,15 +18,24 @@
 
 namespace sdc {
 
+class QtGui;
+
 class QtServiceModel : public QObject, public ServiceModel {
-
-    Q_OBJECT
-
  public:
-  QtServiceModel(AccountData* account) : ServiceModel(account) {}
+  QtServiceModel(AccountData* account);
   virtual ~QtServiceModel() {}
 
+  void SetGui(QtGui* gui) {
+    gui_ = gui;
+  }
   QtService* GetQtService();
+
+ protected:
+  QtGui* GetGui() {
+    return gui_;
+  }
+ private:
+  QtGui* gui_;
 };
 
 } /* namespace sdc */

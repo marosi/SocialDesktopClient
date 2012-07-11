@@ -12,8 +12,6 @@
 #define CORE_SERVICE_H_
 
 #include "common.h"
-#include "mvc_typedefs.h"
-#include "core_typedefs.h"
 #include "boost/shared_ptr.hpp"
 
 namespace sdc {

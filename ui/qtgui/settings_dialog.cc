@@ -1,7 +1,6 @@
 #include "settings_dialog.h"
 #include "new_account_dialog.h"
 #include "service.h"
-#include "settings_dialog_controller.h"
 #include <QMessageBox>
 #include "boost/cast.hpp"
 #include "boost/foreach.hpp"

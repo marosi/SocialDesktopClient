@@ -26,7 +26,6 @@ class ConnectionManager : public AbstractManager {
  public:
   ConnectionManager(Core* core) : AbstractManager(core) {}
   void MakeConnection(Connection* connection);
-  void ConnectAll();
 
  private:
   std::vector<Connection*> connections_;

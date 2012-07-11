@@ -7,7 +7,6 @@
 
 #include "core.h"
 #include "account_data.h"
-#include "core_typedefs.h"
 #include "connection.h"
 #include "service_model.h"
 #include "ui.h"
@@ -50,26 +49,26 @@ Service* Core::service(const PluginSignature &signature) {
   return services_[signature];
 }
 
-void Core::PushContent(ServiceModel* model, Content::Ref content) { // TODO: Find some way to fingerprint each content with its model creator, other than passing model as argument
-  content->SetServiceModel(model);
-  pair<set<Content::Ref>::iterator, bool> result = contents_.insert(content);
-  if (/*result.second &&*/ content->IsViewable()) { // TODO: for the channel to be showed again after it has been closed the bool is temporarily commented
-    onContentView(content);
-  }
-}
+//void Core::PushContent(ServiceModel* model, Content::Ref content) { // TODO: Find some way to fingerprint each content with its model creator, other than passing model as argument
+//  content->SetServiceModel(model);
+//  pair<set<Content::Ref>::iterator, bool> result = contents_.insert(content);
+//  if (/*result.second &&*/ content->IsViewable()) { // TODO: for the channel to be showed again after it has been closed the bool is temporarily commented
+//    onContentView(content);
+//  }
+//}
 
-void Core::RemoveContent(Content::Ref content) { // TODO: make more effective way to remove content
-  content->Remove();
-  contents_.erase(content);
-  /*vector<Content::Ref>::iterator it;
-  for (it = contents_.begin(); it != contents_.end(); ++it) {
-    if (content.get() == it->get()) {
-      (*it)->Remove();
-      contents_.erase(it);
-      break; // TODO: this must be break, because after erasing from vector iterators change!!!
-    }
-  }*/
-}
+//void Core::RemoveContent(Content::Ref content) { // TODO: make more effective way to remove content
+//  content->Remove();
+//  contents_.erase(content);
+//  /*vector<Content::Ref>::iterator it;
+//  for (it = contents_.begin(); it != contents_.end(); ++it) {
+//    if (content.get() == it->get()) {
+//      (*it)->Remove();
+//      contents_.erase(it);
+//      break; // TODO: this must be break, because after erasing from vector iterators change!!!
+//    }
+//  }*/
+//}
 
 /**
  * Private interface
@@ -90,6 +89,7 @@ void Core::ActivateAccount(AccountData* account) {
   sam->connection_ = conn;
   // emit signal
   onAccountActivated(account);
+  LOG(DEBUG) << "activateing account 2342323423423";
 }
 
 void Core::DeactivateAccount(AccountData* account) {
@@ -97,15 +97,15 @@ void Core::DeactivateAccount(AccountData* account) {
   if (!sam)
     return;
   account_models_.erase(account->GetId());
-  vector<Content::Ref> to_be_removed; // TODO: this is just a workaround to content-widget removal find more elegant solution
-  BOOST_FOREACH (Content::Ref c, contents_) {
-    if (c->GetServiceModel() == sam)
-      to_be_removed.push_back(c);
-  }
-  BOOST_FOREACH (Content::Ref c, to_be_removed) {
-    c->Remove();
-    contents_.erase(c);
-  }
+//  vector<Content::Ref> to_be_removed; // TODO: this is just a workaround to content-widget removal find more elegant solution
+//  BOOST_FOREACH (Content::Ref c, contents_) {
+//    if (c->GetServiceModel() == sam)
+//      to_be_removed.push_back(c);
+//  }
+//  BOOST_FOREACH (Content::Ref c, to_be_removed) {
+//    c->Remove();
+//    contents_.erase(c);
+//  }
 
   vector<ServiceModel*>::iterator it = find(service_models_.begin(), service_models_.end(), sam);
   //delete (*it);
@@ -147,7 +147,6 @@ void Core::Start() {
   plugins()->LoadPlugins();
   data()->Init();
 
-
   // Load Services
   services_ = g_plugin_manager->CreateAllInstances<Service>(SERVICE); // TODO: Change method of getting instances from plugin manager
   std::map<PluginSignature, Service*>::iterator it = services_.begin();
@@ -164,18 +163,9 @@ void Core::Start() {
     }
   }
 
-  BOOST_FOREACH (AccountData* account, data()->accounts()) {
-    if (account->IsEnabled()) {
-      this->ActivateAccount(account);
-    }
-  }
   data()->onAccountEnabled.connect(bind(&Core::ActivateAccount, this, _1));
   data()->onAccountDisabled.connect(bind(&Core::DeactivateAccount, this, _1));
 
-  BOOST_FOREACH (ServiceModel* model, service_models_) {
-    if (model->GetAccount()->GetStatus()) // status == 0 is offline status
-      model->Connect();
-  }
 
   LOG(INFO) << "Main thread ID: " << boost::this_thread::get_id();
   // execute application core in a non-blocking thread
@@ -219,6 +209,18 @@ void Core::Exec() {
       gui_unprepared_.wait(lock);
   }
   onGuiPrepared();
+  // activate enabled accounts
+  for (AccountData* account : data()->accounts()) {
+    if (account->IsEnabled()) {
+      this->ActivateAccount(account);
+    }
+  }
+  // connects services that were left online
+  for (ServiceModel* model : service_models_) {
+    if (model->GetAccount()->GetStatus()) // status == 0 is offline status
+      model->Connect();
+  }
+  // run event loop in core thread
   g_event_manager->Run();
 }
 

@@ -3,6 +3,8 @@
 #include "account_data.h"
 #include "log.h"
 #include <QMenu>
+#include <QDataWidgetMapper>
+#include "boost/cast.hpp"
 
 namespace sdc {
 

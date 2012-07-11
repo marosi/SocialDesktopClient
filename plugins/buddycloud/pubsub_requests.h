@@ -12,6 +12,7 @@
 #define PUBSUB_REQUESTS_H_
 
 #include "payloads/pubsub.h"
+#include "Swiften/Queries/GenericRequest.h"
 
 /**
  * Pubsub <items> request
@@ -85,6 +86,38 @@ class SetPubsubSubscribeRequest : public Swift::GenericRequest<PubsubSubscribeRe
  private:
   SetPubsubSubscribeRequest(Swift::Payload::ref payload, const Swift::JID &reciever, Swift::IQRouter* router)
       : Swift::GenericRequest<PubsubSubscribeRequest>(Swift::IQ::Set, reciever, payload, router) {}
+};
+
+/**
+ * Pubsub node <subscribe> request
+ */
+class SetPubsubUnsubscribeRequest : public Swift::GenericRequest<PubsubUnsubscribeRequest> {
+ public:
+  typedef boost::shared_ptr<SetPubsubUnsubscribeRequest> ref;
+
+  static ref create(Swift::Payload::ref payload, const Swift::JID &reciever, Swift::IQRouter* router) {
+    return ref(new SetPubsubUnsubscribeRequest(payload, reciever, router));
+  }
+
+ private:
+  SetPubsubUnsubscribeRequest(Swift::Payload::ref payload, const Swift::JID &reciever, Swift::IQRouter* router)
+      : Swift::GenericRequest<PubsubUnsubscribeRequest>(Swift::IQ::Set, reciever, payload, router) {}
+};
+
+/**
+ * Pubsub node <create><configure> request
+ */
+class SetPubsubConfigureNodeRequest : public Swift::GenericRequest<PubsubConfigureNodeRequest> {
+ public:
+  typedef boost::shared_ptr<SetPubsubConfigureNodeRequest> ref;
+
+  static ref create(Swift::Payload::ref payload, const Swift::JID &reciever, Swift::IQRouter* router) {
+    return ref(new SetPubsubConfigureNodeRequest(payload, reciever, router));
+  }
+
+ private:
+  SetPubsubConfigureNodeRequest(Swift::Payload::ref payload, const Swift::JID &reciever, Swift::IQRouter* router)
+      : Swift::GenericRequest<PubsubConfigureNodeRequest>(Swift::IQ::Set, reciever, payload, router) {}
 };
 
 

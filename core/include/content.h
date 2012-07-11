@@ -19,101 +19,101 @@
 
 namespace sdc {
 
-class ServiceModel;
+//class ServiceModel;
 
-class Content {
- public:
-  typedef boost::shared_ptr<Content> Ref;
+//class Content {
+// public:
+//  typedef boost::shared_ptr<Content> Ref;
 
-  Content() : is_viewable_(true) {}
-  virtual ~Content() {}
+//  Content() : is_viewable_(true) {}
+//  virtual ~Content() {}
 
-  void SetID(const std::string &id) {
-    id_ = id;
-    onChange();
-  }
+//  void SetID(const std::string &id) {
+//    id_ = id;
+//    onChange();
+//  }
 
-  std::string GetID() const {
-    return id_;
-  }
+//  std::string GetID() const {
+//    return id_;
+//  }
 
-  void SetViewable(bool is_viewable) {
-    is_viewable_ = is_viewable;
-    onChange();
-  }
+//  void SetViewable(bool is_viewable) {
+//    is_viewable_ = is_viewable;
+//    onChange();
+//  }
 
-  bool IsViewable() {
-    return is_viewable_;
-  }
+//  bool IsViewable() {
+//    return is_viewable_;
+//  }
 
-  void SetServiceModel(ServiceModel* model) {
-    model_ = model;
-    onChange();
-  }
+//  void SetServiceModel(ServiceModel* model) {
+//    model_ = model;
+//    onChange();
+//  }
 
-  ServiceModel* GetServiceModel() {
-    return model_;
-  }
+//  ServiceModel* GetServiceModel() {
+//    return model_;
+//  }
 
-  void Remove() {
-    onRemove();
-  }
+//  void Remove() {
+//    onRemove();
+//  }
 
-  boost::signals2::signal<void ()> onChange;
-  boost::signals2::signal<void ()> onRemove;
+//  boost::signals2::signal<void ()> onChange;
+//  boost::signals2::signal<void ()> onRemove;
 
- private:
-  std::string id_;
-  bool is_viewable_;
-  ServiceModel* model_;
-};
+// private:
+//  std::string id_;
+//  bool is_viewable_;
+//  ServiceModel* model_;
+//};
 
-template<class C>
-class Items : public Content {
- public:
-  typedef boost::shared_ptr<Items<C> > Ref;
-  typedef boost::shared_ptr<C> ContentRef;
+//template<class C>
+//class Items : public Content {
+// public:
+//  typedef boost::shared_ptr<Items<C> > Ref;
+//  typedef boost::shared_ptr<C> ContentRef;
 
-  Items() : ready_to_iterate_(false) {}
+//  Items() : ready_to_iterate_(false) {}
 
-  void AddItem(ContentRef content) {
-    items_.push_back(content);
-  }
+//  void AddItem(ContentRef content) {
+//    items_.push_back(content);
+//  }
 
-  void RemoveItem(ContentRef content) {
-    items_.remove(content);
-  }
+//  void RemoveItem(ContentRef content) {
+//    items_.remove(content);
+//  }
 
-  void Iterate() {
-    iterator_ = items_.begin();
-    ready_to_iterate_ = true;
-  }
+//  void Iterate() {
+//    iterator_ = items_.begin();
+//    ready_to_iterate_ = true;
+//  }
 
-  ContentRef GetNext() {
-    if(iterator_ == items_.end()) {
-      ready_to_iterate_ = false;
-      return ContentRef();
-    }
-    assert(ready_to_iterate_);
-    ContentRef result = *iterator_;
-    ++iterator_;
-    return result;
-  }
+//  ContentRef GetNext() {
+//    if(iterator_ == items_.end()) {
+//      ready_to_iterate_ = false;
+//      return ContentRef();
+//    }
+//    assert(ready_to_iterate_);
+//    ContentRef result = *iterator_;
+//    ++iterator_;
+//    return result;
+//  }
 
-  void Clear() {
-    typename std::list<ContentRef>::iterator it;
-    for (it = items_.begin(); it != items_.end(); ++it) {
-      it->reset();
-    }
-  }
+//  void Clear() {
+//    typename std::list<ContentRef>::iterator it;
+//    for (it = items_.begin(); it != items_.end(); ++it) {
+//      it->reset();
+//    }
+//  }
 
- private:
-  bool ready_to_iterate_;
-  typename std::list<ContentRef>::iterator iterator_;
-  std::list<ContentRef> items_;
-};
+// private:
+//  bool ready_to_iterate_;
+//  typename std::list<ContentRef>::iterator iterator_;
+//  std::list<ContentRef> items_;
+//};
 
-class Contact : public Content {  // TODO: Contact should'n be treated as content... Subject class?
+class Contact {
  public:
   typedef boost::shared_ptr<Contact> Ref;
 
@@ -149,30 +149,30 @@ class Contact : public Content {  // TODO: Contact should'n be treated as conten
   std::vector<std::string> groups_;
 };
 
-class Post : public Content {
- public:
-  typedef boost::shared_ptr<Post> Ref;
+//class Post : public Content {
+// public:
+//  typedef boost::shared_ptr<Post> Ref;
 
-  void SetAuthor(const std::string &author) {
-    author_ = author;
-  }
+//  void SetAuthor(const std::string &author) {
+//    author_ = author;
+//  }
 
-  void SetContent(const std::string &content) {
-    content_ = content;
-  }
+//  void SetContent(const std::string &content) {
+//    content_ = content;
+//  }
 
-  std::string GetAuthor() {
-    return author_;
-  }
+//  std::string GetAuthor() {
+//    return author_;
+//  }
 
-  std::string GetContent() {
-    return content_;
-  }
+//  std::string GetContent() {
+//    return content_;
+//  }
 
- private:
-  std::string content_;
-  std::string author_;
-};
+// private:
+//  std::string content_;
+//  std::string author_;
+//};
 
 }  /* namespace sdc */
 

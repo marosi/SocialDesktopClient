@@ -6,7 +6,7 @@
  */
 
 #include "buddycloud_connection.h"
-#include "buddycloud_bot.h"
+#include "bc_model.h"
 #include "boost/shared_ptr.hpp"
 #include "boost/pointer_cast.hpp"
 
@@ -14,7 +14,7 @@ using namespace sdc;
 using std::string;
 using boost::shared_ptr;
 
-BuddycloudConnection::BuddycloudConnection(BuddycloudBot* bot)
+BuddycloudConnection::BuddycloudConnection(BcModel* bot)
     : bot_(bot) {
   LOG(DEBUG1) << "BuddycloudConnection has been instantiated.";
 }

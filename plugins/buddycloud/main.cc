@@ -19,7 +19,6 @@ sdc::Registration* registerLibrary() {
   sdc::Registration *reg = new sdc::Registration(name, version, description);
 
   reg->AddClass(sdc::SERVICE, "BuddycloudService", "createBuddycloudService");
-  //reg->AddClass(sdc::UI, "whatever", "initModelAndController");
 
   return reg;
 }

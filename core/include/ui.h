@@ -12,7 +12,6 @@
 #define GUI_H_
 
 #include "core_anchor.h"
-#include "controller.h"
 #include <vector>
 
 namespace sdc {
@@ -33,14 +32,6 @@ class UI : public CoreAnchor { // TODO: Abstract manager holds anchor to Core, s
    * This method is responsible for keeping GUI alive as long as it takes.
    */
   virtual int Exec()=0;
-
- protected:
-  const std::vector<ServiceController*>& GetControllers() const {
-    return controllers_;
-  }
-
- private:
-  std::vector<ServiceController*> controllers_;
 };
 
 } /* namespace sdc */

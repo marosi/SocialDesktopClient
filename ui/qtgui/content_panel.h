@@ -4,32 +4,36 @@
 #include <QtGui/QFrame>
 #include "ui_content_panel.h"
 #include "content.h"
-#include "qt_view.h"
+#include "boost/cast.hpp"
 
 namespace sdc {
 
 class MainWindow;
 
-class ContentPanel : public QFrame, public QtView {
+class ContentPanel : public QFrame {
 
     Q_OBJECT
 
  public:
-  ContentPanel(QWidget *parent, Content::Ref content);
+  ContentPanel(QWidget* parent = 0);
   virtual ~ContentPanel();
 
-  void SetTitle(const QString &title);
+  void AddTitleBarButton(QAbstractButton* button);
 
-  void AddContent(Content::Ref content);
+  void SetHeaderWidget(QWidget* widget);
 
-  void AddHeaderButton(QAbstractButton* button);
+  QLabel* title_label() {
+    return ui.titleLabel;
+  }
 
-  void PutWidgetAboveContent(QWidget* widget);
+  QVBoxLayout* content_layout() {
+    return boost::polymorphic_downcast<QVBoxLayout*>(ui.contentScrollArea->layout());
+  }
+
 
  protected:
   Ui::ContentPanelClass ui;
   MainWindow* main_window_;
-  QWidget* widget_above_content_;
 };
 
 } /* namespace sdc */

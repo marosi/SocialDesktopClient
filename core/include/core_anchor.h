@@ -28,8 +28,9 @@ class CoreAnchor {
     core_ = core;
   }
 
- protected:
   Core* GetCore() { return core_; }
+
+ protected:
   Core* core()  {
     assert(core_);
     return core_;

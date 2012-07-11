@@ -1,5 +1,5 @@
 /**
- * @file pubsub_payload.h
+ * @file pubsub.h
  * @brief TODO:
  *	
  * TODO: Complete detailed description
@@ -11,142 +11,17 @@
 #ifndef PUBSUB_PAYLOAD_H_
 #define PUBSUB_PAYLOAD_H_
 
-#include "sdc.h"
-#include "Swiften/Swiften.h"
+#include "pubsub_node.h"
+#include "atom.h"
+#include "items.h"
+#include "Swiften/JID/JID.h"
+#include "Swiften/Elements/Form.h"
 #include "boost/shared_ptr.hpp"
 #include <string>
 #include <vector>
 
-template<class P>
-class Items : public Swift::Payload {
- public:
-  typedef boost::shared_ptr<Items<P> > ref;
-
-  void appendPayload(boost::shared_ptr<P> payload) {
-    items_.push_back(payload);
-  }
-
-  const std::vector<boost::shared_ptr<P> >& get() const {
-    return items_;
-  }
-
- private:
-  std::vector<boost::shared_ptr<P> > items_;
-};
-
-/**
- * Various payloads
- */
-
-class Atom : public Swift::Payload {
- public:
-  friend class AtomSerializer;
-  typedef boost::shared_ptr<Atom> ref;
-  enum Verb { POST };
-  enum ObjectType { NOTE, COMMENT };
-
-  Atom() {}
-
-  void setID(const std::string & id) {
-    id_ = id;
-  }
-
-  void setVerb(Verb verb) {
-    verb_ = verb;
-  }
-
-  void setObjectType(ObjectType type) {
-    object_type_ = type;
-  }
-
-  void setPublished(const std::string & published) {
-    published_ = published;
-  }
-
-  void setAuthor(const std::string & author) {
-    author_ = author;
-  }
-
-  void setContent(const std::string & content) {
-    content_ = content;
-  }
-
-  std::string getID() const {
-    return id_;
-  }
-
-  Verb getVerb() const {
-    return verb_;
-  }
-
-  ObjectType getObjectType() const {
-    return object_type_;
-  }
-
-  std::string getVerbString() const {
-    switch (verb_) {
-      case POST:
-        return "post";
-      default:
-        assert(false);
-    }
-  }
-
-  std::string getObjectTypeString() const {
-    switch (object_type_) {
-      case NOTE:
-        return "note";
-      case COMMENT:
-        return "comment";
-      default:
-        assert(false);
-    }
-  }
-
-  std::string getPublished() const {
-    return published_;
-  }
-
-  std::string getAuthor() const {
-    return author_;
-  }
-
-  std::string getContent() const {
-    return content_;
-  }
-
-
- private:
-  Verb verb_;
-  ObjectType object_type_;
-  std::string published_;
-  std::string author_;
-  std::string content_;
-  std::string id_;
-};
-
 class Geoloc : Swift::Payload {
   // TODO: As far as this is a desktop client geoloc info are not that important
-};
-
-/**
- * Pubsub payloads
- */
-
-class PubsubNode : public Swift::Payload {
- public:
-  typedef boost::shared_ptr<PubsubNode> ref;
-
-  void setNode(const std::string &node) {
-    node_ = node;
-  }
-
-  std::string getNode() {
-    return node_;
-  }
-
- private:
-  std::string node_;
 };
 
 class PubsubNodeItem : public PubsubNode {
@@ -187,26 +62,24 @@ class PubsubItemsRequest : public PubsubNode {
 class PubsubRetractRequest : public PubsubNodeItem {
  public:
   typedef boost::shared_ptr<PubsubRetractRequest> ref;
-
-  // TODO: this class can also be just a typedef
 };
 
 class PubsubPublishRequest : public PubsubNodeItem {
  public:
   typedef boost::shared_ptr<PubsubPublishRequest> ref;
 
-  PubsubPublishRequest() : atom_(new Atom) {}
+  PubsubPublishRequest() : payload_() {}
 
-  void setAtom(Atom::ref atom) {
-    atom_ = atom;
+  void setPayload(Swift::Payload::ref atom) {
+    payload_ = atom;
   }
 
-  Atom::ref& getAtom() {
-    return atom_;
+  Swift::Payload::ref& getPayload() {
+    return payload_;
   }
 
  private:
-  Atom::ref atom_;
+  Swift::Payload::ref payload_;
 };
 
 class PubsubSubscribeRequest : public PubsubNode {
@@ -240,6 +113,22 @@ class PubsubSubscribeRequest : public PubsubNode {
 
 class PubsubUnsubscribeRequest : public PubsubNode {
 
+};
+
+class PubsubConfigureNodeRequest : public PubsubNode {
+ public:
+  typedef boost::shared_ptr<PubsubConfigureNodeRequest> ref;
+
+  void setForm(Swift::Form::ref form) {
+    form_ = form;
+  }
+
+  Swift::Form::ref getForm() {
+    return form_;
+  }
+
+ private:
+  Swift::Form::ref form_;
 };
 
 /**
