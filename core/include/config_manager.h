@@ -10,7 +10,6 @@
 #define CORE_CONFIGMANAGER_H_
 
 #include "account_data.h"
-#include "common.h"
 #include "abstract_manager.h"
 #include "boost/serialization/nvp.hpp"
 #include "boost/serialization/map.hpp"
@@ -109,8 +108,6 @@ class ConfigManager : public AbstractManager, public Properties {
   }
 
   void OnExit();
-
-  //void RegisterConnection(ConnectionRegistration*); //HAHA 111st design approach
 
   boost::signals2::signal<void ()> onAccountsChanged;
   boost::signals2::signal<void (AccountData*)> onAccountEnabled;

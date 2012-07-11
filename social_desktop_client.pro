@@ -25,7 +25,6 @@ HEADERS += ui/qtgui/bind.h \
     core/include/content.h \
     core/include/service_model.h \
     core/include/connection.h \
-    core/include/data_manager.h \
     core/include/event_manager.h \
     core/include/abstract_manager.h \
     core/include/core.h \

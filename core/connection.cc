@@ -7,6 +7,7 @@
 
 #include "connection.h"
 #include "core.h"
+#include "log.h"
 #include "event_manager.h"
 
 namespace sdc {

@@ -17,12 +17,12 @@ class AccountButton : public QWidget, public QtView {
   AccountButton(QWidget *parent, QtServiceModel* model);
   virtual ~AccountButton();
 
-  bool isThis(ServiceModel* model) {
-    return model == model_;
-  }
-
   QMenu* menu() {
     return menu_;
+  }
+
+  QToolButton* tool_button() {
+    ui.toolButton;
   }
 
  protected slots:

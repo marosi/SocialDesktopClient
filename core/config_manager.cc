@@ -7,9 +7,9 @@
 
 #include "config_manager.h"
 #include "account_data.h"
+#include "log.h"
 #include "boost/archive/xml_iarchive.hpp"
 #include "boost/archive/xml_oarchive.hpp"
-#include "boost/foreach.hpp"
 #include <fstream>
 
 namespace sdc {

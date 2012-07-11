@@ -6,8 +6,7 @@
  */
 
 #include "event_manager.h"
-
-#include "boost/foreach.hpp"
+#include "log.h"
 
 namespace sdc {
 
@@ -17,10 +16,6 @@ void EventManager::PostEvent(boost::function<void ()> callback) {
   queue_.push_back(event);
   is_empty_queue_.notify_one();
 }
-
-/*void EventManager::PostCommand(Command* command) {
-  PostEvent(boost::bind(&Command::Execute, command));
-}*/
 
 void EventManager::Run() {
   // Run, Forest, run!
@@ -38,7 +33,7 @@ void EventManager::Run() {
     }
     // Log number of taken events, for
     LOG(DEBUG3) << "Events taken: " << events_to_process.size();
-    BOOST_FOREACH(const Event& event, events_to_process)
+    for (const Event& event : events_to_process)
     {
       ProcessEvent(event);
     }

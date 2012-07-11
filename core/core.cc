@@ -8,6 +8,7 @@
 #include "core.h"
 #include "account_data.h"
 #include "connection.h"
+#include "log.h"
 #include "service_model.h"
 #include "ui.h"
 #include "qt_gui.h"
@@ -16,10 +17,8 @@
 #include "connection_manager.h"
 #include "plugin_manager.h"
 #include "event_manager.h"
-#include "data_manager.h"
 // Boost
 #include "boost/shared_ptr.hpp"
-#include "boost/foreach.hpp"
 #include "boost/bind.hpp"
 #include <algorithm>
 
@@ -49,27 +48,6 @@ Service* Core::service(const PluginSignature &signature) {
   return services_[signature];
 }
 
-//void Core::PushContent(ServiceModel* model, Content::Ref content) { // TODO: Find some way to fingerprint each content with its model creator, other than passing model as argument
-//  content->SetServiceModel(model);
-//  pair<set<Content::Ref>::iterator, bool> result = contents_.insert(content);
-//  if (/*result.second &&*/ content->IsViewable()) { // TODO: for the channel to be showed again after it has been closed the bool is temporarily commented
-//    onContentView(content);
-//  }
-//}
-
-//void Core::RemoveContent(Content::Ref content) { // TODO: make more effective way to remove content
-//  content->Remove();
-//  contents_.erase(content);
-//  /*vector<Content::Ref>::iterator it;
-//  for (it = contents_.begin(); it != contents_.end(); ++it) {
-//    if (content.get() == it->get()) {
-//      (*it)->Remove();
-//      contents_.erase(it);
-//      break; // TODO: this must be break, because after erasing from vector iterators change!!!
-//    }
-//  }*/
-//}
-
 /**
  * Private interface
  */
@@ -89,7 +67,6 @@ void Core::ActivateAccount(AccountData* account) {
   sam->connection_ = conn;
   // emit signal
   onAccountActivated(account);
-  LOG(DEBUG) << "activateing account 2342323423423";
 }
 
 void Core::DeactivateAccount(AccountData* account) {
@@ -115,15 +92,8 @@ void Core::DeactivateAccount(AccountData* account) {
 }
 
 /**
- * Core initialization
+ * Construct Core.
  */
-// Manager global variables definition
-ConfigManager* g_config_manager;
-ConnectionManager* g_connection_manager;
-PluginManager* g_plugin_manager;
-EventManager* g_event_manager;
-DataManager* g_data_manager;
-
 Core::Core(int argc, char* argv[]) :
     is_gui_prepared_(false),
     ui_(new QtGui(this, argc, argv)) // Initialization point for specific GUI (Qt)
@@ -133,11 +103,10 @@ Core::Core(int argc, char* argv[]) :
 
 Core::~Core() {
   delete ui_;
-  delete g_config_manager;
-  delete g_connection_manager;
-  delete g_plugin_manager;
-  delete g_event_manager;
-  delete g_data_manager;
+  delete config_manager_;
+  delete connection_manager_;
+  delete plugin_manager_;
+  delete event_manager_;
 }
 
 void Core::Start() {
@@ -148,7 +117,7 @@ void Core::Start() {
   data()->Init();
 
   // Load Services
-  services_ = g_plugin_manager->CreateAllInstances<Service>(SERVICE); // TODO: Change method of getting instances from plugin manager
+  services_ = plugin_manager_->CreateAllInstances<Service>(SERVICE); // TODO: Change method of getting instances from plugin manager
   std::map<PluginSignature, Service*>::iterator it = services_.begin();
   for(it = services_.begin(); it != services_.end(); ++it) {
     it->second->SetSignature(it->first);
@@ -156,7 +125,7 @@ void Core::Start() {
   }
 
   // Map service object with loaded accounts
-  BOOST_FOREACH (AccountData* account, data()->accounts()) {
+  for (AccountData* account : data()->accounts()) {
     if (services_.count(account->GetServiceSignature()) > 0) {
       Service* service = services_[account->GetServiceSignature()];
       account->SetService(service);
@@ -167,7 +136,7 @@ void Core::Start() {
   data()->onAccountDisabled.connect(bind(&Core::DeactivateAccount, this, _1));
 
 
-  LOG(INFO) << "Main thread ID: " << boost::this_thread::get_id();
+  LOG(INFO) << "GUI(main) thread ID: " << boost::this_thread::get_id();
   // execute application core in a non-blocking thread
   core_ = boost::thread(&Core::Exec, this);
 
@@ -177,7 +146,7 @@ void Core::Start() {
   ExecUi();
 
   // Quit actions
-  g_plugin_manager->UnloadPlugins();
+  plugin_manager_->UnloadPlugins();
 
   LOG(INFO) << "Exiting application...";
   Exit();
@@ -185,20 +154,18 @@ void Core::Start() {
 }
 
 void Core::Exit() {
-  g_data_manager->OnExit();
-  g_plugin_manager->OnExit();
-  g_connection_manager->OnExit();
-  g_config_manager->OnExit();
+  plugin_manager_->OnExit();
+  connection_manager_->OnExit();
+  config_manager_->OnExit();
   // stop event loop
-  g_event_manager->Stop();
+  event_manager_->Stop();
 }
 
 void Core::Init() {
-  g_config_manager = new ConfigManager(this);
-  g_connection_manager = new ConnectionManager(this);
-  g_plugin_manager = new PluginManager(this);
-  g_event_manager = new EventManager(this);
-  g_data_manager = new DataManager(this);
+  config_manager_ = new ConfigManager(this);
+  connection_manager_ = new ConnectionManager(this);
+  plugin_manager_ = new PluginManager(this);
+  event_manager_ = new EventManager(this);
 }
 
 void Core::Exec() {
@@ -221,7 +188,7 @@ void Core::Exec() {
       model->Connect();
   }
   // run event loop in core thread
-  g_event_manager->Run();
+  event_manager_->Run();
 }
 
 void Core::ExecUi() {

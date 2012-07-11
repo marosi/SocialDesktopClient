@@ -77,12 +77,12 @@ void MainWindow::DeactivateAccount(AccountData* account) {
   /*
    * Remove account button
    */
-  for (int i = 0; i < buttons_.size(); ++i) {// TODO: model does not exists here anymore, using it will lead to SEGFAULT, think of different approach of removing Account ICON
-    if (buttons_.at(i)->isThis(account->GetServiceModel())) {  // TODO: change to fingerprint
-      delete buttons_.at(i);
-      buttons_.removeAt(i);
-    }
-  }
+//  for (int i = 0; i < buttons_.size(); ++i) {// TODO: model does not exists here anymore, using it will lead to SEGFAULT, think of different approach of removing Account ICON
+//    if (buttons_.at(i)->isThis(account->GetServiceModel())) {  // TODO: change to fingerprint
+//      delete buttons_.at(i);
+//      buttons_.removeAt(i);
+//    }
+//  }
 }
 
 } /* namespace sdc */

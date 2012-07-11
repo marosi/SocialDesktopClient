@@ -19,7 +19,10 @@
 
 namespace sdc {
 
-class ServicePresenter {
+class ServicePresenter : public QObject {
+
+    Q_OBJECT
+
  public:
   friend class QtGui;
   friend class MainWindow;

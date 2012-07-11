@@ -26,6 +26,11 @@ class Service;
 class ServiceModel;
 class UI;
 
+class PluginManager;
+class ConfigManager;
+class EventManager;
+class ConnectionManager;
+
 /**
  * @class SocialDesktopClient
  * @brief The heart of SocialDesktopClient application.
@@ -39,19 +44,21 @@ class Core : boost::noncopyable {
 	void Start();
 	void Exit();
 
-	EventManager* event_manager() {
-	  return g_event_manager;
+  EventManager* events() {
+    return event_manager_;
 	}
 	ConnectionManager* connections() {
-	  return g_connection_manager;
+    return connection_manager_;
 	}
 	ConfigManager* data() {
-	  return g_config_manager;
+    return config_manager_;
 	}
 	PluginManager* plugins() {
-	  return g_plugin_manager;
+    return plugin_manager_;
 	}
+
 	std::vector<Service*> services();
+
 	Service* service(const PluginSignature &/* signature */);
 
 	std::vector<ServiceModel*> GetModels() {
@@ -66,9 +73,6 @@ class Core : boost::noncopyable {
 	  return account_models_[account_id];
 	}
 
-    //void PushContent(ServiceModel* model, Content::Ref content);
-    //void RemoveContent(Content::Ref content);
-
 	int GetReturnCode() { return return_code_; }
 	/**
    * Signals
@@ -76,14 +80,26 @@ class Core : boost::noncopyable {
   boost::signals2::signal<void ()>  onGuiPrepared;
   boost::signals2::signal<void (AccountData*)> onAccountActivated;
   boost::signals2::signal<void (AccountData*)> onAccountDeactivated;
-  //boost::signals2::signal<void (Content::Ref)> onContentView;
-
 
  private:
 	void Init();
 	void Exec();
 	void ExecUi();
-
+  /*
+   * Accounts
+   */
+  void ActivateAccount(AccountData* data);
+  void DeactivateAccount(AccountData* data);
+  /*
+   * Managers
+   */
+  PluginManager* plugin_manager_;
+  ConfigManager* config_manager_;
+  EventManager* event_manager_;
+  ConnectionManager* connection_manager_;
+  /*
+   * Threading
+   */
 	boost::thread core_;
 	boost::mutex mutex_;
 	boost::condition_variable gui_unprepared_;
@@ -91,12 +107,9 @@ class Core : boost::noncopyable {
 	//boost::thread ui_; // Qt GUI cannot run in secondary thread
   UI* ui_;
 	int return_code_;
-	/**
-	 * Data
-	 */
-	void ActivateAccount(AccountData* data);
-	void DeactivateAccount(AccountData* data);
-
+  /*
+   * Models & accounts
+   */
   std::vector<ServiceModel*> service_models_;
   AccountModelsMap account_models_;
   std::map<PluginSignature, Service*> services_; /// Pluged-in services and their configuration options

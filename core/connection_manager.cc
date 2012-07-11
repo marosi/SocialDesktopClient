@@ -7,6 +7,7 @@
 
 #include "connection_manager.h"
 #include "connection.h"
+#include "log.h"
 #include "boost/foreach.hpp"
 #include <exception>
 

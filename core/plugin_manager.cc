@@ -5,6 +5,7 @@
  *      Author: Maros Kasinec
  */
 #include "plugin_manager.h"
+#include "log.h"
 
 #ifndef USE_PRECOMPILED_HEADERS
 #ifdef WIN32
