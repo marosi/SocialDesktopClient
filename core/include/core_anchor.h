@@ -11,9 +11,11 @@
 #ifndef CORE_ANCHOR_H_
 #define CORE_ANCHOR_H_
 
-#include "core.h"
+#include <assert.h>
 
 namespace sdc {
+
+class Core;
 
 class CoreAnchor {
  public:

@@ -16,7 +16,7 @@ QtServiceModel::QtServiceModel(AccountData* account) : ServiceModel(account) {
 }
 
 QtService* QtServiceModel::GetQtService() {
-  return boost::polymorphic_downcast<QtService*>(this->GetService());
+  return boost::polymorphic_downcast<QtService*>(this->service());
 }
 
 } /* namespace sdc */

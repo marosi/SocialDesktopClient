@@ -7,11 +7,10 @@ using boost::bind;
 
 namespace sdc {
 
-ContactWidget::ContactWidget(QWidget* parent, Contact::Ref contact)
-    : QWidget(parent), QtView(parent) {
+ContactWidget::ContactWidget(QWidget* parent, Contact* contact)
+    : QWidget(parent) {
 	ui.setupUi(this);
 	model_ = contact;
-
 
 	// TODO: put closing widget on content signal in more common content widget class
   //contact->onRemove.connect(bind(&ContactWidget::Close, this));
@@ -19,7 +18,6 @@ ContactWidget::ContactWidget(QWidget* parent, Contact::Ref contact)
 	    this, SLOT(close()));
 
 	MainWindow* parent_ = boost::polymorphic_downcast<MainWindow*>(parent);
-
 
 	ui.contactInfo->setText(QString::fromStdString(contact->GetUid()));
 

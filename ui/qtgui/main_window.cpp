@@ -42,7 +42,7 @@ MainWindow::~MainWindow() {
 void MainWindow::AddContact(ServicePresenter* presenter, ContactWidget* contact) {
   std::string tooltip = qtgui()->GetService(presenter)->name() +
       " - " +
-      qtgui()->GetModel(presenter)->GetAccount()->GetUid();
+      qtgui()->GetModel(presenter)->account()->GetUid();
   contact->setToolTip(QString::fromStdString(tooltip));
   ui.contactPanelLayout->insertWidget(0, contact);
 }

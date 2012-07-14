@@ -41,7 +41,8 @@ SOURCES += \
     bc_model.cc \
     bc_contact.cc \
     pubsub_parser.cc \
-    comment_widget.cpp
+    comment_widget.cpp \
+    bc_contact_widget.cc
 FORMS += \
     post_widget.ui \
     new_post_widget.ui \

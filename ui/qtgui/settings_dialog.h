@@ -34,8 +34,6 @@ class SettingsDialog : public QDialog, public QtView
  private slots:
   void ChangePage(QListWidgetItem* current, QListWidgetItem* previous);
   void ShowNewAccountDialog();
-  void RefreshAccountsTable();
-  void SetEnabledAccount(QTableWidgetItem* item);
   void AccountSelected();
   void DeleteAccount();
   void EditAccount();

@@ -7,6 +7,7 @@
 
 #include "channel.h"
 #include "bc_model.h"
+#include "post.h"
 #include "payloads/pubsub.h"
 #include "pubsub_requests.h"
 #include <algorithm>
@@ -60,7 +61,7 @@ void ChannelController::CreatePost(Post1* post) {
   PubsubPublishRequest::ref publish(new PubsubPublishRequest);
   publish->setPayload(atom);
   publish->setNode(posts_node_);
-  SetPubsubPublishRequest::ref rq = SetPubsubPublishRequest::create(publish, model_->channel_service_.jid, router_);
+  SetPubsubPublishRequest::ref rq = SetPubsubPublishRequest::create(publish, service_.jid, router_);
   // on response actions
   rq->onResponse.connect([=] (PubsubPublishRequest::ref payload, ErrorPayload::ref error) {
     if (error) {
@@ -86,7 +87,7 @@ void ChannelController::CreateComment(Comment* comment) {
   PubsubPublishRequest::ref publish(new PubsubPublishRequest);
   publish->setPayload(atom);
   publish->setNode(posts_node_);
-  SetPubsubPublishRequest::ref rq = SetPubsubPublishRequest::create(publish, model_->channel_service_.jid, router_);
+  SetPubsubPublishRequest::ref rq = SetPubsubPublishRequest::create(publish, service_.jid, router_);
   // on response actions
   rq->onResponse.connect([=] (PubsubPublishRequest::ref payload, ErrorPayload::ref error) {
     if (error) {
@@ -103,7 +104,7 @@ void ChannelController::CreateComment(Comment* comment) {
 }
 
 void ChannelController::DeletePost(Post1* post) {
-  SetPubsubRetractRequest::ref retract = SetPubsubRetractRequest::create(post->GetID(), posts_node_, model_->channel_service_.jid, router_);
+  SetPubsubRetractRequest::ref retract = SetPubsubRetractRequest::create(post->GetID(), posts_node_, service_.jid, router_);
   retract->onResponse.connect([=] (PubsubRetractRequest::ref /*payload*/, ErrorPayload::ref error) {
     if (error) {
       LOG(ERROR) << error->getText();

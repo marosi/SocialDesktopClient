@@ -12,15 +12,18 @@
 #define CORE_ACCOUNT_DATA_H_
 
 #include "common.h"
+#include "properties.h"
 #include "boost/serialization/nvp.hpp"
 #include "boost/serialization/vector.hpp"
 
+
+#include "log.h"
 namespace sdc {
 
 class Service;
 class ServiceModel;
 
-class AccountData {
+class AccountData : public Properties {
  public:
   friend class boost::serialization::access;
 
@@ -108,6 +111,10 @@ class AccountData {
     return service_ + uid_;
   }
 
+  std::string GetDir() const {
+    return "./resources/" + GetId();
+  }
+
  private:
   Service* service_ptr_;  // service instance
   ServiceModel* service_model_ptr_; // service model instance
@@ -122,6 +129,7 @@ class AccountData {
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version) {
     if (version) {}
+    ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Properties);
     ar & BOOST_SERIALIZATION_NVP(service_);
     ar & BOOST_SERIALIZATION_NVP(is_enabled_);
     ar & BOOST_SERIALIZATION_NVP(uid_);

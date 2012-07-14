@@ -30,9 +30,6 @@ class QtService : public Service {
   virtual NewAccountWidget* CreateNewAccountPane()=0;
   virtual NewContactWidget* CreateNewContactWidget()=0;
 
-  virtual ContactWidget* CreateContactWidget(QWidget* parent, Contact::Ref contact);
-
-  //virtual PostWidget* CreatePostWidget()=0;
   virtual std::vector<WidgetFactory*> CreateWidgetFactories()=0;
   virtual ServicePresenter* CreateServicePresenter()=0;
 };

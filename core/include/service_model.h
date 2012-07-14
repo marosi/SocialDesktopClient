@@ -29,11 +29,11 @@ class ServiceModel : public CoreAnchor {
   }
   virtual ~ServiceModel() {}
 
-  const AccountData* GetAccount() const {
+  AccountData* account() const {
     return account_;
   }
 
-  Service* GetService() const {
+  Service* service() const {
     return service_;
   }
 

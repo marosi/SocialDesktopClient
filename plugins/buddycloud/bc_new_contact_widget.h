@@ -23,11 +23,8 @@ class BcNewContactWidget : public sdc::NewContactWidget {
   }
 
   void Process(sdc::ServiceModel* model) {
-    /*BcModel* bc = boost::polymorphic_downcast<BcModel*>(model);
-    BcContact::Ref contact(new BcContact);
-    contact->SetUid(ui.lineEdit->text().toStdString());
-    LOG(DEBUG) << "Contact " << contact->GetUid() << " are about to be process by buddycloud model";
-    bc->AddNewContact(contact);*/
+    BcModel* m = boost::polymorphic_downcast<BcModel*>(model);
+    m->AddNewContact(ui.lineEdit->text().toStdString());
   }
 
  private:

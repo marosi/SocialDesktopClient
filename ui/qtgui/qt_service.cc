@@ -13,8 +13,5 @@
 
 namespace sdc {
 
-ContactWidget* QtService::CreateContactWidget(QWidget* parent, Contact::Ref contact) {
-  return new ContactWidget(parent, contact);
-}
 
 } /* namespace sdc */

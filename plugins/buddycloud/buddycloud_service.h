@@ -16,13 +16,15 @@
 class BuddycloudService : public sdc::QtService {
  public:
   BuddycloudService() {
-    name_ = "Buddycloud";
-    description_ = "Buddycloud channels service.";
+    SetName("Buddycloud");
+    SetDescription("Buddycloud channels service.");
+    SetDir("resources/buddycloud");
   }
 
   sdc::Connection* CreateConnection();
   sdc::ServiceModel* CreateServiceModel(sdc::AccountData* account_data);
   sdc::ServicePresenter* CreateServicePresenter();
+
   sdc::NewAccountWidget* CreateNewAccountPane();
   sdc::NewContactWidget* CreateNewContactWidget();
 

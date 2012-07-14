@@ -12,14 +12,10 @@
 #include "service_model.h"
 #include "ui.h"
 #include "qt_gui.h"
-// Managers
-#include "config_manager.h"
-#include "connection_manager.h"
-#include "plugin_manager.h"
-#include "event_manager.h"
 // Boost
 #include "boost/shared_ptr.hpp"
 #include "boost/bind.hpp"
+#include "boost/filesystem.hpp"
 #include <algorithm>
 
 #include "qt_service.h"
@@ -59,6 +55,13 @@ void Core::ActivateAccount(AccountData* account) {
   account->SetServiceModel(sam);
   service_models_.push_back(sam);
   account_models_.insert(AccountModelsMap::value_type(account->GetId(), sam));
+  // create account resource directory if none exists
+  filesystem::path p(account->GetDir());
+  if (!filesystem::exists(p)) {
+    if (!filesystem::create_directory(p)) {
+      LOG(ERROR) << "Cannot create directory for account '" << account->GetId() << "'.";
+    }
+  }
   // connection
   Connection* conn = sam->CreateConnection();
   connections()->MakeConnection(conn);
@@ -110,44 +113,59 @@ Core::~Core() {
 }
 
 void Core::Start() {
-  // Set log reporting level
+  /*
+   * Set log reporting level
+   */
   Log::SetGlobalLevel(Log::DEBUG4);
-  // Initialization
+  /*
+   * Initialization
+   */
   plugins()->LoadPlugins();
   data()->Init();
-
-  // Load Services
+  /*
+   * Load Services
+   */
   services_ = plugin_manager_->CreateAllInstances<Service>(SERVICE); // TODO: Change method of getting instances from plugin manager
-  std::map<PluginSignature, Service*>::iterator it = services_.begin();
-  for(it = services_.begin(); it != services_.end(); ++it) {
-    it->second->SetSignature(it->first);
-    LOG(TRACE) << "Services class '" << it->first << "' loaded successfuly.";
+  for(std::pair<PluginSignature, Service*> pair : services_) {
+    Service* s = pair.second;
+    // set service unique signature
+    s->signature_ = pair.first;
+    // create service directory
+    filesystem::path p(s->dir());
+    if (!filesystem::exists(p)) {
+      if (!filesystem::create_directory(p)) {
+        LOG(ERROR) << "Cannot create directory for service '" << s->name() << "'.";
+      }
+    }
+    LOG(TRACE) << "Services class '" << pair.first << "' loaded successfuly.";
   }
-
-  // Map service object with loaded accounts
+  /*
+   * Map service object with loaded accounts
+   */
   for (AccountData* account : data()->accounts()) {
     if (services_.count(account->GetServiceSignature()) > 0) {
       Service* service = services_[account->GetServiceSignature()];
       account->SetService(service);
     }
   }
-
+  /*
+   * Bindings TODO: review
+   */
   data()->onAccountEnabled.connect(bind(&Core::ActivateAccount, this, _1));
   data()->onAccountDisabled.connect(bind(&Core::DeactivateAccount, this, _1));
-
-
-  LOG(INFO) << "GUI(main) thread ID: " << boost::this_thread::get_id();
-  // execute application core in a non-blocking thread
+  /*
+   * Execute application core in a non-blocking thread
+   */
   core_ = boost::thread(&Core::Exec, this);
-
-  // execute application UI in a blocking thread
-  //ui_ = boost::thread(&Core::ExecUi, this);
-  //ui_.join();
+  /*
+   * Execute application UI in a blocking thread
+   */
+  LOG(INFO) << "GUI(main) thread ID: " << boost::this_thread::get_id();
   ExecUi();
-
-  // Quit actions
+  /*
+   * Quit actions
+   */
   plugin_manager_->UnloadPlugins();
-
   LOG(INFO) << "Exiting application...";
   Exit();
   core_.join();
@@ -184,7 +202,7 @@ void Core::Exec() {
   }
   // connects services that were left online
   for (ServiceModel* model : service_models_) {
-    if (model->GetAccount()->GetStatus()) // status == 0 is offline status
+    if (model->account()->GetStatus()) // status == 0 is offline status
       model->Connect();
   }
   // run event loop in core thread

@@ -6,6 +6,7 @@
  */
 
 #include "bind.h"
+#include "core.h"
 #include "qt_gui.h"
 #include "main_window.h"
 #include "connection_manager.h"

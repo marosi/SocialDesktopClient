@@ -9,6 +9,4 @@
 
 namespace sdc {
 
-Service::Service() : name_("Unknown"), description_("Unknown") {}
-
-}
+} /* namespace sdc */

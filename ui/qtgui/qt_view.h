@@ -19,6 +19,7 @@
 namespace sdc {
 
 class Core;
+class ServiceModel;
 
 class QtView : public CoreAnchor {
  public:

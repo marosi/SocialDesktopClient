@@ -33,7 +33,9 @@ HEADERS += ui/qtgui/bind.h \
     core/include/service.h \
     core/include/config_manager.h \
     core/include/connection_manager.h \
-    core/include/plugin_manager.h
+    core/include/plugin_manager.h \
+    core/include/properties.h \
+    ui/qtgui/accounts_model.h
 SOURCES += ui/qtgui/service_presenter.cc \
     ui/qtgui/main_window.cpp \
     ui/qtgui/new_contact_dialog.cpp \
@@ -55,7 +57,8 @@ SOURCES += ui/qtgui/service_presenter.cc \
     core/config_manager.cc \
     core/connection_manager.cc \
     core/plugin_manager.cc \
-    main.cpp
+    main.cpp \
+    ui/qtgui/accounts_model.cpp
 FORMS += ui/qtgui/main_window.ui \
     ui/qtgui/new_contact_dialog.ui \
     ui/qtgui/content_panel.ui \
@@ -70,6 +73,9 @@ INCLUDEPATH += core/include \
 LIBS += -L/home/xangel/projects/boost_1_48_0/stage/lib \
     -lboost_system \
     -lboost_thread \
-    -lboost_serialization
+    -lboost_serialization \
+    -lboost_filesystem
 QMAKE_LFLAGS += -export-dynamic
 QMAKE_CXXFLAGS += -std=c++0x
+
+DEFINES = BOOST_FILESYSTEM_VERSION=3

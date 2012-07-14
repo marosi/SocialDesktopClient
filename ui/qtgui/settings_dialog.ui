@@ -41,51 +41,10 @@
           </widget>
          </item>
          <item>
-          <widget class="QTableWidget" name="accountsTableWidget">
+          <widget class="QTableView" name="tableView">
            <property name="selectionMode">
             <enum>QAbstractItemView::SingleSelection</enum>
            </property>
-           <property name="selectionBehavior">
-            <enum>QAbstractItemView::SelectRows</enum>
-           </property>
-           <property name="showGrid">
-            <bool>false</bool>
-           </property>
-           <property name="columnCount">
-            <number>2</number>
-           </property>
-           <attribute name="horizontalHeaderDefaultSectionSize">
-            <number>100</number>
-           </attribute>
-           <attribute name="horizontalHeaderMinimumSectionSize">
-            <number>20</number>
-           </attribute>
-           <attribute name="horizontalHeaderStretchLastSection">
-            <bool>false</bool>
-           </attribute>
-           <attribute name="verticalHeaderVisible">
-            <bool>false</bool>
-           </attribute>
-           <attribute name="verticalHeaderStretchLastSection">
-            <bool>false</bool>
-           </attribute>
-           <attribute name="verticalHeaderVisible">
-            <bool>false</bool>
-           </attribute>
-           <attribute name="horizontalHeaderStretchLastSection">
-            <bool>false</bool>
-           </attribute>
-           <attribute name="horizontalHeaderMinimumSectionSize">
-            <number>20</number>
-           </attribute>
-           <attribute name="verticalHeaderStretchLastSection">
-            <bool>false</bool>
-           </attribute>
-           <attribute name="horizontalHeaderDefaultSectionSize">
-            <number>100</number>
-           </attribute>
-           <column/>
-           <column/>
           </widget>
          </item>
          <item>

@@ -14,8 +14,6 @@
 #include "boost/signals2/signal.hpp"
 #include <string>
 
-#include "log.h"
-
 class ChannelController;
 class Comment;
 

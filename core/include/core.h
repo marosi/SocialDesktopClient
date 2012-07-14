@@ -10,7 +10,10 @@
 #define CORE_SOCIALDESKTOPCLIENT_H_
 
 #include "common.h"
-#include "content.h"
+#include "config_manager.h"
+#include "connection_manager.h"
+#include "event_manager.h"
+#include "plugin_manager.h"
 #include "boost/noncopyable.hpp"
 #include "boost/thread.hpp"
 #include "boost/shared_ptr.hpp"

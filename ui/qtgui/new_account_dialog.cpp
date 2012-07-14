@@ -1,3 +1,4 @@
+#include "core.h"
 #include "new_account_dialog.h"
 #include "log.h"
 #include "new_account_widget.h"
@@ -25,8 +26,8 @@ NewAccountDialog::NewAccountDialog(QWidget *parent)
 	ui.servicesComboBox->insertSeparator(1);
 	// load available services
 	int i = 2;
-  BOOST_FOREACH (Service* s, core()->services()) {
-    QString signature = QString::fromStdString(s->GetSignature());
+  for (Service* s : core()->services()) {
+    QString signature = QString::fromStdString(s->signature());
     QVariant data(signature);
     ui.servicesComboBox->insertItem(i, QString::fromStdString(s->name()), data);
     QtService* qs = boost::polymorphic_downcast<QtService*>(s);

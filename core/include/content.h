@@ -135,11 +135,11 @@ class Contact {
     return groups_;
   }
 
-  std::string GetName() {
+  std::string GetName() const {
     return name_;
   }
 
-  std::string GetUid() {
+  std::string GetUid() const {
     return uid_;
   }
 

@@ -1,3 +1,4 @@
+#include "core.h"
 #include "new_contact_dialog.h"
 #include "account_data.h"
 #include "service.h"
@@ -23,7 +24,7 @@ NewContactDialog::NewContactDialog(QWidget *parent)
   BOOST_FOREACH (const Core::AccountModelsMap::value_type &pair, core()->models()) {
     QString id = QString::fromStdString(pair.first);
     QVariant data(id);
-    ui.servicesComboBox->insertItem(i, QString::fromStdString(pair.second->GetAccount()->GetUid()), data);
+    ui.servicesComboBox->insertItem(i, QString::fromStdString(pair.second->account()->GetUid()), data);
     ++i;
   }
 
@@ -44,7 +45,7 @@ void NewContactDialog::ChangeServicePane(int index) {
 
   if (index > 1) {
     std::string account_id = ui.servicesComboBox->itemData(index).toString().toStdString();
-    Service* s = core()->model(account_id)->GetService();
+    Service* s = core()->model(account_id)->service();
     QtService* qs = boost::polymorphic_downcast<QtService*>(s);
     contact_pane_ = qs->CreateNewContactWidget();
     boost::polymorphic_downcast<QVBoxLayout*>(layout())->insertWidget(1, contact_pane_);

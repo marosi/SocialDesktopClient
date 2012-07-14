@@ -8,13 +8,17 @@
 
 namespace sdc {
 
-class ContactWidget : public QWidget, public QtView {
+class ContactWidget : public QWidget {
 
     Q_OBJECT
 
  public:
-  ContactWidget(QWidget *parent, Contact::Ref contact);
+  ContactWidget(QWidget *parent, Contact* contact);
   ~ContactWidget();
+
+  QToolButton* contact_image_button() {
+    return ui.contactToolButton;
+  }
 
  signals:
   void _close();
@@ -27,7 +31,7 @@ class ContactWidget : public QWidget, public QtView {
     emit _close();
   }
 
-  Contact::Ref model_;
+  Contact* model_;
   Ui::ContactWidgetClass ui;
   MainWindow* parent_;
   QToolButton* close_button_;

@@ -12,7 +12,7 @@ AccountButton::AccountButton(QWidget* parent, QtServiceModel* model)
     : QWidget(parent), QtView(parent), model_(model) {
 	ui.setupUi(this);
 
-	QString account_name = QString::fromStdString(model_->GetAccount()->GetUid());
+	QString account_name = QString::fromStdString(model_->account()->GetUid());
 
 	QColor color;
 	color.setNamedColor("sienna");
@@ -22,7 +22,7 @@ AccountButton::AccountButton(QWidget* parent, QtServiceModel* model)
 	ui.toolButton->setToolTip(account_name);
 
 	menu_ = new QMenu(account_name, this);
-	QAction* title = menu_->addAction(QString::fromStdString(model->GetAccount()->GetUid()));
+	QAction* title = menu_->addAction(QString::fromStdString(model->account()->GetUid()));
 	title->setEnabled(false);
 	menu_->addSeparator();
 	connect(menu_->addAction("Online"), SIGNAL(triggered()),

@@ -12,20 +12,15 @@
 #define BC_CONTACT_WIDGET_H_
 
 #include "contact_widget.h"
-#include "channel_widget.h"
-#include "bc_contact.h"
 // includes from sdc
 #include "main_window.h"
 
+class BcContact;
+class ChannelWidget;
+
 class BcContactWidget : public sdc::ContactWidget {
  public:
-  BcContactWidget(sdc::MainWindow* parent, BcContact::Ref contact)
-      : sdc::ContactWidget(parent, contact),
-        window_(parent),
-        contact_(contact),
-        channel_(0) {
-
-  }
+  BcContactWidget(sdc::MainWindow* parent, BcContact* contact);
 
   void Remove() {
     // TODO: impelment
@@ -33,24 +28,13 @@ class BcContactWidget : public sdc::ContactWidget {
   }
 
  protected:
-  void mouseDoubleClickEvent(QMouseEvent* event) {
-    LOG(DEBUG) << "Clicking contact!";
-    event->ignore();
-    ShowChannelPanel();
-  }
+  void mouseDoubleClickEvent(QMouseEvent* event);
 
  private:
-  void ShowChannelPanel() {
-    LOG(DEBUG) << " In ShowChannelPanel() thread ID: " << boost::this_thread::get_id();
-    if (!channel_) {
-      channel_ = new ChannelWidget(contact_->GetChannel());
-    }
-    window_->AddContentPanel(channel_);
-    channel_->show();
-  }
+  void ShowChannelPanel();
 
   sdc::MainWindow* window_;
-  BcContact::Ref contact_;
+  BcContact* contact_;
   ChannelWidget* channel_;
 };
 

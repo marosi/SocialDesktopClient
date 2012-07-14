@@ -13,14 +13,12 @@
 
 #include "buddycloud_connection.h"
 
-#include "post.h"
-#include "bc_contact.h"
+// sdc
+#include "qt_service.h"
 
-#include "payloads/pubsub.h"
-
-#include "sdc.h"
 #include "Swiften/Client/Client.h"
 #include "Swiften/Client/ClientXMLTracer.h"
+#include "Swiften/Elements/VCard.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Network/NetworkFactories.h"
@@ -28,7 +26,8 @@
 #include <vector>
 #include <set>
 
-#include "channel.h" // move to cc as soon as ChannelServiceInfo is resolved
+class BcContact;
+class ChannelController;
 
 class BcModel : public sdc::QtServiceModel {
   public:
@@ -44,25 +43,27 @@ class BcModel : public sdc::QtServiceModel {
 
     //GetSoftwareVersionRequest::ref gsvr = GetSoftwareVersionRequest::create("localhost", client_->getIQRouter());
     //GetVCardRequest::ref gvcr = GetVCardRequest::create(to, client_->getIQRouter());
-    void SendDiscoInfo(const std::string &to_attribute, const std::string &node_attribute);
-    void SendDiscoItems(const std::string &to_attribute, const std::string &node_attribute);
-
-
-    Swift::Client* xmpp() {
-      return client_;
-    }
-
     void ToggleChannelPrivacy();
     void Unsubscribe();
+    void test();
 
-    /**
+    /*
      * Content interface
      */
-    BcContact::Ref GetContact(const Swift::JID &jid);
+    BcContact* GetContact(const Swift::JID &jid);
     ChannelController* GetChannel(const Swift::JID &jid);
-    void AddNewContact(BcContact::Ref contact);
-    void RemoveContact(BcContact::Ref contact);
-    /**
+    void AddNewContact(const Swift::JID &jid);
+    void RemoveContact(const Swift::JID &jid);
+
+    const std::string GetOwnAvatarPath() {
+      return avatar_file_path_;
+    }
+
+    const std::string GetDefaultAvatarPath() {
+      return service()->dir() + "/default_avatar.png";
+    }
+
+    /*
      * Errors
      */
     enum Error {
@@ -72,18 +73,34 @@ class BcModel : public sdc::QtServiceModel {
      * Signals
      */
     boost::signals2::signal<void (Error)> onError;
-    boost::signals2::signal<void (Swift::RosterPayload::ref)> onRosterReady;
     boost::signals2::signal<void ()> onConnected;
-
-    boost::signals2::signal<void (const std::vector<BcContact::Ref>) > onContactsReady;
+    boost::signals2::signal<void (const Swift::JID)> onContactAdded;
+    boost::signals2::signal<void (const Swift::JID)> onContactRemoved;
     boost::signals2::signal<void ()> onSelfChannelRegistered;
+    boost::signals2::signal<void (Swift::VCard::ref)> onOwnVCardUpdate;
+    boost::signals2::signal<void (const std::string file_path)> onOwnAvatarChange;
 
   private:
     /*
      * On request
      */
-    void GetRoster();
     void GetServerInfo();
+    /*
+     * Connected/disconnected handlers
+     */
+    void handleConnected();
+    void handleDisconnected(boost::optional<Swift::ClientError> error);
+    /*
+     * Permanent stanza handling
+     */
+    void handleMessageReceived(Swift::Message::ref message);
+    void handlePresenceReceived(Swift::Presence::ref presence);
+    /*
+     * Roster change handlers
+     */
+    void handleJidAdded(const Swift::JID &jid);
+    void handleJidRemove(const Swift::JID &jid);
+    void handleJidUpdated(const Swift::JID &jid, const std::string &name, const std::vector<std::string> &groups);
     /*
      * Parsers and serializers
      */
@@ -91,31 +108,18 @@ class BcModel : public sdc::QtServiceModel {
     void AddSerializers();
     void AddParserFactory(Swift::PayloadParserFactory* factory);
     void AddSerializer(Swift::PayloadSerializer* serializer);
-    /*
-     * Handlers
-     */
-    void handleConnected();
-    void handleDisconnected(boost::optional<Swift::ClientError> error);
-    /*
-     * Permanent stanza handling
-     */
-    void handleIQRecieved(Swift::IQ::ref iq);
-    void handleMessageReceived(Swift::Message::ref message);
-    void handlePresenceReceived(Swift::Presence::ref presence);
-    void handleDataRecieved(const Swift::SafeByteArray &byte_array);
+    void AddContact(const Swift::XMPPRosterItem &item);
     /*
      * Miscellaneous
      */
-    void handleJidAdded(const Swift::JID &jid);
-    void handleJidRemove(const Swift::JID &jid);
-    void handleJidUpdated(const Swift::JID &jid, const std::string &name, const std::vector<std::string> &groups);
+    const std::string SavePhoto(const Swift::JID &jid, Swift::VCard::ref vcard);
     /**
      * SDC data
      */
     sdc::AccountData* account_;
-    sdc::Contact::Ref me_;
     BuddycloudConnection* connection_; // TODO: Rename to ChannelConnection
-    std::vector<BcContact::Ref> contacts_;
+    std::vector<BcContact*> contacts_;
+    std::map<Swift::JID, BcContact*> contacts_map_;
     /**
      * Domain server stuff
      */
@@ -123,15 +127,17 @@ class BcModel : public sdc::QtServiceModel {
     /**
      * Channels
      */
-    ChannelController* my_channel_;
-    std::set<ChannelController*> channel_controllers_;
-    std::map<Swift::JID, ChannelController*> channels_;
+    ChannelController* own_channel_;
+    std::vector<ChannelController*> channels_;
+    std::map<Swift::JID, ChannelController*> channels_map_;
     /**
      * Channel client data
      */
     Swift::JID jid_;
+    Swift::JID service_jid_;
+    bool is_service_registration_available_;
     std::string posts_node_;
-    ChannelServiceInfo channel_service_;
+    std::string avatar_file_path_;
     /**
      * Switen engine
      */
@@ -139,6 +145,7 @@ class BcModel : public sdc::QtServiceModel {
     Swift::NetworkFactories* network_;
     Swift::Client* client_;
     Swift::ClientXMLTracer* tracer_;
+
     bool connected_;
     /**
      * Serializers & Parsers

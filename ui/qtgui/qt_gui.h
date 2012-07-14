@@ -17,6 +17,7 @@
 
 namespace sdc {
 
+class AccountData;
 class MainWindow;
 class QtSettingsController;
 class QtServiceModel;

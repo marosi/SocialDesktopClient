@@ -21,30 +21,52 @@ class ServiceController;
 class ServiceModel;
 class AccountData;
 
-// @class Service
+/// @class Service
 /// @brief TODO:
 class Service {
  public:
-  Service();
+  friend class Core;
 
-  std::string name() { return name_; }
-  std::string description() { return description_; }
+  Service() : name_("Unknown"), description_("Unknown") {}
+
+  std::string name() {
+    return name_;
+  }
+
+  std::string description() {
+    return description_;
+  }
+
+  const std::string dir() {
+    return dir_path_;
+  }
+
+  std::string signature() {
+    return signature_;
+  }
+
   /// @brief Factory method for user connection.
   virtual Connection* CreateConnection()=0;
   virtual ServiceModel* CreateServiceModel(AccountData*)=0;
 
-  void SetSignature(std::string signature) {
-    signature_ = signature;
-  }
-
-  std::string GetSignature() {
-    return signature_;
-  }
-
  protected:
+  void SetName(const std::string &name) {
+    name_ = name;
+  }
+
+  void SetDescription(const std::string &description) {
+    description_ = description;
+  }
+
+  void SetDir(const std::string &dir_path) {
+    dir_path_ = dir_path;
+  }
+
+ private:
   std::string signature_;
   std::string name_;
   std::string description_;
+  std::string dir_path_;
 };
 
 }

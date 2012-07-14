@@ -11,6 +11,7 @@
 
 #include "account_data.h"
 #include "abstract_manager.h"
+#include "properties.h"
 #include "boost/serialization/nvp.hpp"
 #include "boost/serialization/map.hpp"
 #include "boost/serialization/string.hpp"
@@ -21,28 +22,6 @@
 #include <map>
 
 namespace sdc {
-
-class Properties {
- public:
-  friend class boost::serialization::access;
-
-  void SetProperty(const std::string &key, const std::string &value) {
-    props_[key] = value;
-  }
-
-  std::string GetProperty(const std::string &key) {
-    return props_[key];
-  }
-
- private:
-  std::map<std::string, std::string> props_;
-
-  template<class Archive>
-  void serialize(Archive & ar, const unsigned int version) {
-    if (version) {}
-    ar & BOOST_SERIALIZATION_NVP(props_);
-  }
-};
 
 class Library {
  public:
@@ -59,6 +38,8 @@ class Library {
     ar & BOOST_SERIALIZATION_NVP(filename_);
   }
 };
+
+class AccountData;
 
 /// @class ConfigManager
 /// @brief Maintains application configuration and provides interface for other managers.

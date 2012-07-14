@@ -15,13 +15,17 @@
 #include "bc_model.h"
 
 class BcPresenter : public sdc::ServicePresenter {
+
+    Q_OBJECT
+
  public:
   void Init();
 
- private:
-  void PopulateContactPanel(const std::vector<BcContact::Ref> contacts);
+ public slots:
+  void Test();
 
- BcModel* model_;
+ private:
+  BcModel* model_;
 };
 
 #endif /* BC_PRESENTER_H_ */

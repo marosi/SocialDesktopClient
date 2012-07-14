@@ -22,7 +22,7 @@ class AccountButton : public QWidget, public QtView {
   }
 
   QToolButton* tool_button() {
-    ui.toolButton;
+    return ui.toolButton;
   }
 
  protected slots:

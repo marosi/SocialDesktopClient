@@ -8,15 +8,16 @@
 #include "bc_contact.h"
 #include "bc_model.h"
 #include "Swiften/Swiften.h"
+#include "boost/filesystem.hpp"
 
 BcContact::BcContact(BcModel* model, const Swift::JID &jid)
     : model_(model),
-      jid_(jid),
-      client_(model->xmpp()),
-      router_(client_->getIQRouter()) {
-
-}
+      jid_(jid) {}
 
 ChannelController* BcContact::GetChannel() {
   return model_->GetChannel(jid_);
+}
+
+const std::string BcContact::GetAvatarPath() {
+  return model_->account()->GetProperty("avatars/" + jid_.toString());
 }
