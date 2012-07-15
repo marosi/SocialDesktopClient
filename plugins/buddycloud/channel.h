@@ -11,6 +11,7 @@
 #ifndef CHANNEL_H_
 #define CHANNEL_H_
 
+#include "abstract_model.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Queries/IQRouter.h"
 #include "Swiften/Elements/DiscoInfo.h"
@@ -25,32 +26,32 @@ class BcModel;
 class Post1;
 class Comment;
 
-struct ChannelServiceInfo {
-  Swift::JID jid;
-  bool is_available;
-  bool is_registration_available;
-
-  ChannelServiceInfo(
-      bool is_avail = false,
-      bool is_registration = false)
-      : is_available(is_avail),
-        is_registration_available(is_registration) {}
-};
-
-struct ChannelUserInfo {
-  bool is_user_channel_registered; // TODO: deprecate, only client can have this state!
-
-  Swift::JID jid;
-  std::string posts_node;
-  std::string subscription_node;
-
-  ChannelUserInfo(
-      bool is_user_channel_registered = false)
-      : is_user_channel_registered(is_user_channel_registered) {}
-};
-
-class ChannelController {
+class ChannelController : public AbstractModel {
  public:
+  struct ChannelServiceInfo {
+    Swift::JID jid;
+    bool is_available;
+    bool is_registration_available;
+
+    ChannelServiceInfo(
+        bool is_avail = false,
+        bool is_registration = false)
+        : is_available(is_avail),
+          is_registration_available(is_registration) {}
+  };
+
+  struct ChannelUserInfo {
+    bool is_user_channel_registered; // TODO: deprecate, only client can have this state!
+
+    Swift::JID jid;
+    std::string posts_node;
+    std::string subscription_node;
+
+    ChannelUserInfo(
+        bool is_user_channel_registered = false)
+        : is_user_channel_registered(is_user_channel_registered) {}
+  };
+
   friend class BcModel;
   typedef boost::shared_ptr<ChannelController> ref;
 
@@ -78,7 +79,7 @@ class ChannelController {
     Subscribers
   };
 
-  ChannelController(const Swift::JID &jid, BcModel* bot);
+  ChannelController(BcModel* bot, const Swift::JID &jid);
   ~ChannelController();
 
   void Sync();

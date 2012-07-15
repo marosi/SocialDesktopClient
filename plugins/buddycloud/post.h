@@ -11,14 +11,16 @@
 #ifndef POST_H_
 #define POST_H_
 
+#include "abstract_model.h"
 #include "boost/signals2/signal.hpp"
 #include <string>
 
 class ChannelController;
 class Comment;
 
-class Content {
+class Content : public AbstractModel {
  public:
+  Content(AbstractModel* model) : AbstractModel(model) {}
 
   void SetID(const std::string &id) {
     id_ = id;

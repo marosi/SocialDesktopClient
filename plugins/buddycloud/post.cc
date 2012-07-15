@@ -9,7 +9,7 @@
 #include "channel.h"
 #include <algorithm>
 
-Post1::Post1(ChannelController* channel) : channel_(channel) {}
+Post1::Post1(ChannelController* channel) : Content(channel), channel_(channel) {}
 
 void Post1::Delete() {
   channel_->DeletePost(this);
@@ -31,7 +31,7 @@ void Post1::AddComment(Comment* comment, bool signal) {
   }
 }
 
-Comment::Comment(Post1* post, const std::string &content) : post_(post) {
+Comment::Comment(Post1* post, const std::string &content) : Content(post), post_(post) {
   comment_on_id_ = post->GetID();
   SetContent(content);
 }

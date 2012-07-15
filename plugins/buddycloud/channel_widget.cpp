@@ -10,8 +10,9 @@
 #include "post.h"
 #include "bind.h"
 
-ChannelWidget::ChannelWidget(ChannelController* channel)
-    : channel_(channel) {
+ChannelWidget::ChannelWidget(AbstractPresenter* presenter, ChannelController* channel)
+    : AbstractPresenter(presenter),
+      channel_(channel) {
   { // set new post button
     new_post_button_ = new QToolButton;
     new_post_button_->setChecked(false);
@@ -40,7 +41,7 @@ ChannelWidget::ChannelWidget(ChannelController* channel)
   // bind model events
   sdc::bind(channel_->onSynchronized, [&] () {
     for (Post1* post : channel_->posts()) {
-      PostWidget* pw = new PostWidget(post);
+      PostWidget* pw = new PostWidget(this, post);
       posts_[post->GetID()] = pw;
       content_layout()->insertWidget(0, pw);
     }
@@ -55,7 +56,7 @@ ChannelWidget::ChannelWidget(ChannelController* channel)
   });
 
   sdc::bind(channel_->onPostAdded, [&] (Post1* post) {
-    PostWidget* pw = new PostWidget(post);
+    PostWidget* pw = new PostWidget(this, post);
     posts_[post->GetID()] = pw;
     content_layout()->insertWidget(0, pw);
   });

@@ -11,22 +11,23 @@
 #ifndef BC_CONTACT_H_
 #define BC_CONTACT_H_
 
+#include "abstract_model.h"
 #include "content.h"
 #include "Swiften/JID/JID.h"
 
 class BcModel;
 class ChannelController;
 
-class BcContact : public sdc::Contact {
+class BcContact : public sdc::Contact, public AbstractModel {
  public:
   BcContact(BcModel* model, const Swift::JID &jid);
 
   ChannelController* GetChannel();
 
+  // TODO: not used anymore
   const std::string GetAvatarPath();
 
   boost::signals2::signal<void ()> onChannelRetrieved;
-  boost::signals2::signal<void ()> onAvatarChanged;
 
  private:
   BcModel* model_;

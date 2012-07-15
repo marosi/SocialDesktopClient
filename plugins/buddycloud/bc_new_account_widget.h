@@ -2,7 +2,7 @@
 #define NEW_ACCOUNT_WIDGET_H
 
 #include "sdc.h"
-#include "buddycloud_account.h"
+#include "bc_account.h"
 #include <QtGui/QWidget>
 #include "ui_bc_new_account_widget.h"
 
@@ -27,7 +27,7 @@ class BcNewAccountWidget : public sdc::NewAccountWidget
   }
 
   sdc::AccountData* CreateNew() {
-    BuddycloudAccount* account = new BuddycloudAccount;
+    BcAccount* account = new BcAccount;
     this->BindDataTo(account);
     return account;
   }

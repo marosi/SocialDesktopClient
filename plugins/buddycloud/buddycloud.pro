@@ -14,7 +14,6 @@ HEADERS += \
     channel_widget.h \
     ui_new_post_widget.h \
     buddycloud_connection.h \
-    buddycloud_account.h \
     bc_presenter.h \
     bc_new_contact_widget.h \
     bc_new_account_widget.h \
@@ -26,7 +25,13 @@ HEADERS += \
     payloads/pubsub.h \
     payloads/items.h \
     payloads/atom.h \
-    comment_widget.h
+    comment_widget.h \
+    abstract_model.h \
+    abstract_presenter.h \
+    avatar.h \
+    filesystem_storages.h \
+    avatar_filesystem_storage.h \
+    bc_account.h
 SOURCES += \
     pubsub_serializer.cc \
     post.cc \
@@ -42,7 +47,9 @@ SOURCES += \
     bc_contact.cc \
     pubsub_parser.cc \
     comment_widget.cpp \
-    bc_contact_widget.cc
+    bc_contact_widget.cc \
+    filesystem_storages.cpp \
+    avatar_filesystem_storage.cpp
 FORMS += \
     post_widget.ui \
     new_post_widget.ui \

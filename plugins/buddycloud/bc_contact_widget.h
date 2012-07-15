@@ -11,16 +11,17 @@
 #ifndef BC_CONTACT_WIDGET_H_
 #define BC_CONTACT_WIDGET_H_
 
+#include "abstract_presenter.h"
 #include "contact_widget.h"
 // includes from sdc
-#include "main_window.h"
 
 class BcContact;
+class BcPresenter;
 class ChannelWidget;
 
-class BcContactWidget : public sdc::ContactWidget {
+class BcContactWidget : public sdc::ContactWidget, public AbstractPresenter {
  public:
-  BcContactWidget(sdc::MainWindow* parent, BcContact* contact);
+  BcContactWidget(BcPresenter* presenter, BcContact* contact);
 
   void Remove() {
     // TODO: impelment
@@ -33,7 +34,6 @@ class BcContactWidget : public sdc::ContactWidget {
  private:
   void ShowChannelPanel();
 
-  sdc::MainWindow* window_;
   BcContact* contact_;
   ChannelWidget* channel_;
 };

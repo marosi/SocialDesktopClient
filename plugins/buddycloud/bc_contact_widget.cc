@@ -1,18 +1,20 @@
 #include "bc_contact_widget.h"
-#include "channel_widget.h"
 #include "bc_contact.h"
+#include "bc_presenter.h"
+#include "channel_widget.h"
 
 #include "bind.h"
 #include <QMouseEvent>
 
-BcContactWidget::BcContactWidget(sdc::MainWindow* parent, BcContact* contact)
-    : sdc::ContactWidget(parent, contact),
-      window_(parent),
+BcContactWidget::BcContactWidget(BcPresenter* presenter, BcContact* contact)
+    : sdc::ContactWidget(contact),
+      AbstractPresenter(presenter),
       contact_(contact),
       channel_(0) {
-  sdc::bind(contact_->onAvatarChanged, [&] () {
-    contact_image_button()->setIcon(QIcon(QString::fromStdString(contact_->GetAvatarPath())));
-  });
+  // setup avatar
+  Avatar* avatar = this->presenter()->GetAvatar(contact_->GetUid());
+  avatar_label()->setPixmap(avatar->GetPixmap());
+  connect(avatar, SIGNAL(changed(QPixmap)), avatar_label(), SLOT(setPixmap(QPixmap)));
 }
 
 void BcContactWidget::mouseDoubleClickEvent(QMouseEvent* event) {
@@ -23,8 +25,8 @@ void BcContactWidget::mouseDoubleClickEvent(QMouseEvent* event) {
 
 void BcContactWidget::ShowChannelPanel() {
   if (!channel_) {
-    channel_ = new ChannelWidget(contact_->GetChannel());
+    channel_ = new ChannelWidget(this, contact_->GetChannel());
   }
-  window_->AddContentPanel(channel_);
+  presenter()->main_window()->AddContentPanel(channel_);
   channel_->show();
 }

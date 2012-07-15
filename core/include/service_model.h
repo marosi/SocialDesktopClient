@@ -23,16 +23,12 @@ class ServiceModel : public CoreAnchor {
  public:
   friend class Core;
 
-  ServiceModel() {} // TODO: REMOVE
-  ServiceModel(AccountData* account) {
-    account_ = account;
-  }
+  ServiceModel(AccountData* account);
   virtual ~ServiceModel() {}
 
   AccountData* account() const {
     return account_;
   }
-
   Service* service() const {
     return service_;
   }

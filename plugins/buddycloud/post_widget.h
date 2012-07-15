@@ -1,6 +1,7 @@
 #ifndef POST_WIDGET_H
 #define POST_WIDGET_H
 
+#include "abstract_presenter.h"
 #include "post.h"
 #include <QtGui/QWidget>
 #include <QList>
@@ -8,12 +9,12 @@
 
 class CommentWidget;
 
-class PostWidget : public QWidget {
+class PostWidget : public QWidget, public AbstractPresenter {
 
     Q_OBJECT
 
  public:
-  PostWidget(Post1* post);
+  PostWidget(AbstractPresenter* presenter, Post1* post);
   ~PostWidget();
 
  public slots:

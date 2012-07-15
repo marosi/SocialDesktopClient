@@ -12,7 +12,11 @@
 #define BC_PRESENTER_H_
 
 #include "service_presenter.h"
-#include "bc_model.h"
+#include "avatar.h"
+#include "Swiften/JID/JID.h"
+#include <QMap>
+
+class BcModel;
 
 class BcPresenter : public sdc::ServicePresenter {
 
@@ -20,12 +24,16 @@ class BcPresenter : public sdc::ServicePresenter {
 
  public:
   void Init();
+  Avatar* GetAvatar(const Swift::JID &jid);
 
  public slots:
   void Test();
 
  private:
+  void SetAvatar(const std::string &file_path);
+
   BcModel* model_;
+  QMap<Swift::JID, Avatar*> avatars_;
 };
 
 #endif /* BC_PRESENTER_H_ */

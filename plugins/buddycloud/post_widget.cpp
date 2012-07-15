@@ -1,16 +1,22 @@
 #include "post_widget.h"
 #include "bc_model.h"
+#include "bc_presenter.h"
 #include "comment_widget.h"
 // from sdc
 #include "bind.h"
 
-PostWidget::PostWidget(Post1* post)
-    : post_(post) {
+PostWidget::PostWidget(AbstractPresenter* presenter, Post1* post)
+    : AbstractPresenter(presenter),
+      post_(post) {
 	ui.setupUi(this);
   ui.commentLineEdit->hide();
   // set post data
 	ui.authorLabel->setText(QString::fromStdString(post_->GetAuthor()));
 	ui.contentTextEdit->setText(QString::fromStdString(post_->GetContent()));
+  // setup avatar
+  Avatar* avatar = this->presenter()->GetAvatar(post_->GetAuthor());
+  ui.avatarLabel->setPixmap(avatar->GetPixmap());
+  connect(avatar, SIGNAL(changed(QPixmap)), ui.avatarLabel, SLOT(setPixmap(QPixmap)));
   // set focusing policy
   setFocusPolicy(Qt::StrongFocus);
   setFocusProxy(ui.commentLineEdit);
@@ -21,13 +27,13 @@ PostWidget::PostWidget(Post1* post)
           this, SLOT(PostComment()));
   sdc::bind(post_->onCommentAdded, [&] (Comment* comment) {
             LOG(DEBUG) << "ADDING COMMENT : PostWidget 1";
-    CommentWidget* cw = new CommentWidget(comment);
+    CommentWidget* cw = new CommentWidget(this, comment);
     comments_.append(cw);
     ui.commentsLayout->addWidget(cw);
   });
   // show comments
   for (Comment* comment : post_->comments()) {
-    CommentWidget* cw = new CommentWidget(comment);
+    CommentWidget* cw = new CommentWidget(this, comment);
     comments_.append(cw);
     ui.commentsLayout->addWidget(cw);
   }

@@ -8,13 +8,13 @@
  *   @date Apr 17, 2012
  */
 
-#ifndef BUDDYCLOUD_ACCOUNT_H_
-#define BUDDYCLOUD_ACCOUNT_H_
+#ifndef BC_ACCOUNT_H_
+#define BC_ACCOUNT_H_
 
 #include "sdc.h"
 
-class BuddycloudAccount : public sdc::AccountData {
+class BcAccount : public sdc::AccountData {
 
 };
 
-#endif /* BUDDYCLOUD_ACCOUNT_H_ */
+#endif /* BC_ACCOUNT_H_ */

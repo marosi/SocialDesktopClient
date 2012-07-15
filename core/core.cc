@@ -48,13 +48,6 @@ Service* Core::service(const PluginSignature &signature) {
  * Private interface
  */
 void Core::ActivateAccount(AccountData* account) {
-  Service* s = service(account->GetServiceSignature());
-  account->SetService(s);
-  ServiceModel* sam = s->CreateServiceModel(account);
-  sam->SetCore(this);
-  account->SetServiceModel(sam);
-  service_models_.push_back(sam);
-  account_models_.insert(AccountModelsMap::value_type(account->GetId(), sam));
   // create account resource directory if none exists
   filesystem::path p(account->GetDir());
   if (!filesystem::exists(p)) {
@@ -62,13 +55,24 @@ void Core::ActivateAccount(AccountData* account) {
       LOG(ERROR) << "Cannot create directory for account '" << account->GetId() << "'.";
     }
   }
+  // TODO: initialize account properly
+  Service* s = service(account->GetServiceSignature());
+  account->SetService(s);
+
+  // create service model
+  ServiceModel* sam = s->CreateServiceModel(account);
+  sam->SetCore(this);
+  account->SetServiceModel(sam);
+  service_models_.push_back(sam);
+  account_models_.insert(AccountModelsMap::value_type(account->GetId(), sam));
+
   // connection
   Connection* conn = sam->CreateConnection();
   connections()->MakeConnection(conn);
   // hook model with its service and connection
-  sam->service_ = account->GetService();
   sam->connection_ = conn;
   // emit signal
+
   onAccountActivated(account);
 }
 

@@ -15,7 +15,10 @@ class Properties {
   }
 
   std::string GetProperty(const std::string &key) {
-    return properties_[key];
+    if (properties_.count(key) > 0)
+      return properties_[key];
+    else
+      return std::string();
   }
 
  private:

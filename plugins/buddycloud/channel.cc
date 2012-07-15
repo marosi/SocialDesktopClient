@@ -20,8 +20,9 @@ using std::vector;
 /*
  * Channel controller
  */
-ChannelController::ChannelController(const Swift::JID &jid, BcModel* model)
-    : router_(model->client_->getIQRouter()),
+ChannelController::ChannelController(BcModel* model, const Swift::JID &jid)
+    : AbstractModel(model),
+      router_(model->client_->getIQRouter()),
       model_(model),
       jid_(jid) {
   null_node_          = "/user/" + jid_.toString();
@@ -243,6 +244,10 @@ void ChannelController::handleDomainItemInfo(DiscoInfo::ref payload, ErrorPayloa
     }
   }
 }
+
+/*
+ * Internal structures manipulation
+ */
 
 void ChannelController::AddPost(Post1* post, bool signal) {
   if (id_posts_.count(post->GetID()) == 0) {

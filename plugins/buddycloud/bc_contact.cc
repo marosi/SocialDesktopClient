@@ -11,7 +11,8 @@
 #include "boost/filesystem.hpp"
 
 BcContact::BcContact(BcModel* model, const Swift::JID &jid)
-    : model_(model),
+    : AbstractModel(model),
+      model_(model),
       jid_(jid) {}
 
 ChannelController* BcContact::GetChannel() {

@@ -30,7 +30,6 @@ class ServicePresenter : public QObject {
   virtual ~ServicePresenter() {}
   virtual void Init() {}
 
- protected:
   MainWindow* main_window() {
     return main_window_;
   }

@@ -8,6 +8,7 @@
 #include "bc_model.h"
 #include "bc_contact.h"
 #include "channel.h"
+#include "filesystem_storages.h"
 #include "post.h"
 #include "payloads/pubsub.h"
 #include "pubsub_requests.h"
@@ -75,17 +76,17 @@ BcModel::BcModel(sdc::AccountData* account)
       connected_(false) {
   LOG(DEBUG) << "This is buddycloud Service Model!";
   //Swift::logging = true;
-  avatar_file_path_ = ""; // TODO: implement default avatar
   /*
    * Swiften setup
    */
   loop_ = new SimpleEventLoop;
   network_ = new BoostNetworkFactories(loop_);
+  storages_ = new FilesystemStorages(service()->dir(), account);
   //client_ = new Client("sdc_test@jabbim.com", "sdc_test", network_);
   //client_ = new Client("maros@buddycloud.org", "udsampia", network_);
   //client_ = new Client("pista@localhost", "pista", network_);
   //client_ = new Client("test_subject@buddycloud.org", "test", network_);
-  client_ = new Client(jid_, account->GetPassword(), network_);
+  client_ = new Client(jid_, account->GetPassword(), network_, storages_);
 
   client_->setAlwaysTrustCertificates();
   client_->onConnected.connect(bind(&BcModel::handleConnected, this));
@@ -104,22 +105,19 @@ BcModel::BcModel(sdc::AccountData* account)
    * VCard actions
    */
   client_->getVCardManager()->onOwnVCardChanged.connect([&] (VCard::ref vcard) {
-    if (vcard->getPhoto().size() > 0) {
-      const std::string file_path = SavePhoto(jid_, vcard);
-      if (file_path != "") {
-        this->account()->SetProperty("avatars/own", file_path);
-        onOwnAvatarChange(file_path);
-      }
-    }
+
   });
   client_->getVCardManager()->onVCardChanged.connect([&] (const JID &jid, VCard::ref vcard) {
-    if (vcard->getPhoto().size() > 0) {
-      const std::string file_path = SavePhoto(jid, vcard);
-      if (file_path != "") {
-        this->account()->SetProperty("avatars/" + jid.toString(), file_path);
-        GetContact(jid)->onAvatarChanged();
-      }
-    }
+  });
+  /*
+   * Avatar management
+   */
+  client_->getAvatarManager()->onAvatarChanged.connect([&] (const JID &jid) {
+    if (jid == jid_)
+      LOG(DEBUG) << "@@@@@@@@@@@ CHANGING OWN AVATAR!";
+
+    onAvatarChanged(jid);
+    LOG(DEBUG) << "Avatar of " << jid.toString() << " changed";
   });
   /*
    * Subscriptions
@@ -127,7 +125,6 @@ BcModel::BcModel(sdc::AccountData* account)
   client_->getSubscriptionManager()->onPresenceSubscriptionRequest.connect([&] (const JID &jid, const string &str, Presence::ref presence) {
     LOG(DEBUG) << "Subscription request from " << jid.toString() << " and message?: " << str;
   });
-
   client_->getSubscriptionManager()->onPresenceSubscriptionRevoked.connect([&] (const JID &jid, const string &str) {
     LOG(DEBUG) << "Subscription of " << jid.toString() << " has been revoked: " << str;
   });
@@ -201,7 +198,7 @@ BcContact* BcModel::GetContact(const Swift::JID &jid) {
 ChannelController* BcModel::GetChannel(const Swift::JID &jid) {
   if (channels_map_.count(jid) > 0)
     return channels_map_[jid];
-  ChannelController* channel = new ChannelController(jid, this);
+  ChannelController* channel = new ChannelController(this, jid);
   channels_.push_back(channel);
   channels_map_[jid] = channel;
   return channel;
@@ -216,6 +213,22 @@ void BcModel::GetServerInfo() {
   info->send();
 }
 
+const string BcModel::GetOwnAvatarPath() {
+  return GetAvatarPath(jid_);
+}
+
+const std::string BcModel::GetAvatarPath(const JID &jid) {
+  string file = client_->getAvatarManager()->getAvatarPath(jid).file_string();
+  if (!file.empty())
+    return file;
+  else
+    return GetDefaultAvatarPath();
+}
+
+const string BcModel::GetDefaultAvatarPath() {
+  return service()->dir() + "/default_avatar.png";
+}
+
 void BcModel::test() {
   //client_->getVCardManager()->requestOwnVCard();
 }
@@ -226,68 +239,62 @@ void BcModel::test() {
 
 void BcModel::handleConnected() {
   LOG(TRACE) << "XMPP client is connected" << std::endl;
-
   // request own vCard
-
-
+  client_->getVCardManager()->requestOwnVCard();
+  // request contact vCards
   client_->getRoster()->onInitialRosterPopulated.connect([&] () {
     LOG(TRACE) << "Requesting vCards for contacts";
-    // request vCards
     for (Contact* c : contacts_) {
       client_->getVCardManager()->requestVCard(c->GetUid());
     }
   });
   client_->requestRoster();
 
-
-
   // Send presence message
   client_->sendPresence(Presence::create("Ready when you are..."));
+
   // initialize own channel
-//  if (!own_channel_) {
-//    own_channel_ = new ChannelController(jid_, this);
-//    own_channel_->onChannelsServiceAvailable.connect([&] (ChannelServiceInfo info) {
-//      service_jid_ = info.jid;
-//      is_service_registration_available_ = info.is_registration_available;
-//    });
-//    // Get roster after channels service is found
-//    //my_channel_->onChannelsServiceAvailable.connect(bind(&BcModel::GetRoster, this));
-//    // Handle errors
-//    own_channel_->onError.connect([&] (ChannelController::Error error) {
-//      switch (error) {
-//        case ChannelController::UserChannelNotPresent:
-//          LOG(WARNING) << "Jabber user '" << jid_ << "' has not registered channel yet. \n";
-//          if (is_service_registration_available_) {
-//            LOG(TRACE) << "Trying to register user to service '" << service_jid_.toString() << "'.";
-//            InBandRegistrationPayload::ref payload(new InBandRegistrationPayload);
-//            //payload->set... // TODO: Set user account data accordingly
-//            SetInBandRegistrationRequest::ref reg = SetInBandRegistrationRequest::create(service_jid_, payload, client_->getIQRouter());
-//            reg->onResponse.connect([&] (Payload::ref payload, ErrorPayload::ref error) {
-//              /*
-//               * Second level asynchronous call
-//               */
-//              if (!error) {
-//                LOG(INFO) << "Channel has registered succesfully.";
-//                onSelfChannelRegistered();
-//              }
-//            });
-//            reg->send();
-//          } else {
-//            LOG(ERROR) << "Registration to channel service '" << service_jid_.toString() << "' is not available!";
-//          }
-//          break;
-//        case ChannelController::ChannelsServiceUnavailable:
-//          break;
-//        default:
-//          assert(false);
-//          break;
-//      }
-//    });
-//    own_channel_->DiscoverService();
-//  }
+  if (!own_channel_) {
+    own_channel_ = new ChannelController(this, jid_);
+    own_channel_->onChannelsServiceAvailable.connect([&] (ChannelController::ChannelServiceInfo info) {
+      service_jid_ = info.jid;
+      is_service_registration_available_ = info.is_registration_available;
+    });
+    // Handle errors
+    own_channel_->onError.connect([&] (ChannelController::Error error) {
+      switch (error) {
+        case ChannelController::UserChannelNotPresent:
+          LOG(WARNING) << "Jabber user '" << jid_ << "' has not registered channel yet. \n";
+          if (is_service_registration_available_) {
+            LOG(TRACE) << "Trying to register user to service '" << service_jid_.toString() << "'.";
+            InBandRegistrationPayload::ref payload(new InBandRegistrationPayload);
+            //payload->set... // TODO: Set user account data accordingly
+            SetInBandRegistrationRequest::ref reg = SetInBandRegistrationRequest::create(service_jid_, payload, client_->getIQRouter());
+            reg->onResponse.connect([&] (Payload::ref payload, ErrorPayload::ref error) {
+              /*
+               * Second level asynchronous call
+               */
+              if (!error) {
+                LOG(INFO) << "Channel has registered succesfully.";
+                onSelfChannelRegistered();
+              }
+            });
+            reg->send();
+          } else {
+            LOG(ERROR) << "Registration to channel service '" << service_jid_.toString() << "' is not available!";
+          }
+          break;
+        case ChannelController::ChannelsServiceUnavailable:
+          break;
+        default:
+          assert(false);
+          break;
+      }
+    });
+    own_channel_->Sync();
+  }
   connected_ = true;
   onConnected();
-
 }
 
 void BcModel::handleDisconnected(boost::optional<ClientError> error) {
@@ -331,7 +338,6 @@ void BcModel::handleMessageReceived(Message::ref message) {
 }
 
 void BcModel::handlePresenceReceived(Presence::ref presence) {
-  LOG(DEBUG) << "Handling presence message..";
   // Automatically approve subscription requests
   if (presence->getType() == Presence::Subscribe) {
     LOG(INFO) << "Presence subscription request recieved -> approving subscription.";
@@ -519,5 +525,5 @@ const std::string BcModel::SavePhoto(const Swift::JID &jid, Swift::VCard::ref vc
     return avatar_file;
   }
   // something went wrong
-  return "";
+  return string();
 }

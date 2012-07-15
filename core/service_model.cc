@@ -6,9 +6,15 @@
  */
 
 #include "service_model.h"
+#include "account_data.h"
 #include "connection.h"
 
 namespace sdc {
+
+ServiceModel::ServiceModel(AccountData* account)
+  : account_(account) {
+  service_ = account->GetService();
+}
 
 void ServiceModel::Connect() {
   connection_->Connect();

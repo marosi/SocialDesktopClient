@@ -11,6 +11,7 @@
 #ifndef CHANNEL_WIDGET_H_
 #define CHANNEL_WIDGET_H_
 
+#include "abstract_presenter.h"
 #include "content_panel.h"
 #include "channel.h"
 #include "ui_new_post_widget.h"
@@ -19,12 +20,12 @@
 
 class PostWidget;
 
-class ChannelWidget : public sdc::ContentPanel {
+class ChannelWidget : public sdc::ContentPanel, public AbstractPresenter {
 
     Q_OBJECT
 
  public:
-  ChannelWidget(ChannelController* channel);
+  ChannelWidget(AbstractPresenter* presenter, ChannelController* channel);
 
  public slots:
   void SendPost();

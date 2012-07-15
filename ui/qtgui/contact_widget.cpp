@@ -7,8 +7,7 @@ using boost::bind;
 
 namespace sdc {
 
-ContactWidget::ContactWidget(QWidget* parent, Contact* contact)
-    : QWidget(parent) {
+ContactWidget::ContactWidget(Contact* contact) {
 	ui.setupUi(this);
 	model_ = contact;
 
@@ -16,8 +15,6 @@ ContactWidget::ContactWidget(QWidget* parent, Contact* contact)
   //contact->onRemove.connect(bind(&ContactWidget::Close, this));
 	connect(this, SIGNAL(_close()),
 	    this, SLOT(close()));
-
-	MainWindow* parent_ = boost::polymorphic_downcast<MainWindow*>(parent);
 
 	ui.contactInfo->setText(QString::fromStdString(contact->GetUid()));
 

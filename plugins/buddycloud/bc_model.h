@@ -28,6 +28,7 @@
 
 class BcContact;
 class ChannelController;
+class FilesystemStorages;
 
 class BcModel : public sdc::QtServiceModel {
   public:
@@ -55,13 +56,9 @@ class BcModel : public sdc::QtServiceModel {
     void AddNewContact(const Swift::JID &jid);
     void RemoveContact(const Swift::JID &jid);
 
-    const std::string GetOwnAvatarPath() {
-      return avatar_file_path_;
-    }
-
-    const std::string GetDefaultAvatarPath() {
-      return service()->dir() + "/default_avatar.png";
-    }
+    const std::string GetOwnAvatarPath();
+    const std::string GetAvatarPath(const Swift::JID &jid);
+    const std::string GetDefaultAvatarPath();
 
     /*
      * Errors
@@ -77,8 +74,9 @@ class BcModel : public sdc::QtServiceModel {
     boost::signals2::signal<void (const Swift::JID)> onContactAdded;
     boost::signals2::signal<void (const Swift::JID)> onContactRemoved;
     boost::signals2::signal<void ()> onSelfChannelRegistered;
-    boost::signals2::signal<void (Swift::VCard::ref)> onOwnVCardUpdate;
-    boost::signals2::signal<void (const std::string file_path)> onOwnAvatarChange;
+    boost::signals2::signal<void (Swift::VCard::ref)> onOwnVCardUpdated;
+    boost::signals2::signal<void ()> onOwnAvatarChanged;
+    boost::signals2::signal<void (const Swift::JID)> onAvatarChanged;
 
   private:
     /*
@@ -143,6 +141,7 @@ class BcModel : public sdc::QtServiceModel {
      */
     Swift::SimpleEventLoop* loop_;
     Swift::NetworkFactories* network_;
+    FilesystemStorages* storages_;
     Swift::Client* client_;
     Swift::ClientXMLTracer* tracer_;
 
