@@ -49,7 +49,8 @@ SOURCES += \
     comment_widget.cpp \
     bc_contact_widget.cc \
     filesystem_storages.cpp \
-    avatar_filesystem_storage.cpp
+    avatar_filesystem_storage.cpp \
+    pubsub_requests.cc
 FORMS += \
     post_widget.ui \
     new_post_widget.ui \

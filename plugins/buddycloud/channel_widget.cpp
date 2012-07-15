@@ -9,6 +9,7 @@
 #include "post_widget.h"
 #include "post.h"
 #include "bind.h"
+#include <QScrollBar>
 
 ChannelWidget::ChannelWidget(AbstractPresenter* presenter, ChannelController* channel)
     : AbstractPresenter(presenter),
@@ -30,55 +31,40 @@ ChannelWidget::ChannelWidget(AbstractPresenter* presenter, ChannelController* ch
     SetHeaderWidget(new_post_);
     new_post_->hide();
   }
-
   // show hide new post widget
   connect(new_post_button_, SIGNAL(toggled(bool)),
       new_post_, SLOT(setVisible(bool)));
   // send button
   connect(new_post_ui.sendToolButton, SIGNAL(clicked()),
       this, SLOT(SendPost()));
-
+  // handle scrollbar event and retrieve new posts
+  scroll_bar_ = content_scroll_area()->verticalScrollBar();
+  connect(scroll_bar_, SIGNAL(valueChanged(int)),
+      this, SLOT(OnScrollBarValueChanged(int)));
   // bind model events
-  sdc::bind(channel_->onSynchronized, [&] () {
-    for (Post1* post : channel_->posts()) {
+  sdc::bind(channel_->onNewPostsRetrieved, [&] (const std::vector<Post1*> posts) {
+    for (Post1* post : posts) {
       PostWidget* pw = new PostWidget(this, post);
       posts_[post->GetID()] = pw;
       content_layout()->insertWidget(0, pw);
     }
   });
-
   sdc::bind(channel_->onChannelTitleChange, [&] (const std::string title) {
     title_label()->setText(QString::fromStdString(title));
   });
-
   sdc::bind(channel_->onChannelDescriptionChange, [&] (const std::string description) {
     setToolTip(QString::fromStdString(description));
   });
-
   sdc::bind(channel_->onPostAdded, [&] (Post1* post) {
     PostWidget* pw = new PostWidget(this, post);
     posts_[post->GetID()] = pw;
     content_layout()->insertWidget(0, pw);
   });
-
   sdc::bind(channel_->onPostDeleted, [&] (const std::string id) {
     PostWidget* pw = posts_[id];
     posts_.remove(id);
     delete pw;
   });
-
-  //qRegisterMetaType<Post1::Ref>("Post1::Ref");
-  //channel_->onPostAdded.connect(boost::bind(&ChannelWidget::OnPostAdded, this, _1));
-  /*connect(this, SIGNAL(addPost(Post1::Ref)),
-      this, SLOT(AddPost(Post1::Ref)));*/
-
-
-  // TODO: Put this close action in more common content widget class
-  //channel_->onRemove.connect(boost::bind(&ChannelWidget::OnRemoveContent, this));
-  /*connect(this, SIGNAL(_close()),
-      this, SLOT(close()));*/
-
-
   // sync channel
   channel_->Sync();
 }
@@ -96,4 +82,13 @@ void ChannelWidget::SendPost() {
   new_post_ui.textEdit->clear();
   new_post_->hide();
   new_post_button_->setChecked(false);
+}
+
+void ChannelWidget::OnScrollBarValueChanged(int value) {
+  if (value == old_scroll_bar_value_)
+    return;
+  LOG(DEBUG) << "scroll bar max " << scroll_bar_->maximum() << " ... value : " << value;
+  if (value >= scroll_bar_->maximum())
+    channel_->RetrieveNextPosts();
+  old_scroll_bar_value_ = value;
 }

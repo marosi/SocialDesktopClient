@@ -26,6 +26,10 @@ class ContentPanel : public QFrame {
     return ui.titleLabel;
   }
 
+  QScrollArea* content_scroll_area() {
+    return ui.scrollArea;
+  }
+
   QVBoxLayout* content_layout() {
     return boost::polymorphic_downcast<QVBoxLayout*>(ui.contentScrollArea->layout());
   }

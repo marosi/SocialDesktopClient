@@ -11,8 +11,16 @@
 #ifndef PUBSUB_PAYLOAD_SERIALIZER_H_
 #define PUBSUB_PAYLOAD_SERIALIZER_H_
 
-#include "payloads/pubsub.h"
 #include "Swiften/Serializer/GenericPayloadSerializer.h"
+
+class Atom;
+class PubsubConfigureNodeRequest;
+class PubsubItemsRequest;
+class PubsubPublishRequest;
+class PubsubRetractRequest;
+class PubsubSubscribeRequest;
+class PubsubUnsubscribeRequest;
+class Rsm;
 
 class AtomSerializer : public Swift::GenericPayloadSerializer<Atom> {
  public:
@@ -47,6 +55,11 @@ class PubsubUnsubscribeRequestSerializer : public Swift::GenericPayloadSerialize
 class PubsubConfigureNodeRequestSerializer : public Swift::GenericPayloadSerializer<PubsubConfigureNodeRequest> {
  public:
   virtual std::string serializePayload(boost::shared_ptr<PubsubConfigureNodeRequest> payload) const;
+};
+
+class RsmSerializer : public Swift::GenericPayloadSerializer<Rsm> {
+ public:
+  virtual std::string serializePayload(boost::shared_ptr<Rsm> payload) const;
 };
 
 #endif /* PUBSUB_PAYLOAD_SERIALIZER_H_ */

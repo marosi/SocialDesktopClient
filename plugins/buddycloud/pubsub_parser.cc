@@ -142,8 +142,14 @@ void AtomParser::handleCharacterData(const std::string&  data) {
 /*
  * PUBSUB ITEMS REQUEST PARSER
  */
-PubsubItemsRequestParser::PubsubItemsRequestParser() : level_(TopLevel), is_parsing_items_(false) {
+PubsubItemsRequestParser::PubsubItemsRequestParser()
+    : level_(TopLevel), is_parsing_items_(false), rsm_parser_(0), is_parsing_rsm_(false) {
   item_parser_.addPaylodParserFactory(new AtomParserFactory);
+}
+
+PubsubItemsRequestParser::~PubsubItemsRequestParser() {
+  if (rsm_parser_)
+    delete rsm_parser_;
 }
 
 void PubsubItemsRequestParser::handleStartElement(const std::string& element, const std::string& ns, const Swift::AttributeMap& attributes) {
@@ -151,11 +157,16 @@ void PubsubItemsRequestParser::handleStartElement(const std::string& element, co
     if (element == "items") {
       getPayloadInternal()->setNode(attributes.getAttributeValue("node").get_value_or("___NODE___"));
       is_parsing_items_ = true;
+    } else if (element == "set") {
+      // because there isn't always RSM payload create parser dynamicaly
+      rsm_parser_ = new RsmParser();
+      is_parsing_rsm_ = true;
     }
-  } else {
-    if (is_parsing_items_) {
+  } else if (level_ > TopLevel) {
+    if (is_parsing_items_)
       item_parser_.handleStartElement(element, ns, attributes);
-    }
+    else if (is_parsing_rsm_)
+      rsm_parser_->handleStartElement(element, ns, attributes);
   }
   ++level_;
 }
@@ -166,15 +177,24 @@ void PubsubItemsRequestParser::handleEndElement(const std::string& element, cons
     if (element == "items") {
       getPayloadInternal()->setItems(item_parser_.getPayloadInternal());
       is_parsing_items_ = false;
+    } else if (element == "set") {
+      getPayloadInternal()->setRsm(rsm_parser_->getPayloadInternal());
+      is_parsing_rsm_ = false;
     }
-  } else if (level_ > TopLevel && is_parsing_items_) {
-    item_parser_.handleEndElement(element, ns);
+  } else if (level_ > TopLevel) {
+    if (is_parsing_items_)
+      item_parser_.handleEndElement(element, ns);
+    else if (is_parsing_rsm_)
+      rsm_parser_->handleEndElement(element, ns);
   }
 }
 
 void PubsubItemsRequestParser::handleCharacterData(const std::string& data) {
-  if (level_ > TopLevel && is_parsing_items_) {
-    item_parser_.handleCharacterData(data);
+  if (level_ > TopLevel) {
+    if (is_parsing_items_)
+      item_parser_.handleCharacterData(data);
+    else if (is_parsing_rsm_)
+      rsm_parser_->handleCharacterData(data);
   }
 }
 
@@ -314,4 +334,26 @@ void EventPayloadParser::handleCharacterData(const std::string& data) {
 
 boost::shared_ptr<Swift::Payload> EventPayloadParser::getPayload() const {
   return getPayloadInternal();
+}
+
+RsmParser::~RsmParser() {}
+
+void RsmParser::handleStartElement(const std::string&  element, const std::string&  ns, const Swift::AttributeMap&  attributes) {
+  if (element == "first")
+    getPayloadInternal()->setFirstIndex(attributes.getAttributeValue("index").get_value_or(""));
+}
+
+void RsmParser::handleEndElement(const std::string&  element, const std::string&  ns) {
+  if (element == "first") {
+    getPayloadInternal()->setFirst(data_);
+  } else if (element == "last") {
+    getPayloadInternal()->setLast(data_);
+  } else if (element == "count") {
+    getPayloadInternal()->setCount(data_);
+  }
+  data_.clear();
+}
+
+void RsmParser::handleCharacterData(const std::string& data) {
+  data_ = data;
 }

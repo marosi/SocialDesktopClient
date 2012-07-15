@@ -21,11 +21,9 @@ class GetPubsubItemsRequest : public Swift::GenericRequest<PubsubItemsRequest> {
  public:
   typedef boost::shared_ptr<GetPubsubItemsRequest> ref;
 
-  static ref create(const std::string &reciever, const std::string &node, Swift::IQRouter* router) {
-    boost::shared_ptr<PubsubItemsRequest> payload(new PubsubItemsRequest);
-    payload->setNode(node);
-    return ref(new GetPubsubItemsRequest(Swift::IQ::Get, payload, reciever, router));
-  }
+  static ref create(const std::string &node, const std::string &reciever, Swift::IQRouter* router);
+  static ref create(const std::string &max, const std::string &node, const std::string &reciever, Swift::IQRouter* router);
+  static ref create(const std::string &after, const std::string &max, const std::string &node, const std::string &reciever, Swift::IQRouter* router);
 
   /*virtual void handleResponse(boost::shared_ptr<Swift::Payload> payload, Swift::ErrorPayload::ref error) {
     LOG(DEBUG) << "GetPubsubItemsRequest response object: " << typeid(*payload.get()).name();

@@ -29,6 +29,7 @@ class ChannelWidget : public sdc::ContentPanel, public AbstractPresenter {
 
  public slots:
   void SendPost();
+  void OnScrollBarValueChanged(int value);
 
  private:
   ChannelController* channel_;
@@ -36,6 +37,8 @@ class ChannelWidget : public sdc::ContentPanel, public AbstractPresenter {
   QToolButton* new_post_button_;
   QWidget* new_post_;
   Ui::NewPostClass new_post_ui;
+  QScrollBar* scroll_bar_;
+  int old_scroll_bar_value_;
 };
 
 #endif /* CHANNEL_WIDGET_H_ */

@@ -6,10 +6,12 @@
  */
 
 #include "pubsub_serializer.h"
+#include "payloads/pubsub.h"
 #include "Swiften/Serializer/PayloadSerializers/FormSerializer.h"
 #include "Swiften/Serializer/XML/XMLElement.h"
 #include "Swiften/Serializer/XML/XMLRawTextNode.h"
 #include "sdc.h"
+#include "boost/make_shared.hpp"
 
 using namespace Swift;
 
@@ -58,6 +60,10 @@ std::string PubsubItemsRequestSerializer::serializePayload(boost::shared_ptr<Pub
   XMLElement::ref items(new XMLElement("items"));
   items->setAttribute("node", payload->getNode());
   pubsub.addNode(items);
+  if (payload->getRsm()) {
+    RsmSerializer rs;
+    pubsub.addNode(boost::make_shared<XMLRawTextNode>(rs.serialize(payload->getRsm())));
+  }
   return pubsub.serialize();
 }
 
@@ -83,7 +89,7 @@ std::string PubsubPublishRequestSerializer::serializePayload(boost::shared_ptr<P
   std::string text_atom = as.serialize(payload->getPayload());
 
   XMLElement::ref item_elem(new XMLElement("item"));
-  item_elem->addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(text_atom)));
+  item_elem->addNode(boost::make_shared<XMLRawTextNode>(text_atom));
   publish->addNode(item_elem);
 
   pubsub.addNode(publish);
@@ -114,7 +120,32 @@ std::string PubsubConfigureNodeRequestSerializer::serializePayload(boost::shared
   pubsub.addNode(create);
   FormSerializer fs;
   XMLElement::ref configure(new XMLElement("configure"));
-  configure->addNode(boost::shared_ptr<XMLRawTextNode>(new XMLRawTextNode(fs.serialize(payload->getForm()))));
+  configure->addNode(boost::make_shared<XMLRawTextNode>(fs.serialize(payload->getForm())));
   pubsub.addNode(configure);
   return pubsub.serialize();
+}
+
+/**
+ * Serializes RSM payload data.
+ *
+ * RSM parameters as <first/>, <last/>, <count/> are not implemented in client
+ * because they are only showed in responses from server.
+ */
+std::string RsmSerializer::serializePayload(boost::shared_ptr<Rsm> payload) const {
+  XMLElement rsm("set", "http://jabber.org/protocol/rsm");
+  XMLElement::ref max(new XMLElement("max", "", payload->getMax()));
+  rsm.addNode(max);
+  if (!payload->getAfter().empty()) {
+    XMLElement::ref after(new XMLElement("after", "", payload->getAfter()));
+    rsm.addNode(after);
+  }
+  if (!payload->getBefore().empty()) {
+    XMLElement::ref before(new XMLElement("before", "", payload->getBefore()));
+    rsm.addNode(before);
+  }
+  if (!payload->getIndex().empty()) {
+    XMLElement::ref index(new XMLElement("index", "", payload->getIndex()));
+    rsm.addNode(index);
+  }
+  return rsm.serialize();
 }

@@ -83,7 +83,7 @@ class ChannelController : public AbstractModel {
   ~ChannelController();
 
   void Sync();
-  void RetrievePosts();
+  void RetrieveNextPosts();
   void CreatePost(Post1* post);
   void CreateComment(Comment* comment);
   void DeletePost(Post1* post);
@@ -103,29 +103,23 @@ class ChannelController : public AbstractModel {
   boost::signals2::signal<void (Error)> onError;
   boost::signals2::signal<void (ChannelServiceInfo)> onChannelsServiceAvailable;
   boost::signals2::signal<void ()> onChannelAvailable;
-  boost::signals2::signal<void ()> onSynchronized;
+  boost::signals2::signal<void (const std::vector<Post1*>) > onNewPostsRetrieved;
   boost::signals2::signal<void (const std::string)> onChannelTitleChange;
   boost::signals2::signal<void (const std::string)> onChannelDescriptionChange;
 
-  //boost::signals2::signal<void (const std::string &, const std::vector<>)> onNodeItemsRetrieved;
   boost::signals2::signal<void (const std::string)> onPostDeleted;
   boost::signals2::signal<void (Post1*)> onPostAdded;
 
  private:
   void DiscoverChannel();
-  /**
-   *
-   */
-  void RetrieveNodeItems(const std::string &node);
-  /**
-   *
-   */
   void DiscoverService();
   /**
    * When searching for a channel service this handler is used to recursively iterate through domain items.
    */
   void handleDomainItemInfo(Swift::DiscoInfo::ref payload, Swift::ErrorPayload::ref error, boost::shared_ptr<Swift::DiscoItems> items, std::vector<Swift::DiscoItems::Item>::const_iterator it);
-
+  /*
+   * Internal structures manipulation
+   */
   void AddPost(Post1* post, bool signal = true);
   void RemovePost(const std::string &id);
   Post1* GetPost(const std::string &id);
@@ -151,6 +145,10 @@ class ChannelController : public AbstractModel {
   std::string geo_future_node_;
   std::vector<Post1*> posts_;
   std::map<std::string, Post1*> id_posts_;
+  std::string pagination_;
+  std::string first_post_id_;
+  std::string last_post_id_;
+  std::string posts_count_;
 };
 
 #endif /* CHANNEL_H_ */

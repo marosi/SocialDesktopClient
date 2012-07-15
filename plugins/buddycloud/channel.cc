@@ -32,6 +32,11 @@ ChannelController::ChannelController(BcModel* model, const Swift::JID &jid)
   geo_current_node_   =  null_node_ + "/geo/current";
   geo_previous_node_  =  null_node_ + "/geo/previous";
   geo_future_node_    =  null_node_ + "/geo/future";
+
+  // default pagination of items requests
+  pagination_ = "20";
+  first_post_id_ = "";
+  last_post_id_ = "";
 }
 
 ChannelController::~ChannelController() {
@@ -42,12 +47,54 @@ ChannelController::~ChannelController() {
 void ChannelController::Sync() {
   // when service is available, check if there's any
   onChannelsServiceAvailable.connect(bind(&ChannelController::DiscoverChannel, this));
-  onChannelAvailable.connect(bind(&ChannelController::RetrieveNodeItems, this, posts_node_));
+  onChannelAvailable.connect(bind(&ChannelController::RetrieveNextPosts, this));
   DiscoverService();
 }
 
-void ChannelController::RetrievePosts() {
-  RetrieveNodeItems(posts_node_);
+void ChannelController::RetrieveNextPosts() {
+  GetPubsubItemsRequest::ref request = GetPubsubItemsRequest::create(last_post_id_, pagination_, posts_node_, service_.jid, router_);
+  request->onResponse.connect([&] (PubsubItemsRequest::ref items, ErrorPayload::ref error) {
+    if (error) {
+      LOG(ERROR) << error->getText();
+      return;
+    }
+    // obtain channel posts
+    vector<Post1*> new_posts;
+    for (const Atom::ref &atom : items->getItems()->get()) {
+      if (atom->getInReplyTo() == "") {
+        Post1* post = new Post1(this);
+        post->SetID(atom->getID());
+        post->SetAuthor(atom->getAuthor());
+        post->SetContent(atom->getContent());
+        new_posts.push_back(post);
+        AddPost(post, false);
+      }
+    }
+    // obtain channel comments
+    for (const Atom::ref &atom : items->getItems()->get()) {
+      if (atom->getInReplyTo() != "") {
+        Post1* post = GetPost(atom->getInReplyTo());
+        if (post) {
+          Comment* comment = new Comment(post, atom->getContent());
+          comment->SetAuthor(atom->getAuthor());
+          comment->SetID(atom->getID());
+          post->AddComment(comment, false);
+        }
+      }
+    }
+    if (items->getRsm()) {
+      Rsm::ref rsm = items->getRsm();
+      if (!rsm->getFirst().empty())
+        first_post_id_ = rsm->getFirst();
+      if (!rsm->getLast().empty())
+        last_post_id_ = items->getRsm()->getLast();
+      if (!rsm->getCount().empty())
+        posts_count_ = items->getRsm()->getCount();
+    }
+    // signal that channel is synchronized
+    onNewPostsRetrieved(new_posts);
+  });
+  request->send();
 }
 
 void ChannelController::CreatePost(Post1* post) {
@@ -155,42 +202,6 @@ void ChannelController::DiscoverChannel() {
         rq->send();*/
       });
   info->send();
-}
-
-void ChannelController::RetrieveNodeItems(const std::string &node) {
-  GetPubsubItemsRequest::ref items = GetPubsubItemsRequest::create(service_.jid, node, router_);
-  items->onResponse.connect([&] (PubsubItemsRequest::ref items, ErrorPayload::ref error) {
-    if (error) {
-      LOG(ERROR) << error->getText();
-      return;
-    }
-    // obtain channel posts
-    for (const Atom::ref &atom : items->getItems()->get()) {
-      if (atom->getInReplyTo() == "") {
-        Post1* post = new Post1(this);
-        post->SetID(atom->getID());
-        post->SetAuthor(atom->getAuthor());
-        post->SetContent(atom->getContent());
-        AddPost(post, false);
-      }
-    }
-    // obtain channel comments
-    for (const Atom::ref &atom : items->getItems()->get()) {
-      if (atom->getInReplyTo() != "") {
-        Post1* post = GetPost(atom->getInReplyTo());
-        if (post) {
-          Comment* comment = new Comment(post, atom->getContent());
-          comment->SetAuthor(atom->getAuthor());
-          comment->SetID(atom->getID());
-          post->AddComment(comment, false);
-        }
-      }
-    }
-    // signal that channel is synchronized
-    onSynchronized();
-    //onNodeItemsRetrieved(node, posts_);
-  });
-  items->send();
 }
 
 /*

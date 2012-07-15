@@ -24,6 +24,9 @@ class PubsubItemsRequest;
 class PubsubPublishRequest;
 class PubsubRetractRequest;
 class PubsubSubscribeRequest;
+class Rsm;
+
+class RsmParser;
 
 /**
  *
@@ -32,16 +35,13 @@ template<class T>
 class ItemParser : public Swift::GenericPayloadParser<Items<T> > {
  public:
   ItemParser();
-
   ~ItemParser();
 
   void addPaylodParserFactory(Swift::PayloadParserFactory* parser);
 
-  virtual void handleStartElement(const std::string& element, const std::string& ns, const Swift::AttributeMap& attributes);
-
   using Swift::GenericPayloadParser<Items<T> >::getPayloadInternal;
+  virtual void handleStartElement(const std::string& element, const std::string& ns, const Swift::AttributeMap& attributes);
   virtual void handleEndElement(const std::string& element, const std::string& ns);
-
   virtual void handleCharacterData(const std::string& data);
 
  private:
@@ -60,11 +60,9 @@ class LogParser : public Swift::PayloadParser {
   void handleStartElement(const std::string&  element, const std::string&  ns, const Swift::AttributeMap&  /*attributes*/) {
     LOG(DEBUG) << "<" << element << " xmlns=" << ns << ">";
   }
-
   void handleEndElement(const std::string&  element, const std::string&  ns) {
     LOG(DEBUG) << "</" << element << " xmlns=" << ns << ">";
   }
-
   void handleCharacterData(const std::string&  data) {
     LOG(DEBUG) << data;
   }
@@ -81,9 +79,7 @@ class AtomParser : public Swift::GenericPayloadParser<Atom> {
   AtomParser();
 
   void handleStartElement(const std::string&  element, const std::string&  ns, const Swift::AttributeMap&  /*attributes*/);
-
   void handleEndElement(const std::string&  element, const std::string&  /*ns*/);
-
   void handleCharacterData(const std::string&  data);
 
  private:
@@ -106,11 +102,10 @@ class AtomParser : public Swift::GenericPayloadParser<Atom> {
 class PubsubItemsRequestParser : public Swift::GenericPayloadParser<PubsubItemsRequest> {
  public:
   PubsubItemsRequestParser();
+  ~PubsubItemsRequestParser();
 
   virtual void handleStartElement(const std::string& element, const std::string& ns, const Swift::AttributeMap& attributes);
-
   virtual void handleEndElement(const std::string& element, const std::string& ns);
-
   virtual void handleCharacterData(const std::string& data);
 
  private:
@@ -120,32 +115,28 @@ class PubsubItemsRequestParser : public Swift::GenericPayloadParser<PubsubItemsR
   int level_;
   bool is_parsing_items_;
   ItemParser<Atom> item_parser_;
+  RsmParser* rsm_parser_;
+  bool is_parsing_rsm_;
 };
 
 class PubsubPublishRequestParser : public Swift::GenericPayloadParser<PubsubPublishRequest> {
  public:
   virtual void handleStartElement(const std::string& element, const std::string& /*ns*/, const Swift::AttributeMap& attributes);
-
   virtual void handleEndElement(const std::string& /*element*/, const std::string& /*ns*/) {}
-
   virtual void handleCharacterData(const std::string& /*data*/) {}
 };
 
 //class PubsubRetractRequestParser : public Swift::GenericPayloadParser<PubsubRetractRequest> {
 // public:
 //  virtual void handleStartElement(const std::string& element, const std::string& ns, const Swift::AttributeMap& attributes);
-
 //  virtual void handleEndElement(const std::string& /*element*/, const std::string& /*ns*/) {}
-
 //  virtual void handleCharacterData(const std::string& /*data*/) {}
 //};
 
 class PubsubSubscribeRequestParser : public Swift::GenericPayloadParser<PubsubSubscribeRequest> {
  public:
   virtual void handleStartElement(const std::string& element, const std::string& /*ns*/, const Swift::AttributeMap& attributes);
-
   virtual void handleEndElement(const std::string& /*element*/, const std::string& /*ns*/) {}
-
   virtual void handleCharacterData(const std::string& /*data*/) {}
 };
 
@@ -156,9 +147,7 @@ class PubsubParser : public Swift::PayloadParser {
   ~PubsubParser();
 
   void handleStartElement(const std::string&  element, const std::string&  ns, const Swift::AttributeMap&  attributes);
-
   void handleEndElement(const std::string&  element, const std::string&  ns);
-
   void handleCharacterData(const std::string& data);
 
   virtual boost::shared_ptr<Swift::Payload> getPayload() const;
@@ -183,9 +172,7 @@ class EventPayloadParser : public Swift::GenericPayloadParser<EventPayload> {
   ~EventPayloadParser();
 
   void handleStartElement(const std::string&  element, const std::string&  ns, const Swift::AttributeMap&  attributes);
-
   void handleEndElement(const std::string&  element, const std::string&  ns);
-
   void handleCharacterData(const std::string& data);
 
   virtual boost::shared_ptr<Swift::Payload> getPayload() const;
@@ -204,6 +191,18 @@ class EventPayloadParser : public Swift::GenericPayloadParser<EventPayload> {
   int level_;
   PubsubItemsRequestParser* items_parser_;
   PayloadParser* parser_;
+};
+
+class RsmParser : public Swift::GenericPayloadParser<Rsm> {
+ public:
+  ~RsmParser();
+
+  void handleStartElement(const std::string&  element, const std::string&  ns, const Swift::AttributeMap&  attributes);
+  void handleEndElement(const std::string&  element, const std::string&  ns);
+  void handleCharacterData(const std::string& data);
+
+ private:
+  std::string data_;
 };
 
 #endif /* PUBSUB_PAYLOAD_PARSER_H_ */
