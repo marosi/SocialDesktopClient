@@ -45,8 +45,9 @@ ChannelController::~ChannelController() {
 }
 
 void ChannelController::Sync() {
-  // when service is available, check if there's any
+  // When service is available, check if there is any channel for JID ...
   onChannelsServiceAvailable.connect(bind(&ChannelController::DiscoverChannel, this));
+  // ... if there is, retrieve first page of posts.
   onChannelAvailable.connect(bind(&ChannelController::RetrieveNextPosts, this));
   DiscoverService();
 }
@@ -82,6 +83,7 @@ void ChannelController::RetrieveNextPosts() {
         }
       }
     }
+    // result set management
     if (items->getRsm()) {
       Rsm::ref rsm = items->getRsm();
       if (!rsm->getFirst().empty())
@@ -91,7 +93,7 @@ void ChannelController::RetrieveNextPosts() {
       if (!rsm->getCount().empty())
         posts_count_ = items->getRsm()->getCount();
     }
-    // signal that channel is synchronized
+    // signal new posts
     onNewPostsRetrieved(new_posts);
   });
   request->send();

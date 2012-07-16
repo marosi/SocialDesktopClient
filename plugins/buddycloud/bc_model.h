@@ -46,13 +46,15 @@ class BcModel : public sdc::QtServiceModel {
     //GetVCardRequest::ref gvcr = GetVCardRequest::create(to, client_->getIQRouter());
     void ToggleChannelPrivacy();
     void Unsubscribe();
-    void test();
 
     /*
      * Content interface
      */
     BcContact* GetContact(const Swift::JID &jid);
+    Swift::JID GetOwnJID() { return jid_; }
     ChannelController* GetChannel(const Swift::JID &jid);
+    ChannelController* GetOwnChannel() { return own_channel_; }
+
     void AddNewContact(const Swift::JID &jid);
     void RemoveContact(const Swift::JID &jid);
 
@@ -71,10 +73,15 @@ class BcModel : public sdc::QtServiceModel {
      */
     boost::signals2::signal<void (Error)> onError;
     boost::signals2::signal<void ()> onConnected;
+    boost::signals2::signal<void ()> onDisconnected;
+
+    boost::signals2::signal<void ()> onSelfChannelRegistered;
+
     boost::signals2::signal<void (const Swift::JID)> onContactAdded;
     boost::signals2::signal<void (const Swift::JID)> onContactRemoved;
-    boost::signals2::signal<void ()> onSelfChannelRegistered;
+
     boost::signals2::signal<void (Swift::VCard::ref)> onOwnVCardUpdated;
+
     boost::signals2::signal<void ()> onOwnAvatarChanged;
     boost::signals2::signal<void (const Swift::JID)> onAvatarChanged;
 
@@ -134,8 +141,6 @@ class BcModel : public sdc::QtServiceModel {
     Swift::JID jid_;
     Swift::JID service_jid_;
     bool is_service_registration_available_;
-    std::string posts_node_;
-    std::string avatar_file_path_;
     /**
      * Switen engine
      */
@@ -144,8 +149,6 @@ class BcModel : public sdc::QtServiceModel {
     FilesystemStorages* storages_;
     Swift::Client* client_;
     Swift::ClientXMLTracer* tracer_;
-
-    bool connected_;
     /**
      * Serializers & Parsers
      */

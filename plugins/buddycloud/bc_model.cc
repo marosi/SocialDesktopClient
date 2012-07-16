@@ -70,10 +70,9 @@ using std::vector;
  */
 BcModel::BcModel(sdc::AccountData* account)
     : QtServiceModel(account),
-      own_channel_(0),
-      jid_(account->GetUid()),
-      posts_node_("/user/" + jid_.toString() + "/posts"),
-      connected_(false) {
+      own_channel_(0) {
+  // initialize
+  jid_ = account->GetUid();
   LOG(DEBUG) << "This is buddycloud Service Model!";
   //Swift::logging = true;
   /*
@@ -113,9 +112,9 @@ BcModel::BcModel(sdc::AccountData* account)
    * Avatar management
    */
   client_->getAvatarManager()->onAvatarChanged.connect([&] (const JID &jid) {
-    if (jid == jid_)
+    if (jid == jid_) {
       LOG(DEBUG) << "@@@@@@@@@@@ CHANGING OWN AVATAR!";
-
+    }
     onAvatarChanged(jid);
     LOG(DEBUG) << "Avatar of " << jid.toString() << " changed";
   });
@@ -171,18 +170,18 @@ void BcModel::AddNewContact(const JID &jid) {
 }
 
 void BcModel::RemoveContact(const JID &jid) {
-  /*Presence::ref presence(new Presence);
-  presence->setTo(contact->GetUid());
-  presence->setType(Presence::Unsubscribe);
-  client_->sendPresence(presence);*/
+//  Presence::ref presence(new Presence);
+//  presence->setTo(contact->GetUid());
+//  presence->setType(Presence::Unsubscribe);
+//  client_->sendPresence(presence);
 
-  RosterPayload::ref roster(new RosterPayload);
-  RosterItemPayload item;
-  item.setJID(jid);
-  item.setSubscription(RosterItemPayload::Remove);
-  roster->addItem(item);
-  SetRosterRequest::ref set = SetRosterRequest::create(roster, client_->getIQRouter());
-  set->send();
+//  RosterPayload::ref roster(new RosterPayload);
+//  RosterItemPayload item;
+//  item.setJID(jid);
+//  item.setSubscription(RosterItemPayload::Remove);
+//  roster->addItem(item);
+//  SetRosterRequest::ref set = SetRosterRequest::create(roster, client_->getIQRouter());
+//  set->send();
 }
 
 BcContact* BcModel::GetContact(const Swift::JID &jid) {
@@ -213,7 +212,7 @@ void BcModel::GetServerInfo() {
   info->send();
 }
 
-const string BcModel::GetOwnAvatarPath() {
+const std::string BcModel::GetOwnAvatarPath() {
   return GetAvatarPath(jid_);
 }
 
@@ -225,12 +224,8 @@ const std::string BcModel::GetAvatarPath(const JID &jid) {
     return GetDefaultAvatarPath();
 }
 
-const string BcModel::GetDefaultAvatarPath() {
+const std::string BcModel::GetDefaultAvatarPath() {
   return service()->dir() + "/default_avatar.png";
-}
-
-void BcModel::test() {
-  //client_->getVCardManager()->requestOwnVCard();
 }
 
 /*
@@ -246,6 +241,7 @@ void BcModel::handleConnected() {
     LOG(TRACE) << "Requesting vCards for contacts";
     for (Contact* c : contacts_) {
       client_->getVCardManager()->requestVCard(c->GetUid());
+      channels_.push_back(new ChannelController(this, c->GetUid()));
     }
   });
   client_->requestRoster();
@@ -291,9 +287,9 @@ void BcModel::handleConnected() {
           break;
       }
     });
-    own_channel_->Sync();
+    // put own channel to vector for common channel operations
+    channels_.push_back(own_channel_);
   }
-  connected_ = true;
   onConnected();
 }
 
@@ -301,7 +297,7 @@ void BcModel::handleDisconnected(boost::optional<ClientError> error) {
   if (error) {
     LOG(DEBUG) << "Disconnected with error number " << error.get().getType() << ".";
   }
-  connected_ = false;
+  onDisconnected();
 }
 
 /*
@@ -313,9 +309,11 @@ void BcModel::handleMessageReceived(Message::ref message) {
   if (EventPayload::ref event = message->getPayload<EventPayload>()) {
     LOG(DEBUG2) << "Event from node: " << event->getNode();
     for (ChannelController* channel : channels_) {
+      LOG(DEBUG3) << "Iterating through channel: " << channel->posts_node_;
       if (channel->posts_node_ == event->getNode()) {
         for (Atom::ref atom : event->getItems()->get()) {
           if (atom->getInReplyTo() != "") {
+            LOG(DEBUG4) << "In reply to: " << atom->getInReplyTo();
             Post1* post = channel->GetPost(atom->getInReplyTo());
             if (post) {
               Comment* comment = new Comment(post, atom->getContent());
@@ -525,5 +523,5 @@ const std::string BcModel::SavePhoto(const Swift::JID &jid, Swift::VCard::ref vc
     return avatar_file;
   }
   // something went wrong
-  return string();
+  return "";
 }

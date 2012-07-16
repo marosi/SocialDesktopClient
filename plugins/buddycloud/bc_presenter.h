@@ -11,28 +11,33 @@
 #ifndef BC_PRESENTER_H_
 #define BC_PRESENTER_H_
 
+#include "abstract_presenter.h"
 #include "service_presenter.h"
 #include "avatar.h"
 #include "Swiften/JID/JID.h"
 #include <QMap>
 
 class BcModel;
+class ChannelWidget;
 
-class BcPresenter : public sdc::ServicePresenter {
+class BcPresenter : public sdc::ServicePresenter, public AbstractPresenter {
 
     Q_OBJECT
 
  public:
+  BcPresenter();
   void Init();
+
   Avatar* GetAvatar(const Swift::JID &jid);
 
  public slots:
-  void Test();
 
  private:
-  void SetAvatar(const std::string &file_path);
+  void SetOwnAvatar(const std::string &file_path);
+  void UpdateAvatar(const Swift::JID &jid);
 
   BcModel* model_;
+  ChannelWidget* channel_;
   QMap<Swift::JID, Avatar*> avatars_;
 };
 
