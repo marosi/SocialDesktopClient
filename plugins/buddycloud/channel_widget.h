@@ -27,6 +27,7 @@ class ChannelWidget : public sdc::ContentPanel, public AbstractPresenter {
 
  public:
   ChannelWidget(AbstractPresenter* presenter, ChannelController* channel);
+  ~ChannelWidget();
 
  public slots:
   void SendPost();

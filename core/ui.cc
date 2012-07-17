@@ -15,13 +15,10 @@
 
 namespace sdc {
 
+UI::UI(Core* core) : CoreAnchor(core) {}
+
 UI::~UI() {}
 
-void UI::Init() {
-  // Launch GUI of each initiated service connection
-  BOOST_FOREACH (Service* service, core()->services()) {
-    // TODO: Whaaat??
-  }
-}
+void UI::Init() {}
 
 } /* namespace sdc */

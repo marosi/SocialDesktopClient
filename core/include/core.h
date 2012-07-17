@@ -40,8 +40,6 @@ class ConnectionManager;
  */
 class Core : boost::noncopyable {
  public:
-  typedef std::map<std::string, ServiceModel*> AccountModelsMap;
-
 	Core(int argc, char* argv[]);
 	~Core();
 	void Start();
@@ -62,18 +60,14 @@ class Core : boost::noncopyable {
 
 	std::vector<Service*> services();
 
-	Service* service(const PluginSignature &/* signature */);
+  Service* service(const PluginSignature &signature);
 
-	std::vector<ServiceModel*> GetModels() {
+  std::vector<ServiceModel*> models() {
 	  return service_models_;
 	}
 
-	AccountModelsMap models() {
-	  return account_models_;
-	}
-
 	ServiceModel* model(const std::string &account_id) {
-	  return account_models_[account_id];
+    return service_models_map_[account_id];
 	}
 
 	int GetReturnCode() { return return_code_; }
@@ -81,8 +75,8 @@ class Core : boost::noncopyable {
    * Signals
    */
   boost::signals2::signal<void ()>  onGuiPrepared;
-  boost::signals2::signal<void (AccountData*)> onAccountActivated;
-  boost::signals2::signal<void (AccountData*)> onAccountDeactivated;
+  boost::signals2::signal<void (const std::string)> onAccountActivated;
+  boost::signals2::signal<void (const std::string)> onAccountDeactivated;
 
  private:
 	void Init();
@@ -114,7 +108,7 @@ class Core : boost::noncopyable {
    * Models & accounts
    */
   std::vector<ServiceModel*> service_models_;
-  AccountModelsMap account_models_;
+  std::map<std::string, ServiceModel*> service_models_map_;
   std::map<PluginSignature, Service*> services_; /// Pluged-in services and their configuration options
 
   //std::set<Content::Ref> contents_;

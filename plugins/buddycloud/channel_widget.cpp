@@ -70,6 +70,13 @@ ChannelWidget::ChannelWidget(AbstractPresenter* presenter, ChannelController* ch
   channel_->Sync();
 }
 
+ChannelWidget::~ChannelWidget() {
+//  delete new_post_;
+//  delete new_post_button_;
+//  for (PostWidget* widget : posts_order_)
+//    delete widget;
+}
+
 void ChannelWidget::SendPost() {
   // publish
   channel_->PublishPost(new_post_ui.textEdit->toPlainText().toStdString());

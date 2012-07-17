@@ -15,7 +15,7 @@ class ContactWidget : public QWidget {
 
  public:
   ContactWidget(Contact* contact);
-  ~ContactWidget();
+  virtual ~ContactWidget();
 
   QLabel* avatar_label() {
     return ui.avatarLabel;

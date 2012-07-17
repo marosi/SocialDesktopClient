@@ -15,9 +15,12 @@
 #include "service_presenter.h"
 #include "avatar.h"
 #include "Swiften/JID/JID.h"
+#include <QList>
 #include <QMap>
 
+
 class BcModel;
+class BcContactWidget;
 class ChannelWidget;
 
 class BcPresenter : public sdc::ServicePresenter, public AbstractPresenter {
@@ -26,6 +29,7 @@ class BcPresenter : public sdc::ServicePresenter, public AbstractPresenter {
 
  public:
   BcPresenter();
+  ~BcPresenter();
   void Init();
 
   Avatar* GetAvatar(const Swift::JID &jid);
@@ -38,6 +42,7 @@ class BcPresenter : public sdc::ServicePresenter, public AbstractPresenter {
 
   BcModel* model_;
   ChannelWidget* channel_;
+  QList<BcContactWidget*> contacts_;
   QMap<Swift::JID, Avatar*> avatars_;
 };
 

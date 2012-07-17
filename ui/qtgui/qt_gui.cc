@@ -5,44 +5,29 @@
  *  Created on: Apr 2, 2012
  */
 
+#include "qt_gui.h"
+#include "account_button.h"
 #include "bind.h"
 #include "core.h"
-#include "qt_gui.h"
 #include "main_window.h"
-#include "connection_manager.h"
-#include "config_manager.h"
-#include "contact_widget.h"
-#include "content.h"
 #include "service_model.h"
 #include "service_presenter.h"
 #include "qt_service_model.h"
-#include "widget_factory.h"
-#include "generic_widget_factory.h"
+#include <QSettings>
 #include "boost/foreach.hpp"
 #include "boost/bind.hpp"
 #include "boost/cast.hpp"
 #include <vector>
-#include <QSettings>
-
-using namespace boost;
-using std::vector;
 
 namespace sdc {
 
-//class ContactWidgetFactory : public GenericWidgetFactory<Contact, ContactWidget> {};
-
 QtGui::~QtGui() {
   QSettings settings;
-  //settings.setValue("sample", 123);
-//  for (WidgetFactory* factory : factories_) {
-//    delete factory;
-//  }
 }
 
 void QtGui::Init() {
   // Init core models, controllers and views
   UI::Init();
-
   /*
    * Register core class for Qt meta processing
    * NOTE: For the type to be handled by QVariant it needs to be
@@ -51,108 +36,58 @@ void QtGui::Init() {
   //qRegisterMetaType<Content::Ref>("Content::Ref");
   qRegisterMetaType<bind_params_base*>("bind_params_base");
   /*
-   * Connect core signals
+   * Bind to core signals
    */
-  core()->data()->onAccountsChanged.connect(
-      [&] () {
-        emit accountsChanged();
-      });
-  core()->onGuiPrepared.connect(
-      [&] () {
-        emit guiPrepared();
-      });
-  core()->onAccountActivated.connect(
-      [&] (AccountData* account) {
-        QtServiceModel* model = dynamic_cast<QtServiceModel*>(account->GetServiceModel());
-        if (model) {
-          model->SetGui(this);
-          emit accountActivated(model);
-        }
-      });
-  core()->onAccountDeactivated.connect(
-      [&] (AccountData* account) {
-        emit accountDeactivated(account);
-      });
-//  core()->onContentView.connect(
-//      [&] (Content::Ref content) {
-//        emit contentView(content);
-//      });
-  connect(this, SIGNAL(accountActivated(QtServiceModel*)),
-      this, SLOT(OnAccountActivated(QtServiceModel*)));
-//  connect(this, SIGNAL(contentView(Content::Ref)),
-//      this, SLOT(HandleContentView(Content::Ref)));
+  sdc::bind(core()->onAccountActivated, boost::bind(&QtGui::ActivateAccount, this, _1));
+  sdc::bind(core()->onAccountDeactivated, boost::bind(&QtGui::DeativateAccount, this, _1));
   /*
    * Qt settings for storing GUI state
    */
-  QCoreApplication::setOrganizationName("sdc");
-  QCoreApplication::setOrganizationDomain("socialdesktopclient.net");
+  QCoreApplication::setOrganizationName("SDC");
+  //QCoreApplication::setOrganizationDomain("socialdesktopclient.net");
   QCoreApplication::setApplicationName("Social Desktop Client");
-
-  QSettings settings;
+  //QSettings settings;
   //LOG(DEBUG) << "QSettings testing :: " << settings.value("sample").toInt();
-
   /*
-   * Add default widget factories and widget factories from service plugins
+   * Main window creation
    */
-  //factories_.push_back(new ContactWidgetFactory);
-
-//  for (Service* service : core()->services()) {
-//    QtService* s = dynamic_cast<QtService*>(service);
-//    if (s) {
-//      vector<WidgetFactory*> f = s->CreateWidgetFactories();
-//      factories_.insert(factories_.end(), f.begin(), f.end());
-//    }
-//  }
-  /*
-   * Main window initialization
-   */
-  main_view_ = new MainWindow(this);
-
-  /*
-   * signal/slot connections
-   */
-  connect(this, SIGNAL(accountDeactivated(AccountData*)),
-        main_view_, SLOT(DeactivateAccount(AccountData*)));
-
+  main_window_ = new MainWindow(this);
   /*
    * Show main window finally
    */
-  main_view_->show();
+  main_window_->show();
 }
 
-//QWidget* QtGui::CreateContentWidget(Content::Ref content, QWidget* parent) {
-//  vector<WidgetFactory*>::reverse_iterator it;
-//  QWidget* widget = 0;
-//  for (it = factories_.rbegin(); it != factories_.rend(); ++it) {
-//    if ((*it)->CanCreate(content)) {
-//      // create widget for this specific content
-//      if (parent)
-//        widget = (*it)->Create(parent, content);
-//      else
-//        widget = (*it)->Create(main_view_, content);
-//      content_widgets_.push_back(widget);
-//      // No more widget can be created
-//      break;
-//    }
-//  }
-//  assert(widget);
-//  return widget;
-//}
-
-void QtGui::OnAccountActivated(QtServiceModel* model) {
+void QtGui::ActivateAccount(const std::string account_id) {
+  QtServiceModel* model = boost::polymorphic_downcast<QtServiceModel*>(core()->model(account_id));
+  // create presenter
   ServicePresenter* presenter = model->GetQtService()->CreateServicePresenter();
-  presenter->main_window_ = main_view_;
+  // create account button
+  AccountButton* button = new AccountButton(main_window_, model);
+  main_window_->AddAccountButton(button);
+  buttons_[account_id] = button;
+  // initialize presenter members
+  presenter->account_button_ = button;
+  presenter->main_window_ = main_window_;
   presenter->service_model_ = model;
   // add mapping for model/presenter/service
+  id_to_presenter_[account_id] = presenter;
   model_to_presenter_[model] = presenter;
   presenter_to_model_[presenter] = model;
   presenter_to_service_[presenter] = model->GetQtService();
-  // activate account in main window
-  main_view_->ActivateAccount(model);
+  // finally initialize presenter
+  presenter->Init();
 }
 
-//void QtGui::HandleContentView(Content::Ref content) {
-//  this->CreateContentWidget(content);
-//}
+void QtGui::DeativateAccount(const std::string account_id) {
+  ServicePresenter* presenter = id_to_presenter_[account_id];
+  QtServiceModel* model = presenter_to_model_[presenter];
+  main_window_->RemoveAccountButton(buttons_[account_id]);
+  buttons_.erase(account_id);
+  model_to_presenter_.erase(model);
+  presenter_to_model_.erase(presenter);
+  presenter_to_service_.erase(presenter);
+  delete presenter;
+}
 
 } /* namespace sdc */

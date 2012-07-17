@@ -12,12 +12,14 @@
 #define QT_GUI_H_
 
 #include "ui.h"
-#include "content.h"
 #include <QApplication>
+#include <map>
+#include <vector>
 
 namespace sdc {
 
 class AccountData;
+class AccountButton;
 class MainWindow;
 class QtSettingsController;
 class QtServiceModel;
@@ -26,7 +28,7 @@ class WidgetFactory;
 class ServicePresenter;
 
 /**
- * Kind of a main controller in MVC abstraction and also Manager in Core abstraction.
+ * Kind of a main controller in MVC abstraction.
  */
 class QtGui : public QObject, public UI {
 
@@ -36,7 +38,7 @@ class QtGui : public QObject, public UI {
   QtGui(Core* core, int argc, char* argv[])
       : UI(core),
         app_(argc, argv),
-        main_view_(0) {}
+        main_window_(0) {}
   ~QtGui();
 
   void Init(); // TODO: do something with init() and exec() they are accessible from each QtView
@@ -57,27 +59,19 @@ class QtGui : public QObject, public UI {
     return presenter_to_service_[presenter];
   }
 
-  //QWidget* CreateContentWidget(Content::Ref, QWidget* parent = 0);
-
- signals:
-  void accountsChanged();
-  void guiPrepared();
-  void accountActivated(QtServiceModel* account);
-  void accountDeactivated(AccountData* account);
-  //void contentView(Content::Ref content);
-
  private:
+  void ActivateAccount(const std::string account_id);
+  void DeativateAccount(const std::string account_id);
+
   QApplication app_;
-  MainWindow* main_view_;
+  MainWindow* main_window_;
   std::vector<WidgetFactory*> factories_;
   std::vector<QWidget*> content_widgets_;
+  std::map<std::string, AccountButton*> buttons_;
+  std::map<std::string, ServicePresenter*> id_to_presenter_;
   std::map<QtServiceModel*, ServicePresenter*> model_to_presenter_;
   std::map<ServicePresenter*, QtServiceModel*> presenter_to_model_;
   std::map<ServicePresenter*, QtService*> presenter_to_service_;
-
- private slots:
-  //void HandleContentView(Content::Ref content);
-  void OnAccountActivated(QtServiceModel* model);
 };
 
 } /* namespace sdc */

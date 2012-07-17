@@ -6,7 +6,6 @@
 #include "service_model.h"
 #include "new_contact_widget.h"
 #include <QtGui/QMessageBox>
-#include "boost/foreach.hpp"
 
 namespace sdc {
 
@@ -20,11 +19,11 @@ NewContactDialog::NewContactDialog(QWidget *parent)
 	connect(ui.servicesComboBox, SIGNAL(currentIndexChanged(int)),
 	    this, SLOT(ChangeServicePane(int)));
 
-	int i = 1;
-  BOOST_FOREACH (const Core::AccountModelsMap::value_type &pair, core()->models()) {
-    QString id = QString::fromStdString(pair.first);
+  int i = 1;
+  for (const ServiceModel* model : core()->models()) {
+    QString id = QString::fromStdString(model->account()->GetId());
     QVariant data(id);
-    ui.servicesComboBox->insertItem(i, QString::fromStdString(pair.second->account()->GetUid()), data);
+    ui.servicesComboBox->insertItem(i, QString::fromStdString(model->account()->GetUid()), data);
     ++i;
   }
 

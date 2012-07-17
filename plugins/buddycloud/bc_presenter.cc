@@ -18,7 +18,14 @@
 
 using Swift::JID;
 
-BcPresenter::BcPresenter() : AbstractPresenter(this) {}
+BcPresenter::BcPresenter() : AbstractPresenter(this), channel_(0) {}
+
+BcPresenter::~BcPresenter() {
+  if (channel_)
+    delete channel_;
+  for (BcContactWidget* widget : contacts_)
+    delete widget;
+}
 
 void BcPresenter::Init() {
   LOG(DEBUG) << " BcPresenter thread ID: " << boost::this_thread::get_id();
@@ -46,6 +53,7 @@ void BcPresenter::Init() {
   sdc::bind(model_->onContactAdded, [&] (const JID jid) {
     BcContact* contact = model_->GetContact(jid);
     BcContactWidget* widget = new BcContactWidget(this, contact);
+    contacts_.append(widget);
     main_window()->AddContact(this, widget);
   });
 }

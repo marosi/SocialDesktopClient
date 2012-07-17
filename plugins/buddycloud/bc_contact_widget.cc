@@ -17,6 +17,11 @@ BcContactWidget::BcContactWidget(BcPresenter* presenter, BcContact* contact)
   connect(avatar, SIGNAL(changed(QPixmap)), avatar_label(), SLOT(setPixmap(QPixmap)));
 }
 
+BcContactWidget::~BcContactWidget() {
+  if (channel_)
+    delete channel_;
+}
+
 void BcContactWidget::mouseDoubleClickEvent(QMouseEvent* event) {
   LOG(DEBUG) << "Clicking contact!";
   event->ignore();

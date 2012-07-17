@@ -60,42 +60,34 @@ void Core::ActivateAccount(AccountData* account) {
   account->SetService(s);
 
   // create service model
-  ServiceModel* sam = s->CreateServiceModel(account);
-  sam->SetCore(this);
-  account->SetServiceModel(sam);
-  service_models_.push_back(sam);
-  account_models_.insert(AccountModelsMap::value_type(account->GetId(), sam));
+  ServiceModel* model = s->CreateServiceModel(account);
+
+  model->SetCore(this);
+  account->SetServiceModel(model);
+
+  service_models_.push_back(model);
+  service_models_map_[account->GetId()] = model;
 
   // connection
-  Connection* conn = sam->CreateConnection();
+  Connection* conn = model->CreateConnection();
   connections()->MakeConnection(conn);
   // hook model with its service and connection
-  sam->connection_ = conn;
-  // emit signal
+  model->connection_ = conn;
 
-  onAccountActivated(account);
+  // signal activated account
+  onAccountActivated(account->GetId());
 }
 
 void Core::DeactivateAccount(AccountData* account) {
-  ServiceModel* sam = account->GetServiceModel();
-  if (!sam)
+  if (service_models_map_.count(account->GetId()) == 0)
     return;
-  account_models_.erase(account->GetId());
-//  vector<Content::Ref> to_be_removed; // TODO: this is just a workaround to content-widget removal find more elegant solution
-//  BOOST_FOREACH (Content::Ref c, contents_) {
-//    if (c->GetServiceModel() == sam)
-//      to_be_removed.push_back(c);
-//  }
-//  BOOST_FOREACH (Content::Ref c, to_be_removed) {
-//    c->Remove();
-//    contents_.erase(c);
-//  }
-
-  vector<ServiceModel*>::iterator it = find(service_models_.begin(), service_models_.end(), sam);
+  ServiceModel* model = service_models_map_[account->GetId()];
+  service_models_map_.erase(account->GetId());
+  vector<ServiceModel*>::iterator it = find(service_models_.begin(), service_models_.end(), model);
   //delete (*it);
   service_models_.erase(it);
-  // emit signal
-  onAccountDeactivated(account);
+  // signal deactivated account
+  onAccountDeactivated(account->GetId());
 }
 
 /**
@@ -204,11 +196,11 @@ void Core::Exec() {
       this->ActivateAccount(account);
     }
   }
-  // connects services that were left online
-  for (ServiceModel* model : service_models_) {
-    if (model->account()->GetStatus()) // status == 0 is offline status
-      model->Connect();
-  }
+  // TODO: connects services that were left online
+//  for (ServiceModel* model : service_models_) {
+//    if (model->account()->GetStatus()) // status == 0 is offline status
+//      model->Connect();
+//  }
   // run event loop in core thread
   event_manager_->Run();
 }

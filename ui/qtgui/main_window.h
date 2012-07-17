@@ -22,14 +22,14 @@ class MainWindow : public QMainWindow, public sdc::QtView {
  public:
   MainWindow(QtGui* qtgui);
   ~MainWindow();
+  void AddAccountButton(AccountButton* button);
+  void RemoveAccountButton(AccountButton* button);
   void AddContact(ServicePresenter* presenter, ContactWidget* contact);
   void AddContentPanel(ContentPanel* panel);
 
  public slots:
   void ShowSettingsDialog();
   void ShowNewContactDialog();
-  void ActivateAccount(QtServiceModel* model);
-  void DeactivateAccount(AccountData* account);
 
  private:
   Ui::MainWindowClass ui;

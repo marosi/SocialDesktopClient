@@ -22,6 +22,7 @@ class ChannelWidget;
 class BcContactWidget : public sdc::ContactWidget, public AbstractPresenter {
  public:
   BcContactWidget(BcPresenter* presenter, BcContact* contact);
+  ~BcContactWidget();
 
   void Remove() {
     // TODO: impelment
