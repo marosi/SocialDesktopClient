@@ -12,6 +12,7 @@
 #define CHANNEL_H_
 
 #include "abstract_model.h"
+#include "payloads/atom.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Queries/IQRouter.h"
 #include "Swiften/Elements/DiscoInfo.h"
@@ -84,9 +85,9 @@ class ChannelController : public AbstractModel {
 
   void Sync();
   void RetrieveNextPosts();
-  void CreatePost(Post1* post);
-  void CreateComment(Comment* comment);
-  void DeletePost(Post1* post);
+  void PublishPost(const std::string &content);
+  void PublishComment(const std::string &commented_post_id, const std::string &content);
+  void DeletePost(Post1* post); // TODO:
 
   const std::vector<Post1*> posts() {
     return posts_;
@@ -120,7 +121,7 @@ class ChannelController : public AbstractModel {
   /*
    * Internal structures manipulation
    */
-  void AddPost(Post1* post, bool signal = true);
+  Post1* AddPost(Atom::ref, bool signal = true);
   void RemovePost(const std::string &id);
   Post1* GetPost(const std::string &id);
 

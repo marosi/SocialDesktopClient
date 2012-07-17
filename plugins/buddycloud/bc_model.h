@@ -114,6 +114,7 @@ class BcModel : public sdc::QtServiceModel {
     void AddParserFactory(Swift::PayloadParserFactory* factory);
     void AddSerializer(Swift::PayloadSerializer* serializer);
     void AddContact(const Swift::XMPPRosterItem &item);
+    ChannelController* CreateChannel(const Swift::JID &jid);
     /*
      * Miscellaneous
      */

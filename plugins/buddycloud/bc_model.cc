@@ -197,10 +197,7 @@ BcContact* BcModel::GetContact(const Swift::JID &jid) {
 ChannelController* BcModel::GetChannel(const Swift::JID &jid) {
   if (channels_map_.count(jid) > 0)
     return channels_map_[jid];
-  ChannelController* channel = new ChannelController(this, jid);
-  channels_.push_back(channel);
-  channels_map_[jid] = channel;
-  return channel;
+  return CreateChannel(jid);
 }
 
 void BcModel::GetServerInfo() {
@@ -236,22 +233,22 @@ void BcModel::handleConnected() {
   LOG(TRACE) << "XMPP client is connected" << std::endl;
   // request own vCard
   client_->getVCardManager()->requestOwnVCard();
-  // request contact vCards
+  // request contact vCards and create channel for each contact
   client_->getRoster()->onInitialRosterPopulated.connect([&] () {
     LOG(TRACE) << "Requesting vCards for contacts";
     for (Contact* c : contacts_) {
       client_->getVCardManager()->requestVCard(c->GetUid());
-      channels_.push_back(new ChannelController(this, c->GetUid()));
+      CreateChannel(c->GetUid());
     }
   });
   client_->requestRoster();
 
   // Send presence message
-  client_->sendPresence(Presence::create("Ready when you are..."));
+  //client_->sendPresence(Presence::create("Ready when you are..."));
 
   // initialize own channel
   if (!own_channel_) {
-    own_channel_ = new ChannelController(this, jid_);
+    own_channel_ = CreateChannel(jid_);
     own_channel_->onChannelsServiceAvailable.connect([&] (ChannelController::ChannelServiceInfo info) {
       service_jid_ = info.jid;
       is_service_registration_available_ = info.is_registration_available;
@@ -287,10 +284,9 @@ void BcModel::handleConnected() {
           break;
       }
     });
-    // put own channel to vector for common channel operations
-    channels_.push_back(own_channel_);
   }
   onConnected();
+  client_->getPresenceSender()->sendPresence(Presence::create("I'm here"));
 }
 
 void BcModel::handleDisconnected(boost::optional<ClientError> error) {
@@ -316,20 +312,13 @@ void BcModel::handleMessageReceived(Message::ref message) {
             LOG(DEBUG4) << "In reply to: " << atom->getInReplyTo();
             Post1* post = channel->GetPost(atom->getInReplyTo());
             if (post) {
-              Comment* comment = new Comment(post, atom->getContent());
-              comment->SetAuthor(atom->getAuthor());
-              comment->SetID(atom->getID());
-              post->AddComment(comment);
+              post->AddComment(atom);
             }
           } else {
-            Post1* post = new Post1(channel);
-            post->SetID(atom->getID());
-            post->SetAuthor(atom->getAuthor());
-            post->SetContent(atom->getContent());
-            channel->AddPost(post);
+            channel->AddPost(atom);
           }
         }
-        break;
+
       }
     }
   }
@@ -501,6 +490,15 @@ void BcModel::AddContact(const Swift::XMPPRosterItem &item) {
     contacts_map_[item.getJID()] = contact;
     onContactAdded(item.getJID());
   }
+}
+
+ChannelController* BcModel::CreateChannel(const Swift::JID &jid) {
+  if (channels_map_.count(jid) > 0)
+    return channels_map_[jid];
+  ChannelController* channel = new ChannelController(this, jid);
+  channels_.push_back(channel);
+  channels_map_[jid] = channel;
+  return channel;
 }
 
 /*

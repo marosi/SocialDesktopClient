@@ -108,6 +108,7 @@ class Atom : public Swift::Payload {
   Verb verb_;
   ObjectType object_type_;
   std::string published_;
+  std::string updated_;
   std::string author_;
   std::string content_;
   std::string id_;

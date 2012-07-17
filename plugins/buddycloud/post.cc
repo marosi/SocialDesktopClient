@@ -7,6 +7,7 @@
 
 #include "post.h"
 #include "channel.h"
+#include "Swiften/Base/DateTime.h"
 #include <algorithm>
 
 Post1::Post1(ChannelController* channel) : Content(channel), channel_(channel) {}
@@ -16,24 +17,30 @@ void Post1::Delete() {
 }
 
 void Post1::PostComment(const std::string &content) {
-  Comment* c = new Comment(this, content);
-  channel_->CreateComment(c);
+  channel_->PublishComment(GetID(), content);
 }
 
-void Post1::AddComment(Comment* comment, bool signal) {
+Comment* Post1::AddComment(Atom::ref atom, bool signal) {
   std::vector<Comment*>::iterator it =
       std::find_if(comments_.begin(), comments_.end(),
-                   [&] (const Comment* c) { return c->GetID() == comment->GetID(); });
-  if (it == comments_.end()) {
-    comments_.push_back(comment);
+                   [&] (const Comment* c) { return c->GetID() == atom->getID(); });
+  if (it != comments_.end()) {
+    return *it;
+  } else {
+    Comment* cmt = new Comment(this);
+    cmt->SetID(atom->getID());
+    cmt->SetAuthor(atom->getAuthor());
+    cmt->SetContent(atom->getContent());
+    cmt->SetPublished(Swift::stringToDateTime(atom->getPublished()));
+    comments_.push_back(cmt);
     if (signal)
-      onCommentAdded(comment);
+      onCommentAdded(cmt);
+    return cmt;
   }
 }
 
-Comment::Comment(Post1* post, const std::string &content) : Content(post), post_(post) {
+Comment::Comment(Post1* post) : Content(post) {
   comment_on_id_ = post->GetID();
-  SetContent(content);
 }
 
 std::string Comment::GetCommentedID() {

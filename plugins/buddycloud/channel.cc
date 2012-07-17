@@ -10,6 +10,7 @@
 #include "post.h"
 #include "payloads/pubsub.h"
 #include "pubsub_requests.h"
+#include "Swiften/Base/DateTime.h"
 #include <algorithm>
 
 using namespace Swift;
@@ -63,12 +64,8 @@ void ChannelController::RetrieveNextPosts() {
     vector<Post1*> new_posts;
     for (const Atom::ref &atom : items->getItems()->get()) {
       if (atom->getInReplyTo() == "") {
-        Post1* post = new Post1(this);
-        post->SetID(atom->getID());
-        post->SetAuthor(atom->getAuthor());
-        post->SetContent(atom->getContent());
+        Post1* post = AddPost(atom, false);
         new_posts.push_back(post);
-        AddPost(post, false);
       }
     }
     // obtain channel comments
@@ -76,10 +73,7 @@ void ChannelController::RetrieveNextPosts() {
       if (atom->getInReplyTo() != "") {
         Post1* post = GetPost(atom->getInReplyTo());
         if (post) {
-          Comment* comment = new Comment(post, atom->getContent());
-          comment->SetAuthor(atom->getAuthor());
-          comment->SetID(atom->getID());
-          post->AddComment(comment, false);
+          post->AddComment(atom, false);
         }
       }
     }
@@ -99,12 +93,11 @@ void ChannelController::RetrieveNextPosts() {
   request->send();
 }
 
-void ChannelController::CreatePost(Post1* post) {
-  post->SetAuthor(model_->jid_.toString());
+void ChannelController::PublishPost(const std::string &content) {
   // translate post to atom
   Atom::ref atom(new Atom);
-  atom->setAuthor(post->GetAuthor());
-  atom->setContent(post->GetContent());
+  atom->setAuthor(model_->jid_.toString());
+  atom->setContent(content);
   atom->setObjectType(Atom::NOTE);
   atom->setVerb(Atom::POST);
   // create request
@@ -118,19 +111,17 @@ void ChannelController::CreatePost(Post1* post) {
       LOG(ERROR) << error->getText();
       return;
     }
-    post->SetID(payload->getItemID());
-    AddPost(post);
+    atom->setID(payload->getItemID());
+    AddPost(atom);
   });
   rq->send();
 }
 
-void ChannelController::CreateComment(Comment* comment) {
-  comment->SetAuthor(model_->jid_.toString());
-  // translate post to atom
+void ChannelController::PublishComment(const std::string &commented_post_id, const std::string &content) {
   Atom::ref atom(new Atom);
-  atom->setAuthor(comment->GetAuthor());
-  atom->setContent(comment->GetContent());
-  atom->setInReplyTo(comment->GetCommentedID());
+  atom->setInReplyTo(commented_post_id);
+  atom->setAuthor(model_->jid_.toString());
+  atom->setContent(content);
   atom->setObjectType(Atom::COMMENT);
   atom->setVerb(Atom::POST);
   // create request
@@ -144,10 +135,10 @@ void ChannelController::CreateComment(Comment* comment) {
       LOG(ERROR) << error->getText();
       return;
     }
-    Post1* post = GetPost(comment->GetCommentedID());
+    Post1* post = GetPost(atom->getInReplyTo());
     if (post) {
-      comment->SetID(payload->getItemID());
-      post->AddComment(comment);
+      atom->setID(payload->getItemID());
+      post->AddComment(atom);
     }
   });
   rq->send();
@@ -262,12 +253,21 @@ void ChannelController::handleDomainItemInfo(DiscoInfo::ref payload, ErrorPayloa
  * Internal structures manipulation
  */
 
-void ChannelController::AddPost(Post1* post, bool signal) {
-  if (id_posts_.count(post->GetID()) == 0) {
+Post1* ChannelController::AddPost(Atom::ref atom, bool signal) {
+  if (id_posts_.count(atom->getID()) > 0) {
+    return id_posts_[atom->getID()];
+  } else {
+    // create new post
+    Post1* post = new Post1(this);
+    post->SetID(atom->getID());
+    post->SetAuthor(atom->getAuthor());
+    post->SetContent(atom->getContent());
+    post->SetPublished(stringToDateTime(atom->getPublished()));
     posts_.push_back(post);
     id_posts_[post->GetID()] = post;
     if (signal)
       onPostAdded(post);
+    return post;
   }
 }
 

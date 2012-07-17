@@ -56,6 +56,7 @@ ChannelWidget::ChannelWidget(AbstractPresenter* presenter, ChannelController* ch
     setToolTip(QString::fromStdString(description));
   });
   sdc::bind(channel_->onPostAdded, [&] (Post1* post) {
+    LOG(DEBUG) << "adding post";
     PostWidget* pw = new PostWidget(this, post);
     posts_[post->GetID()] = pw;
     content_layout()->insertWidget(0, pw);
@@ -70,15 +71,9 @@ ChannelWidget::ChannelWidget(AbstractPresenter* presenter, ChannelController* ch
 }
 
 void ChannelWidget::SendPost() {
-  //Post1::Ref post(new Post1);
-  //post->SetContent(new_post_ui.textEdit->toPlainText().toStdString());
-
-  //channel_->controller()->CreatePost(post);
-
-  Post1* post = new Post1(channel_);
-  post->SetContent(new_post_ui.textEdit->toPlainText().toStdString());
-  channel_->CreatePost(post); // TODO: rewrite CreatePost and CreatePost to recieve raw data instead of creating post, comment object
-
+  // publish
+  channel_->PublishPost(new_post_ui.textEdit->toPlainText().toStdString());
+  // tidy up text edit
   new_post_ui.textEdit->clear();
   new_post_->hide();
   new_post_button_->setChecked(false);

@@ -12,7 +12,9 @@
 #define POST_H_
 
 #include "abstract_model.h"
+#include "payloads/atom.h"
 #include "boost/signals2/signal.hpp"
+#include "boost/date_time/posix_time/ptime.hpp"
 #include <string>
 
 class ChannelController;
@@ -22,34 +24,20 @@ class Content : public AbstractModel {
  public:
   Content(AbstractModel* model) : AbstractModel(model) {}
 
-  void SetID(const std::string &id) {
-    id_ = id;
-  }
-
-  std::string GetID() const {
-    return id_;
-  }
-
-  void SetAuthor(const std::string &author) {
-    author_ = author;
-  }
-
-  std::string GetAuthor() {
-    return author_;
-  }
-
-  void SetContent(const std::string &content) {
-    content_ = content;
-  }
-
-  std::string GetContent() {
-    return content_;
-  }
+  void SetID(const std::string &id) { id_ = id; }
+  std::string GetID() const { return id_; }
+  void SetAuthor(const std::string &author) { author_ = author; }
+  std::string GetAuthor() { return author_; }
+  void SetContent(const std::string &content) { content_ = content; }
+  std::string GetContent() { return content_; }
+  void SetPublished(const boost::posix_time::ptime &published) { published_ = published; }
+  boost::posix_time::ptime GetPublished() { return published_; }
 
  private:
   std::string id_;
   std::string content_;
   std::string author_;
+  boost::posix_time::ptime published_;
 };
 
 class Post1 : public Content {
@@ -68,7 +56,7 @@ class Post1 : public Content {
   boost::signals2::signal<void (Comment*)> onCommentAdded;
 
  private:
-  void AddComment(Comment* comment, bool signal = true);
+  Comment* AddComment(Atom::ref atom, bool signal = true);
 
   ChannelController* channel_;
   std::vector<Comment*> comments_;
@@ -76,7 +64,7 @@ class Post1 : public Content {
 
 class Comment : public Content {
  public:
-  Comment(Post1* post, const std::string &content);
+  Comment(Post1* post);
 
   std::string GetCommentedID();
 
