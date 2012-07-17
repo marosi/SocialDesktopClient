@@ -104,6 +104,9 @@ class Atom : public Swift::Payload {
     return thread_id_;
   }
 
+  void setUpdated(const std::string &updated) { updated_ = updated; }
+  const std::string& getUpdated() const { return updated_; }
+
  private:
   Verb verb_;
   ObjectType object_type_;

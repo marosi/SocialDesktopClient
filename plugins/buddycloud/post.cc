@@ -43,6 +43,6 @@ Comment::Comment(Post1* post) : Content(post) {
   comment_on_id_ = post->GetID();
 }
 
-std::string Comment::GetCommentedID() {
+std::string Comment::GetCommentedID() const {
   return comment_on_id_;
 }

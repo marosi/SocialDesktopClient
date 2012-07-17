@@ -15,8 +15,9 @@
 #include "content_panel.h"
 #include "channel.h"
 #include "ui_new_post_widget.h"
+#include "boost/date_time/posix_time/ptime.hpp"
 #include <QList>
-#include <string>
+#include <QMap>
 
 class PostWidget;
 
@@ -32,8 +33,11 @@ class ChannelWidget : public sdc::ContentPanel, public AbstractPresenter {
   void OnScrollBarValueChanged(int value);
 
  private:
+  void ShowPostInOrder(Post1* post);
+
   ChannelController* channel_;
-  QMap<std::string, PostWidget*> posts_;
+  QList<Post1*> posts_order_;
+  QMap<Post1*, PostWidget*> posts_;
   QToolButton* new_post_button_;
   QWidget* new_post_;
   Ui::NewPostClass new_post_ui;

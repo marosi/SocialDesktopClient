@@ -70,31 +70,33 @@ void ItemParser<T>::handleCharacterData(const std::string& data) {
  * ATOM PARSER
  */
 
-AtomParser::AtomParser() : level_(EntryLevel), meta_(NIL) {}
+AtomParser::AtomParser() : level_(TopLevel), meta_(NIL) {}
 
 void AtomParser::handleStartElement(const std::string&  element, const std::string&  ns, const Swift::AttributeMap&  attributes) {
-  if (level_ == EntryLevel) { // TopLevel element
+  if (level_ == TopLevel) { // TopLevel element
   } else if (level_ == MetaLevel) {
     if (element == "author") {
       meta_ = Author;
     } else if (element == "content") {
-      meta_ = Content;
-      inner_text_.clear();
+      text_.clear();
     } else if (element == "object" && ns == "http://activitystrea.ms/spec/1.0/") {
       meta_ = Object;
     } else if (element == "id") {
-      meta_ = Id;
-      inner_text_.clear();
+      text_.clear();
+    } else if (element == "published") {
+      text_.clear();
+    } else if (element == "updated") {
+      text_.clear();
     } else if (element == "in-reply-to" && ns == "http://purl.org/syndication/thread/1.0") {
       getPayloadInternal()->setInReplyTo(attributes.getAttributeValue("ref").get_value_or("__ID__"));
     }
   } else if (level_ > MetaLevel) {
     if (meta_ == Author) {
       if (element == "name" || element == "jid" || element == "uri")
-        inner_text_.clear();
+        text_.clear();
     } else if (meta_ == Object) {
       if (element == "object-type") {
-        inner_text_.clear();
+        text_.clear();
       }
     }
   }
@@ -104,18 +106,19 @@ void AtomParser::handleStartElement(const std::string&  element, const std::stri
 void AtomParser::handleEndElement(const std::string&  element, const std::string&  /*ns*/) {
   --level_;
   if (level_ == MetaLevel) {
-    if (meta_ == Content) {
-      getPayloadInternal()->setContent(inner_text_);
-      meta_ = NIL;
-    } else if (meta_ == Id) {
-      getPayloadInternal()->setID(inner_text_);
-      meta_ = NIL;
+    if (element == "content") {
+      getPayloadInternal()->setContent(text_);
+    } else if (element == "id") {
+      getPayloadInternal()->setID(text_);
+    } else if (element == "published") {
+      getPayloadInternal()->setPublished(text_);
+    } else if (element == "updated") {
+      getPayloadInternal()->setUpdated(text_);
     }
   } else if (level_ > MetaLevel) {
     if (meta_ == Author) {
       if (element == "name") {
-        getPayloadInternal()->setAuthor(inner_text_);
-        meta_ = NIL;
+        getPayloadInternal()->setAuthor(text_);
       }
       else if (element == "jid") {
       } // nothing so far
@@ -123,9 +126,9 @@ void AtomParser::handleEndElement(const std::string&  element, const std::string
       } // nothing so far
     } else if (meta_ == Object) {
       if (element == "object-type") {
-        if (inner_text_ == "note") {
+        if (text_ == "note") {
           getPayloadInternal()->setObjectType(Atom::NOTE);
-        } else if (inner_text_ == "comment") {
+        } else if (text_ == "comment") {
           getPayloadInternal()->setObjectType(Atom::COMMENT);
         }
       }
@@ -135,7 +138,7 @@ void AtomParser::handleEndElement(const std::string&  element, const std::string
 
 void AtomParser::handleCharacterData(const std::string&  data) {
   if (level_ > MetaLevel) {
-    inner_text_ += data;
+    text_ += data;
   }
 }
 

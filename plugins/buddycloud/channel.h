@@ -145,7 +145,7 @@ class ChannelController : public AbstractModel {
   std::string geo_previous_node_;
   std::string geo_future_node_;
   std::vector<Post1*> posts_;
-  std::map<std::string, Post1*> id_posts_;
+  std::map<std::string, Post1*> posts_map_;
   std::string pagination_;
   std::string first_post_id_;
   std::string last_post_id_;

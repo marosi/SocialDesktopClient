@@ -2,8 +2,10 @@
 #include "bc_model.h"
 #include "bc_presenter.h"
 #include "comment_widget.h"
+#include "post.h"
 // from sdc
 #include "bind.h"
+#include "boost/date_time/posix_time/time_formatters.hpp"
 
 PostWidget::PostWidget(AbstractPresenter* presenter, Post1* post)
     : AbstractPresenter(presenter),
@@ -11,8 +13,8 @@ PostWidget::PostWidget(AbstractPresenter* presenter, Post1* post)
 	ui.setupUi(this);
   ui.commentLineEdit->hide();
   // set post data
-	ui.authorLabel->setText(QString::fromStdString(post_->GetAuthor()));
-	ui.contentTextEdit->setText(QString::fromStdString(post_->GetContent()));
+  ui.authorLabel->setText(QString::fromStdString(post_->GetAuthor() + " " + boost::posix_time::to_simple_string(post_->GetPublished())));
+  ui.contentTextEdit->setText(QString::fromStdString(post_->GetContent()));
   // setup avatar
   Avatar* avatar = this->presenter()->GetAvatar(post_->GetAuthor());
   ui.avatarLabel->setPixmap(avatar->GetPixmap());
@@ -26,16 +28,11 @@ PostWidget::PostWidget(AbstractPresenter* presenter, Post1* post)
   connect(ui.commentLineEdit, SIGNAL(returnPressed()),
           this, SLOT(PostComment()));
   sdc::bind(post_->onCommentAdded, [&] (Comment* comment) {
-            LOG(DEBUG) << "ADDING COMMENT : PostWidget 1";
-    CommentWidget* cw = new CommentWidget(this, comment);
-    comments_.append(cw);
-    ui.commentsLayout->addWidget(cw);
+    ShowCommentInOrder(comment);
   });
   // show comments
   for (Comment* comment : post_->comments()) {
-    CommentWidget* cw = new CommentWidget(this, comment);
-    comments_.append(cw);
-    ui.commentsLayout->addWidget(cw);
+    ShowCommentInOrder(comment);
   }
 }
 
@@ -63,4 +60,13 @@ void PostWidget::mouseReleaseEvent(QMouseEvent *) {
 void PostWidget::PostComment() {
   post_->PostComment(ui.commentLineEdit->text().toStdString());
   ui.commentLineEdit->clear();
+}
+
+void PostWidget::ShowCommentInOrder(Comment* comment) {
+  QList<Comment*>::iterator it = qUpperBound(comments_order_.begin(), comments_order_.end(), comment,
+      [&] (const Comment* c1, const Comment* c2) { return c1->GetPublished() < c2->GetPublished(); });
+  comments_order_.insert(it, comment);
+  CommentWidget* cw = new CommentWidget(this, comment);
+  comments_[comment] = cw;
+  ui.commentsLayout->insertWidget(comments_order_.indexOf(comment), cw);
 }

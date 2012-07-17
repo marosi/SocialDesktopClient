@@ -84,7 +84,7 @@ class AtomParser : public Swift::GenericPayloadParser<Atom> {
 
  private:
   enum Level {
-    EntryLevel = 0,
+    TopLevel = 0,
     MetaLevel = 1
   };
   enum Meta {
@@ -96,7 +96,7 @@ class AtomParser : public Swift::GenericPayloadParser<Atom> {
   };
   int level_;
   int meta_;
-  std::string inner_text_;
+  std::string text_;
 };
 
 class PubsubItemsRequestParser : public Swift::GenericPayloadParser<PubsubItemsRequest> {

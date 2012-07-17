@@ -254,8 +254,8 @@ void ChannelController::handleDomainItemInfo(DiscoInfo::ref payload, ErrorPayloa
  */
 
 Post1* ChannelController::AddPost(Atom::ref atom, bool signal) {
-  if (id_posts_.count(atom->getID()) > 0) {
-    return id_posts_[atom->getID()];
+  if (posts_map_.count(atom->getID()) > 0) {
+    return posts_map_[atom->getID()];
   } else {
     // create new post
     Post1* post = new Post1(this);
@@ -264,7 +264,7 @@ Post1* ChannelController::AddPost(Atom::ref atom, bool signal) {
     post->SetContent(atom->getContent());
     post->SetPublished(stringToDateTime(atom->getPublished()));
     posts_.push_back(post);
-    id_posts_[post->GetID()] = post;
+    posts_map_[post->GetID()] = post;
     if (signal)
       onPostAdded(post);
     return post;
@@ -272,18 +272,18 @@ Post1* ChannelController::AddPost(Atom::ref atom, bool signal) {
 }
 
 void ChannelController::RemovePost(const std::string &id) {
-  if (id_posts_.count(id) > 0) {
+  if (posts_map_.count(id) > 0) {
     vector<Post1*>::iterator it = std::find_if(posts_.begin(), posts_.end(), [&] (const Post1* p) { return p->GetID() == id; });
     if (it != posts_.end())
       posts_.erase(it);
-    id_posts_.erase(id);
+    posts_map_.erase(id);
     onPostDeleted(id);
   }
 }
 
 Post1* ChannelController::GetPost(const std::string &id) {
-  if (id_posts_.count(id) > 0)
-    return id_posts_[id];
+  if (posts_map_.count(id) > 0)
+    return posts_map_[id];
   else
     return 0;
 }

@@ -10,6 +10,8 @@
 #include "post.h"
 #include "bind.h"
 #include <QScrollBar>
+#include <QtAlgorithms>
+#include <algorithm>
 
 ChannelWidget::ChannelWidget(AbstractPresenter* presenter, ChannelController* channel)
     : AbstractPresenter(presenter),
@@ -44,9 +46,7 @@ ChannelWidget::ChannelWidget(AbstractPresenter* presenter, ChannelController* ch
   // bind model events
   sdc::bind(channel_->onNewPostsRetrieved, [&] (const std::vector<Post1*> posts) {
     for (Post1* post : posts) {
-      PostWidget* pw = new PostWidget(this, post);
-      posts_[post->GetID()] = pw;
-      content_layout()->insertWidget(0, pw);
+      ShowPostInOrder(post);
     }
   });
   sdc::bind(channel_->onChannelTitleChange, [&] (const std::string title) {
@@ -56,14 +56,14 @@ ChannelWidget::ChannelWidget(AbstractPresenter* presenter, ChannelController* ch
     setToolTip(QString::fromStdString(description));
   });
   sdc::bind(channel_->onPostAdded, [&] (Post1* post) {
-    LOG(DEBUG) << "adding post";
-    PostWidget* pw = new PostWidget(this, post);
-    posts_[post->GetID()] = pw;
-    content_layout()->insertWidget(0, pw);
+    ShowPostInOrder(post);
   });
   sdc::bind(channel_->onPostDeleted, [&] (const std::string id) {
-    PostWidget* pw = posts_[id];
-    posts_.remove(id);
+    QList<Post1*>::iterator it = std::find_if(posts_order_.begin(), posts_order_.end(),
+        [&] (const Post1* p) { return p->GetID() == id; });
+    PostWidget* pw = posts_[*it];
+    posts_.remove(*it);
+    posts_order_.erase(it);
     delete pw;
   });
   // sync channel
@@ -86,4 +86,13 @@ void ChannelWidget::OnScrollBarValueChanged(int value) {
   if (value >= scroll_bar_->maximum())
     channel_->RetrieveNextPosts();
   old_scroll_bar_value_ = value;
+}
+
+void ChannelWidget::ShowPostInOrder(Post1* post) {
+  PostWidget* pw = new PostWidget(this, post);
+  QList<Post1*>::iterator it = qUpperBound(posts_order_.begin(), posts_order_.end(), post,
+      [&] (const Post1* p1, const Post1* p2) { return p1->GetPublished() > p2->GetPublished(); });
+  posts_order_.insert(it, post);
+  posts_[post] = pw;
+  content_layout()->insertWidget(posts_order_.indexOf(post), pw);
 }

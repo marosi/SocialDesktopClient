@@ -27,11 +27,11 @@ class Content : public AbstractModel {
   void SetID(const std::string &id) { id_ = id; }
   std::string GetID() const { return id_; }
   void SetAuthor(const std::string &author) { author_ = author; }
-  std::string GetAuthor() { return author_; }
+  std::string GetAuthor() const { return author_; }
   void SetContent(const std::string &content) { content_ = content; }
-  std::string GetContent() { return content_; }
+  std::string GetContent() const { return content_; }
   void SetPublished(const boost::posix_time::ptime &published) { published_ = published; }
-  boost::posix_time::ptime GetPublished() { return published_; }
+  boost::posix_time::ptime GetPublished() const { return published_; }
 
  private:
   std::string id_;
@@ -66,7 +66,7 @@ class Comment : public Content {
  public:
   Comment(Post1* post);
 
-  std::string GetCommentedID();
+  std::string GetCommentedID() const;
 
  private:
   Post1* post_;

@@ -2,12 +2,14 @@
 #define POST_WIDGET_H
 
 #include "abstract_presenter.h"
-#include "post.h"
+#include "ui_post_widget.h"
 #include <QtGui/QWidget>
 #include <QList>
-#include "ui_post_widget.h"
+#include <QMap>
 
 class CommentWidget;
+class Post1;
+class Comment;
 
 class PostWidget : public QWidget, public AbstractPresenter {
 
@@ -25,11 +27,13 @@ class PostWidget : public QWidget, public AbstractPresenter {
 
  private slots:
   void PostComment();
+  void ShowCommentInOrder(Comment* comment);
 
  private:
   Ui::PostWidgetClass ui;
   Post1* post_;
-  QList<CommentWidget*> comments_;
+  QList<Comment*> comments_order_;
+  QMap<Comment*, CommentWidget*> comments_;
 };
 
 #endif // POST_WIDGET_H
