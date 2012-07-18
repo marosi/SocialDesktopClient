@@ -20,12 +20,7 @@ using Swift::JID;
 
 BcPresenter::BcPresenter() : AbstractPresenter(this), channel_(0) {}
 
-BcPresenter::~BcPresenter() {
-  if (channel_)
-    delete channel_;
-  for (BcContactWidget* widget : contacts_)
-    delete widget;
-}
+BcPresenter::~BcPresenter() {}
 
 void BcPresenter::Init() {
   LOG(DEBUG) << " BcPresenter thread ID: " << boost::this_thread::get_id();
@@ -34,11 +29,11 @@ void BcPresenter::Init() {
   SetOwnAvatar(model_->GetOwnAvatarPath());
   UpdateAvatar(model_->GetOwnJID());
 
-  QObject::connect(account_button()->menu()->addAction("Cuuuuz"), SIGNAL(triggered()), this, SLOT(Test()));
-
   sdc::bind(model_->onConnected, [&] () {
-    channel_ = new ChannelWidget(this, model_->GetOwnChannel());
-    main_window()->AddContentPanel(channel_);
+    if (!channel_) {
+      channel_ = new ChannelWidget(this, model_->GetOwnChannel());
+      main_window()->AddContentPanel(this, channel_);
+    }
     channel_->show();
   });
 

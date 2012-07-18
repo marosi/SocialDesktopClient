@@ -243,9 +243,6 @@ void BcModel::handleConnected() {
   });
   client_->requestRoster();
 
-  // Send presence message
-  //client_->sendPresence(Presence::create("Ready when you are..."));
-
   // initialize own channel
   if (!own_channel_) {
     own_channel_ = CreateChannel(jid_);

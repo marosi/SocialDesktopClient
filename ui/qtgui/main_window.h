@@ -5,6 +5,7 @@
 #include "ui_main_window.h"
 #include <QtGui/QMainWindow>
 #include <QList>
+#include <QMultiMap>
 
 namespace sdc {
 
@@ -24,8 +25,12 @@ class MainWindow : public QMainWindow, public sdc::QtView {
   ~MainWindow();
   void AddAccountButton(AccountButton* button);
   void RemoveAccountButton(AccountButton* button);
-  void AddContact(ServicePresenter* presenter, ContactWidget* contact);
-  void AddContentPanel(ContentPanel* panel);
+
+  void AddContact(ServicePresenter* parent, ContactWidget* contact);
+  void RemoveAllContacts(ServicePresenter* parent);
+
+  void AddContentPanel(ServicePresenter* parent, ContentPanel* panel);
+  void RemoveAllContentPanels(ServicePresenter* parent);
 
  public slots:
   void ShowSettingsDialog();
@@ -38,7 +43,8 @@ class MainWindow : public QMainWindow, public sdc::QtView {
   Ui::MainWindowClass ui;
   QWidget* settings_;
   QList<AccountButton*> buttons_;
-  QList<ContactWidget*> contacts_;
+  QMultiMap<ServicePresenter*, ContactWidget*> contacts_;
+  QMultiMap<ServicePresenter*, ContentPanel*> contents_;
   GroupedBy<ServicePresenter*>* grouped_by_account_;
 };
 

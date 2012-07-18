@@ -20,33 +20,6 @@
 
 namespace sdc {
 
-//template<class T>
-//void GroupedBy::GroupedBy(boost::function<T (const ContactWidget*)> getter, boost::function<QString (const ContactWidget*, const T)> titler) {
-//  getter_ = getter;
-//  titler_ = titler;
-//}
-
-//template<class T>
-//void GroupedBy::Insert(const ContactWidget* widget) {
-//  if (map_.contains(getter_(cw))) {
-//    boxes_[getter_(cw)] = cw;
-//  } else {
-//    boxes_[getter_(cw)] = new QGroupBox(titler_(cw));
-//  }
-//  boxes_[getter_(cw)]->layout->addWidget(cw);
-//}
-
-//template<class T>
-//void GroupedBy::Insert(const ContactWidget* widget, const T key) {
-//  if (map_.contains(key)) {
-//    boxes_[key] = cw;
-//  } else {
-//    boxes_[key] = new QGroupBox(titler_(cw));
-//  }
-//  boxes_[key]->layout->addWidget(cw);
-//}
-
-
 template<class T>
 class MainWindow::GroupedBy {
  public:
@@ -68,6 +41,12 @@ class MainWindow::GroupedBy {
     boxes_[key]->layout()->addWidget(widget);
   }
 
+  void RemoveGroup(const T key) {
+    map_.remove(key);
+    delete boxes_[key];
+    boxes_.remove(key);
+  }
+
  private:
   boost::function<QString (const ContactWidget*, const T)> titler_;
   QMultiMap<T, ContactWidget*> map_;
@@ -82,7 +61,7 @@ MainWindow::MainWindow(QtGui* qtgui) :
   ui.statusbar->hide();
   connect(ui.actionSettings, SIGNAL(triggered()), this, SLOT(ShowSettingsDialog()));
   connect(ui.addContactButton, SIGNAL(clicked()), this, SLOT(ShowNewContactDialog()));
-
+  // grouping
   grouped_by_account_ = new GroupedBy<ServicePresenter*>(
       [&] (const ContactWidget* w, const ServicePresenter* p) { return QString::fromStdString(p->model()->account()->GetUid()); });
   ui.contactsContents->setLayout(grouped_by_account_->GetLayout());
@@ -96,20 +75,38 @@ void MainWindow::AddAccountButton(AccountButton* button) {
 }
 
 void MainWindow::RemoveAccountButton(AccountButton* button) {
-  buttons_.removeOne(button);
-  ui.accountsLayout->removeWidget(button);
+  if (buttons_.contains(button)) {
+    buttons_.removeOne(button);
+    ui.accountsLayout->removeWidget(button);
+    delete button;
+  }
 }
 
-void MainWindow::AddContact(ServicePresenter* presenter, ContactWidget* contact) {
-  std::string tooltip = qtgui()->GetService(presenter)->name() +
+void MainWindow::AddContact(ServicePresenter* parent, ContactWidget* contact) {
+  std::string tooltip = qtgui()->GetService(parent)->name() +
       " - " +
-      qtgui()->GetModel(presenter)->account()->GetUid();
+      qtgui()->GetModel(parent)->account()->GetUid();
   contact->setToolTip(QString::fromStdString(tooltip));
-  grouped_by_account_->Insert(contact, presenter);
+  contacts_.insert(parent, contact);
+  grouped_by_account_->Insert(contact, parent);
 }
 
-void MainWindow::AddContentPanel(ContentPanel* panel) {
+void MainWindow::RemoveAllContacts(ServicePresenter* parent) {
+  for (ContactWidget* widget : contacts_.values(parent))
+    delete widget;
+  grouped_by_account_->RemoveGroup(parent);
+  contacts_.remove(parent);
+}
+
+void MainWindow::AddContentPanel(ServicePresenter* parent, ContentPanel* panel) {
+  contents_.insert(parent, panel);
   ui.contentFrame->layout()->addWidget(panel);
+}
+
+void MainWindow::RemoveAllContentPanels(ServicePresenter* parent) {
+  for (ContentPanel* panel : contents_.values(parent))
+    delete panel;
+  contents_.remove(parent);
 }
 
 void MainWindow::ShowSettingsDialog() {

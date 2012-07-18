@@ -17,10 +17,7 @@ BcContactWidget::BcContactWidget(BcPresenter* presenter, BcContact* contact)
   connect(avatar, SIGNAL(changed(QPixmap)), avatar_label(), SLOT(setPixmap(QPixmap)));
 }
 
-BcContactWidget::~BcContactWidget() {
-  if (channel_)
-    delete channel_;
-}
+BcContactWidget::~BcContactWidget() {}
 
 void BcContactWidget::mouseDoubleClickEvent(QMouseEvent* event) {
   LOG(DEBUG) << "Clicking contact!";
@@ -32,6 +29,6 @@ void BcContactWidget::ShowChannelPanel() {
   if (!channel_) {
     channel_ = new ChannelWidget(this, contact_->GetChannel());
   }
-  presenter()->main_window()->AddContentPanel(channel_);
+  presenter()->main_window()->AddContentPanel(presenter(), channel_);
   channel_->show();
 }

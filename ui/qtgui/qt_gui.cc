@@ -82,7 +82,10 @@ void QtGui::ActivateAccount(const std::string account_id) {
 void QtGui::DeativateAccount(const std::string account_id) {
   ServicePresenter* presenter = id_to_presenter_[account_id];
   QtServiceModel* model = presenter_to_model_[presenter];
+  // remove all widgets parented by this accout
   main_window_->RemoveAccountButton(buttons_[account_id]);
+  main_window_->RemoveAllContacts(presenter);
+  main_window_->RemoveAllContentPanels(presenter);
   buttons_.erase(account_id);
   model_to_presenter_.erase(model);
   presenter_to_model_.erase(presenter);

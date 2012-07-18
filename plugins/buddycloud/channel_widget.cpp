@@ -17,7 +17,7 @@ ChannelWidget::ChannelWidget(AbstractPresenter* presenter, ChannelController* ch
     : AbstractPresenter(presenter),
       channel_(channel) {
   { // set new post button
-    new_post_button_ = new QToolButton;
+    new_post_button_ = new QToolButton(this);
     new_post_button_->setChecked(false);
     new_post_button_->setCheckable(true);
     new_post_button_->setToolTip("Post new message");
@@ -71,10 +71,10 @@ ChannelWidget::ChannelWidget(AbstractPresenter* presenter, ChannelController* ch
 }
 
 ChannelWidget::~ChannelWidget() {
-//  delete new_post_;
-//  delete new_post_button_;
-//  for (PostWidget* widget : posts_order_)
-//    delete widget;
+  delete new_post_;
+  delete new_post_button_;
+  for (PostWidget* widget : posts_.values())
+    delete widget;
 }
 
 void ChannelWidget::SendPost() {
@@ -89,7 +89,6 @@ void ChannelWidget::SendPost() {
 void ChannelWidget::OnScrollBarValueChanged(int value) {
   if (value == old_scroll_bar_value_)
     return;
-  LOG(DEBUG) << "scroll bar max " << scroll_bar_->maximum() << " ... value : " << value;
   if (value >= scroll_bar_->maximum())
     channel_->RetrieveNextPosts();
   old_scroll_bar_value_ = value;
