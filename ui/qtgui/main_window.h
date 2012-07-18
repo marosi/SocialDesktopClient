@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include "qt_view.h"
-#include "ui_mainwindow.h"
+#include "ui_main_window.h"
 #include <QtGui/QMainWindow>
 #include <QList>
 
@@ -32,10 +32,14 @@ class MainWindow : public QMainWindow, public sdc::QtView {
   void ShowNewContactDialog();
 
  private:
+  template<class T>
+  class GroupedBy;
+
   Ui::MainWindowClass ui;
   QWidget* settings_;
   QList<AccountButton*> buttons_;
   QList<ContactWidget*> contacts_;
+  GroupedBy<ServicePresenter*>* grouped_by_account_;
 };
 
 } /* namespace sdc */

@@ -65,7 +65,8 @@ FORMS += ui/qtgui/main_window.ui \
     ui/qtgui/contact_widget.ui \
     ui/qtgui/account_button.ui \
     ui/qtgui/new_account_dialog.ui \
-    ui/qtgui/settings_dialog.ui
+    ui/qtgui/settings_dialog.ui \
+    ui/qtgui/contacts_group.ui
 RESOURCES += 
 INCLUDEPATH += core/include \
     ui/qtgui \

@@ -30,20 +30,20 @@ class ServicePresenter : public QObject {
   virtual ~ServicePresenter() {}
   virtual void Init() {}
 
-  MainWindow* main_window() {
+  MainWindow* main_window() const {
     return main_window_;
   }
 
-  QtServiceModel* model() {
+  QtServiceModel* model() const {
     return service_model_;
   }
 
   template<class T>
-  T* model() {
+  T* model() const {
       return boost::polymorphic_downcast<T*>(service_model_);
   }
 
-  AccountButton* account_button() {
+  AccountButton* account_button() const {
     return account_button_;
   }
 

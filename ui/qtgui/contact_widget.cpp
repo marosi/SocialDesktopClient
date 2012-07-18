@@ -11,11 +11,6 @@ ContactWidget::ContactWidget(Contact* contact) {
 	ui.setupUi(this);
 	model_ = contact;
 
-	// TODO: put closing widget on content signal in more common content widget class
-  //contact->onRemove.connect(bind(&ContactWidget::Close, this));
-	connect(this, SIGNAL(_close()),
-	    this, SLOT(close()));
-
 	ui.contactInfo->setText(QString::fromStdString(contact->GetUid()));
 
 	close_button_ = new QToolButton;

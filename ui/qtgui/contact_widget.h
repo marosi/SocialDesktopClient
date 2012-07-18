@@ -21,17 +21,14 @@ class ContactWidget : public QWidget {
     return ui.avatarLabel;
   }
 
- signals:
-  void _close();
+  Contact* model() {
+    return model_;
+  }
 
  protected slots:
   virtual void Remove() {}
 
  private:
-  void Close() {
-    emit _close();
-  }
-
   Contact* model_;
   Ui::ContactWidgetClass ui;
   QToolButton* close_button_;

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>658</width>
-    <height>485</height>
+    <width>272</width>
+    <height>493</height>
    </rect>
   </property>
   <property name="palette">
@@ -103,6 +103,9 @@
        <item row="1" column="0">
         <layout class="QVBoxLayout" name="contactPanelLayout">
          <item>
+          <widget class="QWidget" name="contactsContents" native="true"/>
+         </item>
+         <item>
           <spacer name="verticalSpacer">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
@@ -119,6 +122,13 @@
        </item>
        <item row="0" column="0">
         <layout class="QHBoxLayout" name="contactsHeaderLayout">
+         <item>
+          <widget class="QToolButton" name="addContactButton">
+           <property name="text">
+            <string>Add</string>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QLabel" name="label">
            <property name="text">
@@ -140,9 +150,9 @@
           </spacer>
          </item>
          <item>
-          <widget class="QToolButton" name="addContactButton">
+          <widget class="QPushButton" name="pushButton">
            <property name="text">
-            <string>Add</string>
+            <string>&gt;</string>
            </property>
           </widget>
          </item>
@@ -161,7 +171,7 @@
       </property>
       <property name="minimumSize">
        <size>
-        <width>250</width>
+        <width>0</width>
         <height>0</height>
        </size>
       </property>
@@ -245,8 +255,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>658</width>
-     <height>25</height>
+     <width>272</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSettings">
@@ -258,9 +268,21 @@
    <addaction name="menuSettings"/>
   </widget>
   <widget class="QDockWidget" name="accountsPaneDock">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>51</width>
+     <height>50</height>
+    </size>
+   </property>
    <property name="maximumSize">
     <size>
-     <width>60</width>
+     <width>70</width>
      <height>524287</height>
     </size>
    </property>
@@ -268,7 +290,7 @@
     <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="allowedAreas">
-    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+    <set>Qt::AllDockWidgetAreas</set>
    </property>
    <property name="windowTitle">
     <string/>
@@ -276,8 +298,11 @@
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
-   <widget class="QWidget" name="accountsPane">
+   <widget class="QWidget" name="accountsPaneContents">
     <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <layout class="QVBoxLayout" name="accountsLayout"/>
+     </item>
      <item>
       <spacer name="verticalSpacer_2">
        <property name="orientation">
@@ -294,7 +319,11 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+  </widget>
   <action name="actionSettings">
    <property name="text">
     <string>Settings</string>
