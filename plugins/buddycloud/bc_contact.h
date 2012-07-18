@@ -23,9 +23,7 @@ class BcContact : public sdc::Contact, public AbstractModel {
   BcContact(BcModel* model, const Swift::JID &jid);
 
   ChannelController* GetChannel();
-
-  // TODO: not used anymore
-  const std::string GetAvatarPath();
+  const Swift::JID& GetJID() { return jid_; }
 
   boost::signals2::signal<void ()> onChannelRetrieved;
 

@@ -11,6 +11,7 @@ namespace sdc {
 
 class AccountData;
 class AccountButton;
+class ActivityPanel;
 class ContactWidget;
 class ContentPanel;
 class QtGui;
@@ -32,6 +33,8 @@ class MainWindow : public QMainWindow, public sdc::QtView {
   void AddContentPanel(ServicePresenter* parent, ContentPanel* panel);
   void RemoveAllContentPanels(ServicePresenter* parent);
 
+  ActivityPanel* activities() { return activities_; }
+
  public slots:
   void ShowSettingsDialog();
   void ShowNewContactDialog();
@@ -46,6 +49,7 @@ class MainWindow : public QMainWindow, public sdc::QtView {
   QMultiMap<ServicePresenter*, ContactWidget*> contacts_;
   QMultiMap<ServicePresenter*, ContentPanel*> contents_;
   GroupedBy<ServicePresenter*>* grouped_by_account_;
+  ActivityPanel* activities_;
 };
 
 } /* namespace sdc */

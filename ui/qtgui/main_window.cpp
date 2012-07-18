@@ -7,6 +7,7 @@
 
 #include "main_window.h"
 #include "account_data.h"
+#include "activity_panel.h"
 #include "contact_widget.h"
 #include "content_panel.h"
 #include "log.h"
@@ -65,6 +66,9 @@ MainWindow::MainWindow(QtGui* qtgui) :
   grouped_by_account_ = new GroupedBy<ServicePresenter*>(
       [&] (const ContactWidget* w, const ServicePresenter* p) { return QString::fromStdString(p->model()->account()->GetUid()); });
   ui.contactsContents->setLayout(grouped_by_account_->GetLayout());
+  // activities
+  activities_ = new ActivityPanel();
+  ui.contentFrame->layout()->addWidget(activities_);
 }
 
 MainWindow::~MainWindow() {}

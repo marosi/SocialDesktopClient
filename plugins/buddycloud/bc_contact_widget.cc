@@ -20,15 +20,6 @@ BcContactWidget::BcContactWidget(BcPresenter* presenter, BcContact* contact)
 BcContactWidget::~BcContactWidget() {}
 
 void BcContactWidget::mouseDoubleClickEvent(QMouseEvent* event) {
-  LOG(DEBUG) << "Clicking contact!";
   event->ignore();
-  ShowChannelPanel();
-}
-
-void BcContactWidget::ShowChannelPanel() {
-  if (!channel_) {
-    channel_ = new ChannelWidget(this, contact_->GetChannel());
-  }
-  presenter()->main_window()->AddContentPanel(presenter(), channel_);
-  channel_->show();
+  presenter()->ShowChannel(contact_->GetJID());
 }

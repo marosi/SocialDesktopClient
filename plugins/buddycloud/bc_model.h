@@ -28,7 +28,9 @@
 
 class BcContact;
 class ChannelController;
+class Comment;
 class FilesystemStorages;
+class Post1;
 
 class BcModel : public sdc::QtServiceModel {
   public:
@@ -61,7 +63,6 @@ class BcModel : public sdc::QtServiceModel {
     const std::string GetOwnAvatarPath();
     const std::string GetAvatarPath(const Swift::JID &jid);
     const std::string GetDefaultAvatarPath();
-
     /*
      * Errors
      */
@@ -80,9 +81,11 @@ class BcModel : public sdc::QtServiceModel {
     boost::signals2::signal<void (const Swift::JID)> onContactAdded;
     boost::signals2::signal<void (const Swift::JID)> onContactRemoved;
 
-    boost::signals2::signal<void (Swift::VCard::ref)> onOwnVCardUpdated;
+    boost::signals2::signal<void (const Post1*)> onNewPost;
+    boost::signals2::signal<void (const Comment*)> onNewComment;
 
-    boost::signals2::signal<void ()> onOwnAvatarChanged;
+    boost::signals2::signal<void (Swift::VCard::ref)> onOwnVCardUpdated; // TODO: signal never emitted
+    boost::signals2::signal<void ()> onOwnAvatarChanged; // TODO: signal never emitted
     boost::signals2::signal<void (const Swift::JID)> onAvatarChanged;
 
   private:
@@ -119,6 +122,7 @@ class BcModel : public sdc::QtServiceModel {
      * Miscellaneous
      */
     const std::string SavePhoto(const Swift::JID &jid, Swift::VCard::ref vcard);
+    int GetStatus(Swift::Presence::ref presence);
     /**
      * SDC data
      */

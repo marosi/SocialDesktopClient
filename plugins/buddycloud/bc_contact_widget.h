@@ -33,8 +33,6 @@ class BcContactWidget : public sdc::ContactWidget, public AbstractPresenter {
   void mouseDoubleClickEvent(QMouseEvent* event);
 
  private:
-  void ShowChannelPanel();
-
   BcContact* contact_;
   ChannelWidget* channel_;
 };

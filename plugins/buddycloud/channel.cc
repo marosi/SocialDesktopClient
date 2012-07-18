@@ -98,8 +98,8 @@ void ChannelController::PublishPost(const std::string &content) {
   Atom::ref atom(new Atom);
   atom->setAuthor(model_->jid_.toString());
   atom->setContent(content);
-  atom->setObjectType(Atom::NOTE);
-  atom->setVerb(Atom::POST);
+  atom->setObjectType(Atom::Note);
+  atom->setVerb(Atom::Post);
   // create request
   PubsubPublishRequest::ref publish(new PubsubPublishRequest);
   publish->setPayload(atom);
@@ -111,8 +111,6 @@ void ChannelController::PublishPost(const std::string &content) {
       LOG(ERROR) << error->getText();
       return;
     }
-    atom->setID(payload->getItemID());
-    AddPost(atom);
   });
   rq->send();
 }
@@ -122,8 +120,8 @@ void ChannelController::PublishComment(const std::string &commented_post_id, con
   atom->setInReplyTo(commented_post_id);
   atom->setAuthor(model_->jid_.toString());
   atom->setContent(content);
-  atom->setObjectType(Atom::COMMENT);
-  atom->setVerb(Atom::POST);
+  atom->setObjectType(Atom::Comment);
+  atom->setVerb(Atom::Post);
   // create request
   PubsubPublishRequest::ref publish(new PubsubPublishRequest);
   publish->setPayload(atom);
@@ -134,11 +132,6 @@ void ChannelController::PublishComment(const std::string &commented_post_id, con
     if (error) {
       LOG(ERROR) << error->getText();
       return;
-    }
-    Post1* post = GetPost(atom->getInReplyTo());
-    if (post) {
-      atom->setID(payload->getItemID());
-      post->AddComment(atom);
     }
   });
   rq->send();
@@ -261,6 +254,7 @@ Post1* ChannelController::AddPost(Atom::ref atom, bool signal) {
     Post1* post = new Post1(this);
     post->SetID(atom->getID());
     post->SetAuthor(atom->getAuthor());
+    post->SetAuthorJID(atom->getAuthorJID());
     post->SetContent(atom->getContent());
     post->SetPublished(stringToDateTime(atom->getPublished()));
     posts_.push_back(post);

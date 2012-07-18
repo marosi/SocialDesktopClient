@@ -12,6 +12,7 @@
 #define ATOM_H_
 
 #include "Swiften/Elements/Payload.h"
+#include "Swiften/JID/JID.h"
 #include "boost/shared_ptr.hpp"
 #include <string>
 
@@ -19,8 +20,8 @@ class Atom : public Swift::Payload {
  public:
   friend class AtomSerializer;
   typedef boost::shared_ptr<Atom> ref;
-  enum Verb { POST };
-  enum ObjectType { NOTE, COMMENT };
+  enum Verb { Post };
+  enum ObjectType { Note, Comment };
 
   Atom() {}
 
@@ -60,9 +61,9 @@ class Atom : public Swift::Payload {
     return object_type_;
   }
 
-  std::string getVerbString() const {
+  const std::string getVerbString() const {
     switch (verb_) {
-      case POST:
+      case Post:
         return "post";
       default:
         assert(false);
@@ -71,11 +72,11 @@ class Atom : public Swift::Payload {
     return "#UNDEFINED#";
   }
 
-  std::string getObjectTypeString() const {
+  const std::string getObjectTypeString() const {
     switch (object_type_) {
-      case NOTE:
+      case Note:
         return "note";
-      case COMMENT:
+      case Comment:
         return "comment";
       default:
         assert(false);
@@ -84,15 +85,15 @@ class Atom : public Swift::Payload {
     return "#UNDEFINED#";
   }
 
-  std::string getPublished() const {
+  const std::string& getPublished() const {
     return published_;
   }
 
-  std::string getAuthor() const {
+  const std::string& getAuthor() const {
     return author_;
   }
 
-  std::string getContent() const {
+  const std::string& getContent() const {
     return content_;
   }
 
@@ -100,12 +101,15 @@ class Atom : public Swift::Payload {
     thread_id_ = thread_id;
   }
 
-  std::string getInReplyTo() {
+  const std::string& getInReplyTo() const {
     return thread_id_;
   }
 
   void setUpdated(const std::string &updated) { updated_ = updated; }
   const std::string& getUpdated() const { return updated_; }
+
+  void setAuthorJID(const Swift::JID &jid) { author_jid_ = jid; }
+  const Swift::JID& getAuthorJID() const { return author_jid_; }
 
  private:
   Verb verb_;
@@ -113,6 +117,7 @@ class Atom : public Swift::Payload {
   std::string published_;
   std::string updated_;
   std::string author_;
+  Swift::JID author_jid_;
   std::string content_;
   std::string id_;
   std::string thread_id_;

@@ -13,6 +13,7 @@
 
 #include "abstract_model.h"
 #include "payloads/atom.h"
+#include "Swiften/JID/JID.h"
 #include "boost/signals2/signal.hpp"
 #include "boost/date_time/posix_time/ptime.hpp"
 #include <string>
@@ -28,6 +29,8 @@ class Content : public AbstractModel {
   std::string GetID() const { return id_; }
   void SetAuthor(const std::string &author) { author_ = author; }
   std::string GetAuthor() const { return author_; }
+  void SetAuthorJID(const Swift::JID &jid) { author_jid_ = jid; }
+  const Swift::JID& GetAuthorJID() const { return author_jid_; }
   void SetContent(const std::string &content) { content_ = content; }
   std::string GetContent() const { return content_; }
   void SetPublished(const boost::posix_time::ptime &published) { published_ = published; }
@@ -37,6 +40,7 @@ class Content : public AbstractModel {
   std::string id_;
   std::string content_;
   std::string author_;
+  Swift::JID author_jid_;
   boost::posix_time::ptime published_;
 };
 
@@ -49,8 +53,12 @@ class Post1 : public Content {
   void Delete();
   void PostComment(const std::string &content);
 
-  const std::vector<Comment*> comments() {
+  const std::vector<Comment*> comments() const {
     return comments_;
+  }
+
+  const ChannelController* channel() const {
+    return channel_;
   }
 
   boost::signals2::signal<void (Comment*)> onCommentAdded;
@@ -66,7 +74,11 @@ class Comment : public Content {
  public:
   Comment(Post1* post);
 
-  std::string GetCommentedID() const;
+  const std::string& GetCommentedID() const;
+
+  const Post1* post() const {
+    return post_;
+  }
 
  private:
   Post1* post_;

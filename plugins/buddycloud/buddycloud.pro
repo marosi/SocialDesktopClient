@@ -31,7 +31,9 @@ HEADERS += \
     avatar.h \
     filesystem_storages.h \
     avatar_filesystem_storage.h \
-    bc_account.h
+    bc_account.h \
+    post_activity.h \
+    comment_activity.h
 SOURCES += \
     pubsub_serializer.cc \
     post.cc \
@@ -50,7 +52,9 @@ SOURCES += \
     bc_contact_widget.cc \
     filesystem_storages.cpp \
     avatar_filesystem_storage.cpp \
-    pubsub_requests.cc
+    pubsub_requests.cc \
+    post_activity.cpp \
+    comment_activity.cpp
 FORMS += \
     post_widget.ui \
     new_post_widget.ui \

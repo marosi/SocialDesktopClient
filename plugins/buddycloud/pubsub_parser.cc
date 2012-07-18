@@ -121,15 +121,16 @@ void AtomParser::handleEndElement(const std::string&  element, const std::string
         getPayloadInternal()->setAuthor(text_);
       }
       else if (element == "jid") {
+        getPayloadInternal()->setAuthorJID(text_);
       } // nothing so far
       else if (element == "uri") {
       } // nothing so far
     } else if (meta_ == Object) {
       if (element == "object-type") {
         if (text_ == "note") {
-          getPayloadInternal()->setObjectType(Atom::NOTE);
+          getPayloadInternal()->setObjectType(Atom::Note);
         } else if (text_ == "comment") {
-          getPayloadInternal()->setObjectType(Atom::COMMENT);
+          getPayloadInternal()->setObjectType(Atom::Comment);
         }
       }
     }

@@ -18,7 +18,3 @@ BcContact::BcContact(BcModel* model, const Swift::JID &jid)
 ChannelController* BcContact::GetChannel() {
   return model_->GetChannel(jid_);
 }
-
-const std::string BcContact::GetAvatarPath() {
-  return model_->account()->GetProperty("avatars/" + jid_.toString());
-}

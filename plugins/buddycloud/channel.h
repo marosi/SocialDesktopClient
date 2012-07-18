@@ -89,17 +89,22 @@ class ChannelController : public AbstractModel {
   void PublishComment(const std::string &commented_post_id, const std::string &content);
   void DeletePost(Post1* post); // TODO:
 
-  const std::vector<Post1*> posts() {
+  const std::vector<Post1*> posts() const {
     return posts_;
   }
 
-  Swift::JID GetChannelServiceJid() {
+  Swift::JID GetChannelServiceJid() const {
     return service_.jid;
   }
 
-  bool IsRegisterationAvailable() {
+  bool IsRegisterationAvailable() const {
     return service_.is_registration_available;
   }
+
+  const Swift::JID& JID() const {
+    return jid_;
+  }
+
 
   boost::signals2::signal<void (Error)> onError;
   boost::signals2::signal<void (ChannelServiceInfo)> onChannelsServiceAvailable;

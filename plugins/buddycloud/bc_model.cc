@@ -119,6 +119,18 @@ BcModel::BcModel(sdc::AccountData* account)
     LOG(DEBUG) << "Avatar of " << jid.toString() << " changed";
   });
   /*
+   * Presence handling
+   */
+  client_->getPresenceOracle()->onPresenceChange.connect([&] (Presence::ref presence) {
+    JID jid = presence->getFrom().toBare();
+    if (contacts_map_.count(jid) > 0) {
+      contacts_map_[jid]->SetStatus(GetStatus(presence));
+    }
+    LOG(DEBUG) << "################";
+    LOG(DEBUG) << "Presence changed by " << presence->getFrom().toString() << " to " << GetStatus(presence);
+    LOG(DEBUG) << "################";
+  });
+  /*
    * Subscriptions
    */
   client_->getSubscriptionManager()->onPresenceSubscriptionRequest.connect([&] (const JID &jid, const string &str, Presence::ref presence) {
@@ -231,8 +243,6 @@ const std::string BcModel::GetDefaultAvatarPath() {
 
 void BcModel::handleConnected() {
   LOG(TRACE) << "XMPP client is connected" << std::endl;
-  // request own vCard
-  client_->getVCardManager()->requestOwnVCard();
   // request contact vCards and create channel for each contact
   client_->getRoster()->onInitialRosterPopulated.connect([&] () {
     LOG(TRACE) << "Requesting vCards for contacts";
@@ -242,7 +252,8 @@ void BcModel::handleConnected() {
     }
   });
   client_->requestRoster();
-
+  // request own vCard
+  client_->getVCardManager()->requestOwnVCard();
   // initialize own channel
   if (!own_channel_) {
     own_channel_ = CreateChannel(jid_);
@@ -283,7 +294,7 @@ void BcModel::handleConnected() {
     });
   }
   onConnected();
-  client_->getPresenceSender()->sendPresence(Presence::create("I'm here"));
+  client_->sendPresence(Presence::create("I'm here"));
 }
 
 void BcModel::handleDisconnected(boost::optional<ClientError> error) {
@@ -305,14 +316,16 @@ void BcModel::handleMessageReceived(Message::ref message) {
       LOG(DEBUG3) << "Iterating through channel: " << channel->posts_node_;
       if (channel->posts_node_ == event->getNode()) {
         for (Atom::ref atom : event->getItems()->get()) {
-          if (atom->getInReplyTo() != "") {
+          if (atom->getObjectType() == Atom::Comment) {
             LOG(DEBUG4) << "In reply to: " << atom->getInReplyTo();
             Post1* post = channel->GetPost(atom->getInReplyTo());
             if (post) {
-              post->AddComment(atom);
+              Comment* comment = post->AddComment(atom);
+              onNewComment(comment);
             }
           } else {
-            channel->AddPost(atom);
+            Post1* post = channel->AddPost(atom);
+            onNewPost(post);
           }
         }
 
@@ -329,13 +342,13 @@ void BcModel::handlePresenceReceived(Presence::ref presence) {
     response->setTo(presence->getFrom());
     response->setType(Presence::Subscribed);
     client_->sendPresence(response);
-  } else if (presence->getType() == Presence::Subscribed) {
+  } /*else if (presence->getType() == Presence::Subscribed) {
 
   } else if (presence->getType() == Presence::Unsubscribe) {
 
   } else if (presence->getType() == Presence::Unsubscribed) {
 
-  }
+  }*/
 }
 
 /*
@@ -519,4 +532,20 @@ const std::string BcModel::SavePhoto(const Swift::JID &jid, Swift::VCard::ref vc
   }
   // something went wrong
   return "";
+}
+
+int BcModel::GetStatus(Presence::ref presence) {
+  int result;
+  switch (presence->getType()) {
+    case Presence::Unavailable:
+      result = Contact::Offline;
+      break;
+    case Presence::Available:
+      result = Contact::Online;
+      break;
+    default:
+      result = Contact::Offline;
+      break;
+  }
+  return result;
 }

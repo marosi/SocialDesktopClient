@@ -30,6 +30,7 @@ Comment* Post1::AddComment(Atom::ref atom, bool signal) {
     Comment* cmt = new Comment(this);
     cmt->SetID(atom->getID());
     cmt->SetAuthor(atom->getAuthor());
+    cmt->SetAuthorJID(atom->getAuthorJID());
     cmt->SetContent(atom->getContent());
     cmt->SetPublished(Swift::stringToDateTime(atom->getPublished()));
     comments_.push_back(cmt);
@@ -39,10 +40,10 @@ Comment* Post1::AddComment(Atom::ref atom, bool signal) {
   }
 }
 
-Comment::Comment(Post1* post) : Content(post) {
-  comment_on_id_ = post->GetID();
+Comment::Comment(Post1* post) : Content(post), post_(post) {
+  comment_on_id_ = post_->GetID();
 }
 
-std::string Comment::GetCommentedID() const {
+const std::string& Comment::GetCommentedID() const {
   return comment_on_id_;
 }

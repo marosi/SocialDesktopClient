@@ -28,22 +28,26 @@ class BcPresenter : public sdc::ServicePresenter, public AbstractPresenter {
     Q_OBJECT
 
  public:
+  typedef Swift::JID JID;
+
   BcPresenter();
   ~BcPresenter();
   void Init();
 
-  Avatar* GetAvatar(const Swift::JID &jid);
+  Avatar* GetAvatar(const JID &jid);
 
  public slots:
+  void ShowChannel(const JID &jid);
 
  private:
   void SetOwnAvatar(const std::string &file_path);
-  void UpdateAvatar(const Swift::JID &jid);
+  void UpdateAvatar(const JID &jid);
 
   BcModel* model_;
   ChannelWidget* channel_;
+  QMap<JID, ChannelWidget*> channels_;
   QList<BcContactWidget*> contacts_;
-  QMap<Swift::JID, Avatar*> avatars_;
+  QMap<JID, Avatar*> avatars_;
 };
 
 #endif /* BC_PRESENTER_H_ */
