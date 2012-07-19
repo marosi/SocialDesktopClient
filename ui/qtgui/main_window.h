@@ -9,7 +9,7 @@
 
 namespace sdc {
 
-class AccountData;
+class Account;
 class AccountButton;
 class ActivityPanel;
 class ContactWidget;

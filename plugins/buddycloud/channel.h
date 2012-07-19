@@ -24,10 +24,10 @@
 #include <vector>
 
 class BcModel;
-class Post1;
+class Post;
 class Comment;
 
-class ChannelController : public AbstractModel {
+class Channel : public AbstractModel {
  public:
   struct ChannelServiceInfo {
     Swift::JID jid;
@@ -54,7 +54,7 @@ class ChannelController : public AbstractModel {
   };
 
   friend class BcModel;
-  typedef boost::shared_ptr<ChannelController> ref;
+  typedef boost::shared_ptr<Channel> ref;
 
   enum Error {
     ChannelsServiceUnavailable,
@@ -80,16 +80,16 @@ class ChannelController : public AbstractModel {
     Subscribers
   };
 
-  ChannelController(BcModel* bot, const Swift::JID &jid);
-  ~ChannelController();
+  Channel(BcModel* bot, const Swift::JID &jid);
+  ~Channel();
 
   void Sync();
   void RetrieveNextPosts();
   void PublishPost(const std::string &content);
   void PublishComment(const std::string &commented_post_id, const std::string &content);
-  void DeletePost(Post1* post); // TODO:
+  void DeletePost(Post* post); // TODO:
 
-  const std::vector<Post1*> posts() const {
+  const std::vector<Post*> posts() const {
     return posts_;
   }
 
@@ -108,12 +108,12 @@ class ChannelController : public AbstractModel {
   boost::signals2::signal<void (Error)> onError;
   boost::signals2::signal<void (ChannelServiceInfo)> onChannelsServiceAvailable;
   boost::signals2::signal<void ()> onChannelAvailable;
-  boost::signals2::signal<void (const std::vector<Post1*>) > onNewPostsRetrieved;
+  boost::signals2::signal<void (const std::vector<Post*>) > onNewPostsRetrieved;
   boost::signals2::signal<void (const std::string)> onChannelTitleChange;
   boost::signals2::signal<void (const std::string)> onChannelDescriptionChange;
 
   boost::signals2::signal<void (const std::string)> onPostDeleted;
-  boost::signals2::signal<void (Post1*)> onPostAdded;
+  boost::signals2::signal<void (Post*)> onPostAdded;
 
  private:
   void DiscoverChannel();
@@ -125,9 +125,9 @@ class ChannelController : public AbstractModel {
   /*
    * Internal structures manipulation
    */
-  Post1* AddPost(Atom::ref, bool signal = true);
+  Post* AddPost(Atom::ref, bool signal = true);
   void RemovePost(const std::string &id);
-  Post1* GetPost(const std::string &id);
+  Post* GetPost(const std::string &id);
 
   Swift::IQRouter* router_;
   BcModel* model_;
@@ -148,8 +148,8 @@ class ChannelController : public AbstractModel {
   std::string geo_current_node_;
   std::string geo_previous_node_;
   std::string geo_future_node_;
-  std::vector<Post1*> posts_;
-  std::map<std::string, Post1*> posts_map_;
+  std::vector<Post*> posts_;
+  std::map<std::string, Post*> posts_map_;
   std::string pagination_;
   std::string first_post_id_;
   std::string last_post_id_;

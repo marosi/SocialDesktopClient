@@ -22,7 +22,7 @@ class QtGui;
 
 class QtServiceModel : public QObject, public ServiceModel {
  public:
-  QtServiceModel(AccountData* account);
+  QtServiceModel(Account* account);
   virtual ~QtServiceModel() {}
 
   void SetGui(QtGui* gui) {

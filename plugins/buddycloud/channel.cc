@@ -24,7 +24,7 @@ using std::vector;
 /*
  * Channel controller
  */
-ChannelController::ChannelController(BcModel* model, const Swift::JID &jid)
+Channel::Channel(BcModel* model, const Swift::JID &jid)
     : AbstractModel(model),
       router_(model->client_->getIQRouter()),
       model_(model),
@@ -43,20 +43,20 @@ ChannelController::ChannelController(BcModel* model, const Swift::JID &jid)
   last_post_id_ = "";
 }
 
-ChannelController::~ChannelController() {
-  for (Post1* p : posts_)
+Channel::~Channel() {
+  for (Post* p : posts_)
     delete p;
 }
 
-void ChannelController::Sync() {
+void Channel::Sync() {
   // When service is available, check if there is any channel for JID ...
-  onChannelsServiceAvailable.connect(bind(&ChannelController::DiscoverChannel, this));
+  onChannelsServiceAvailable.connect(bind(&Channel::DiscoverChannel, this));
   // ... if there is, retrieve first page of posts.
-  onChannelAvailable.connect(bind(&ChannelController::RetrieveNextPosts, this));
+  onChannelAvailable.connect(bind(&Channel::RetrieveNextPosts, this));
   DiscoverService();
 }
 
-void ChannelController::RetrieveNextPosts() {
+void Channel::RetrieveNextPosts() {
   GetPubsubItemsRequest::ref request = GetPubsubItemsRequest::create(last_post_id_, pagination_, posts_node_, service_.jid, router_);
   request->onResponse.connect([&] (PubsubItemsRequest::ref items, ErrorPayload::ref error) {
     if (error) {
@@ -64,17 +64,17 @@ void ChannelController::RetrieveNextPosts() {
       return;
     }
     // obtain channel posts
-    vector<Post1*> new_posts;
+    vector<Post*> new_posts;
     for (const Atom::ref &atom : items->getItems()->get()) {
       if (atom->getInReplyTo() == "") {
-        Post1* post = AddPost(atom, false);
+        Post* post = AddPost(atom, false);
         new_posts.push_back(post);
       }
     }
     // obtain channel comments
     for (const Atom::ref &atom : items->getItems()->get()) {
       if (atom->getInReplyTo() != "") {
-        Post1* post = GetPost(atom->getInReplyTo());
+        Post* post = GetPost(atom->getInReplyTo());
         if (post) {
           post->AddComment(atom, false);
         }
@@ -96,7 +96,7 @@ void ChannelController::RetrieveNextPosts() {
   request->send();
 }
 
-void ChannelController::PublishPost(const std::string &content) {
+void Channel::PublishPost(const std::string &content) {
   // translate post to atom
   Atom::ref atom(new Atom);
   atom->setAuthor(model_->jid_.toString());
@@ -118,7 +118,7 @@ void ChannelController::PublishPost(const std::string &content) {
   rq->send();
 }
 
-void ChannelController::PublishComment(const std::string &commented_post_id, const std::string &content) {
+void Channel::PublishComment(const std::string &commented_post_id, const std::string &content) {
   Atom::ref atom(new Atom);
   atom->setInReplyTo(commented_post_id);
   atom->setAuthor(model_->jid_.toString());
@@ -140,7 +140,7 @@ void ChannelController::PublishComment(const std::string &commented_post_id, con
   rq->send();
 }
 
-void ChannelController::DeletePost(Post1* post) {
+void Channel::DeletePost(Post* post) {
   SetPubsubRetractRequest::ref retract = SetPubsubRetractRequest::create(post->GetID(), posts_node_, service_.jid, router_);
   retract->onResponse.connect([=] (PubsubRetractRequest::ref /*payload*/, ErrorPayload::ref error) {
     if (error) {
@@ -152,7 +152,7 @@ void ChannelController::DeletePost(Post1* post) {
   retract->send();
 }
 
-void ChannelController::DiscoverChannel() {
+void Channel::DiscoverChannel() {
   // check if there's any posts node for a user
   GetDiscoInfoRequest::ref info = GetDiscoInfoRequest::create(service_.jid, posts_node_, router_);
   info->onResponse.connect(
@@ -197,7 +197,7 @@ void ChannelController::DiscoverChannel() {
  * SERVICE DISCOVERY
  */
 
-void ChannelController::DiscoverService() {
+void Channel::DiscoverService() {
   GetDiscoItemsRequest::ref items = GetDiscoItemsRequest::create(jid_.getDomain(), router_);
   items->onResponse.connect([&] (shared_ptr<DiscoItems> payload, ErrorPayload::ref error) {
     if (error) {
@@ -207,13 +207,13 @@ void ChannelController::DiscoverService() {
     LOG(TRACE) << "Channel " << jid_ << " : handling domain disco items ... ";
     vector<DiscoItems::Item>::const_iterator it = payload->getItems().begin();
     GetDiscoInfoRequest::ref info = GetDiscoInfoRequest::create(it->getJID(), router_);
-    info->onResponse.connect(bind(&ChannelController::handleDomainItemInfo, this, _1, _2, payload, it));
+    info->onResponse.connect(bind(&Channel::handleDomainItemInfo, this, _1, _2, payload, it));
     info->send();
   });
   items->send();
 }
 
-void ChannelController::handleDomainItemInfo(DiscoInfo::ref payload, ErrorPayload::ref error, shared_ptr<DiscoItems> items, vector<DiscoItems::Item>::const_iterator it) {
+void Channel::handleDomainItemInfo(DiscoInfo::ref payload, ErrorPayload::ref error, shared_ptr<DiscoItems> items, vector<DiscoItems::Item>::const_iterator it) {
   if (error) {
     LOG(ERROR) << error->getText();
   } else {
@@ -239,7 +239,7 @@ void ChannelController::handleDomainItemInfo(DiscoInfo::ref payload, ErrorPayloa
       onError(ChannelsServiceUnavailable);
     } else {
       GetDiscoInfoRequest::ref info = GetDiscoInfoRequest::create(it->getJID(), router_);
-      info->onResponse.connect(bind(&ChannelController::handleDomainItemInfo, this, _1, _2, items, it));
+      info->onResponse.connect(bind(&Channel::handleDomainItemInfo, this, _1, _2, items, it));
       info->send();
     }
   }
@@ -249,12 +249,12 @@ void ChannelController::handleDomainItemInfo(DiscoInfo::ref payload, ErrorPayloa
  * Internal structures manipulation
  */
 
-Post1* ChannelController::AddPost(Atom::ref atom, bool signal) {
+Post* Channel::AddPost(Atom::ref atom, bool signal) {
   if (posts_map_.count(atom->getID()) > 0) {
     return posts_map_[atom->getID()];
   } else {
     // create new post
-    Post1* post = new Post1(this);
+    Post* post = new Post(this);
     post->SetID(atom->getID());
     post->SetAuthor(atom->getAuthor());
     post->SetAuthorJID(atom->getAuthorJID());
@@ -268,9 +268,9 @@ Post1* ChannelController::AddPost(Atom::ref atom, bool signal) {
   }
 }
 
-void ChannelController::RemovePost(const std::string &id) {
+void Channel::RemovePost(const std::string &id) {
   if (posts_map_.count(id) > 0) {
-    vector<Post1*>::iterator it = std::find_if(posts_.begin(), posts_.end(), [&] (const Post1* p) { return p->GetID() == id; });
+    vector<Post*>::iterator it = std::find_if(posts_.begin(), posts_.end(), [&] (const Post* p) { return p->GetID() == id; });
     if (it != posts_.end())
       posts_.erase(it);
     posts_map_.erase(id);
@@ -278,7 +278,7 @@ void ChannelController::RemovePost(const std::string &id) {
   }
 }
 
-Post1* ChannelController::GetPost(const std::string &id) {
+Post* Channel::GetPost(const std::string &id) {
   if (posts_map_.count(id) > 0)
     return posts_map_[id];
   else

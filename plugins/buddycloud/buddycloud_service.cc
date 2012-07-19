@@ -16,7 +16,7 @@
 
 using namespace sdc;
 
-ServiceModel* BuddycloudService::CreateServiceModel(AccountData* account_data) {
+ServiceModel* BuddycloudService::CreateServiceModel(Account* account_data) {
   return new BcModel(account_data);
 }
 

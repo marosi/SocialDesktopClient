@@ -6,11 +6,11 @@
  */
 
 #include "service_model.h"
-#include "account_data.h"
+#include "account.h"
 
 namespace sdc {
 
-ServiceModel::ServiceModel(AccountData* account)
+ServiceModel::ServiceModel(Account* account)
   : account_(account) {
   service_ = account->GetService();
 }

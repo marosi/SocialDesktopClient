@@ -32,17 +32,17 @@
 #include <set>
 
 class BcContact;
-class ChannelController;
+class Channel;
 class Comment;
 class FilesystemStorages;
-class Post1;
+class Post;
 
 class BcModel : public sdc::QtServiceModel {
   public:
     friend class BuddycloudConnection;
-    friend class ChannelController;
+    friend class Channel;
 
-    BcModel(sdc::AccountData* account);
+    BcModel(sdc::Account* account);
     ~BcModel();
 
     void Run();
@@ -61,8 +61,8 @@ class BcModel : public sdc::QtServiceModel {
      */
     BcContact* GetContact(const Swift::JID &jid);
     Swift::JID GetOwnJID() { return jid_; }
-    ChannelController* GetChannel(const Swift::JID &jid);
-    ChannelController* GetOwnChannel() { return own_channel_; }
+    Channel* GetChannel(const Swift::JID &jid);
+    Channel* GetOwnChannel() { return own_channel_; }
 
     void AddNewContact(const Swift::JID &jid);
     void RemoveContact(const Swift::JID &jid);
@@ -88,7 +88,7 @@ class BcModel : public sdc::QtServiceModel {
     boost::signals2::signal<void (const Swift::JID)> onContactAdded;
     boost::signals2::signal<void (const Swift::JID)> onContactRemoved;
 
-    boost::signals2::signal<void (const Post1*)> onNewPost;
+    boost::signals2::signal<void (const Post*)> onNewPost;
     boost::signals2::signal<void (const Comment*)> onNewComment;
 
     boost::signals2::signal<void (Swift::VCard::ref)> onOwnVCardUpdated; // TODO: signal never emitted
@@ -124,7 +124,7 @@ class BcModel : public sdc::QtServiceModel {
     void AddParserFactory(Swift::PayloadParserFactory* factory);
     void AddSerializer(Swift::PayloadSerializer* serializer);
     void AddContact(const Swift::XMPPRosterItem &item);
-    ChannelController* CreateChannel(const Swift::JID &jid);
+    Channel* CreateChannel(const Swift::JID &jid);
     /*
      * Miscellaneous
      */
@@ -133,7 +133,7 @@ class BcModel : public sdc::QtServiceModel {
     /**
      * SDC data
      */
-    sdc::AccountData* account_;
+    sdc::Account* account_;
     std::vector<BcContact*> contacts_;
     std::map<Swift::JID, BcContact*> contacts_map_;
     /**
@@ -143,9 +143,9 @@ class BcModel : public sdc::QtServiceModel {
     /**
      * Channels
      */
-    ChannelController* own_channel_;
-    std::vector<ChannelController*> channels_;
-    std::map<Swift::JID, ChannelController*> channels_map_;
+    Channel* own_channel_;
+    std::vector<Channel*> channels_;
+    std::map<Swift::JID, Channel*> channels_map_;
     /**
      * Channel client data
      */

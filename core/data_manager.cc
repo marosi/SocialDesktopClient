@@ -1,12 +1,12 @@
 /*
- * config_manager.cc
+ * data_manager.cc
  *
  *			Author: Maros Kasinec
  *  Created on: Aug 6, 2011
  */
 
-#include "config_manager.h"
-#include "account_data.h"
+#include "data_manager.h"
+#include "account.h"
 #include "log.h"
 #include "boost/archive/xml_iarchive.hpp"
 #include "boost/archive/xml_oarchive.hpp"
@@ -14,9 +14,9 @@
 
 namespace sdc {
 
-const std::string ConfigManager::kConfFile = "sdc.xml";
+const std::string DataManager::kConfFile = "sdc.xml";
 
-void ConfigManager::Init() {
+void DataManager::Init() {
   // Load configuration
   std::ifstream file(kConfFile.c_str());
   if (!file.is_open()) {
@@ -35,7 +35,7 @@ void ConfigManager::Init() {
   }
 }
 
-void ConfigManager::OnExit() {
+void DataManager::OnExit() {
   std::ofstream file(kConfFile.c_str());
   {
     boost::archive::xml_oarchive archive(file);

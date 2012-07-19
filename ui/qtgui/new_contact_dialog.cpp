@@ -1,6 +1,6 @@
 #include "core.h"
 #include "new_contact_dialog.h"
-#include "account_data.h"
+#include "account.h"
 #include "service.h"
 #include "qt_service.h"
 #include "service_model.h"

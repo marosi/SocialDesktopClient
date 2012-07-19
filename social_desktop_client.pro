@@ -16,7 +16,6 @@ HEADERS += ui/qtgui/bind.h \
     ui/qtgui/qt_service.h \
     ui/qtgui/new_account_dialog.h \
     ui/qtgui/qt_service_model.h \
-    core/include/account_data.h \
     ui/qtgui/qt_view.h \
     ui/qtgui/qt_gui.h \
     ui/qtgui/settings_dialog.h \
@@ -30,12 +29,13 @@ HEADERS += ui/qtgui/bind.h \
     core/include/log.h \
     core/include/common.h \
     core/include/service.h \
-    core/include/config_manager.h \
     core/include/plugin_manager.h \
     core/include/properties.h \
     ui/qtgui/accounts_model.h \
     ui/qtgui/activity_panel.h \
-    ui/qtgui/activity.h
+    ui/qtgui/activity.h \
+    core/include/account.h \
+    core/include/data_manager.h
 SOURCES += ui/qtgui/service_presenter.cc \
     ui/qtgui/main_window.cpp \
     ui/qtgui/new_contact_dialog.cpp \
@@ -53,12 +53,12 @@ SOURCES += ui/qtgui/service_presenter.cc \
     core/core.cc \
     core/log.cc \
     core/service.cc \
-    core/config_manager.cc \
     core/plugin_manager.cc \
     main.cpp \
     ui/qtgui/accounts_model.cpp \
     ui/qtgui/activity_panel.cpp \
-    ui/qtgui/activity.cpp
+    ui/qtgui/activity.cpp \
+    core/data_manager.cc
 FORMS += ui/qtgui/main_window.ui \
     ui/qtgui/new_contact_dialog.ui \
     ui/qtgui/content_panel.ui \

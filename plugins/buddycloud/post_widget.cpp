@@ -9,7 +9,7 @@
 #include "bind.h"
 #include "boost/date_time/posix_time/time_formatters.hpp"
 
-PostWidget::PostWidget(AbstractPresenter* presenter, Post1* post)
+PostWidget::PostWidget(AbstractPresenter* presenter, Post* post)
     : AbstractPresenter(presenter),
       post_(post) {
 	ui.setupUi(this);

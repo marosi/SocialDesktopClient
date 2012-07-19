@@ -1,5 +1,5 @@
 /**
- * @file account_data.h
+ * @file account.h
  * @brief TODO:
  *	
  * TODO: Complete detailed description
@@ -8,8 +8,8 @@
  *   @date Apr 14, 2012
  */
 
-#ifndef CORE_ACCOUNT_DATA_H_
-#define CORE_ACCOUNT_DATA_H_
+#ifndef CORE_ACCOUNT_H_
+#define CORE_ACCOUNT_H_
 
 #include "common.h"
 #include "properties.h"
@@ -23,7 +23,7 @@ namespace sdc {
 class Service;
 class ServiceModel;
 
-class AccountData : public Properties {
+class Account : public Properties {
  public:
   friend class boost::serialization::access;
 
@@ -32,7 +32,7 @@ class AccountData : public Properties {
     Online = 1
   };
 
-  AccountData()
+  Account()
       : service_ptr_(0),
         service_model_ptr_(0) {}
 
@@ -140,4 +140,4 @@ class AccountData : public Properties {
 
 } /* namespace sdc */
 
-#endif /* CORE_ACCOUNT_DATA_H_ */
+#endif /* CORE_ACCOUNT_H_ */

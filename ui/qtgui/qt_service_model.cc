@@ -11,7 +11,7 @@
 
 namespace sdc {
 
-QtServiceModel::QtServiceModel(AccountData* account) : ServiceModel(account) {
+QtServiceModel::QtServiceModel(Account* account) : ServiceModel(account) {
 
 }
 

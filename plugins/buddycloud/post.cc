@@ -10,17 +10,17 @@
 #include "Swiften/Base/DateTime.h"
 #include <algorithm>
 
-Post1::Post1(ChannelController* channel) : Content(channel), channel_(channel) {}
+Post::Post(Channel* channel) : Content(channel), channel_(channel) {}
 
-void Post1::Delete() {
+void Post::Delete() {
   channel_->DeletePost(this);
 }
 
-void Post1::PostComment(const std::string &content) {
+void Post::PostComment(const std::string &content) {
   channel_->PublishComment(GetID(), content);
 }
 
-Comment* Post1::AddComment(Atom::ref atom, bool signal) {
+Comment* Post::AddComment(Atom::ref atom, bool signal) {
   std::vector<Comment*>::iterator it =
       std::find_if(comments_.begin(), comments_.end(),
                    [&] (const Comment* c) { return c->GetID() == atom->getID(); });
@@ -40,7 +40,7 @@ Comment* Post1::AddComment(Atom::ref atom, bool signal) {
   }
 }
 
-Comment::Comment(Post1* post) : Content(post), post_(post) {
+Comment::Comment(Post* post) : Content(post), post_(post) {
   comment_on_id_ = post_->GetID();
 }
 

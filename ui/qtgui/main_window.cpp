@@ -6,7 +6,7 @@
  */
 
 #include "main_window.h"
-#include "account_data.h"
+#include "account.h"
 #include "activity_panel.h"
 #include "contact_widget.h"
 #include "content_panel.h"

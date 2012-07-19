@@ -6,7 +6,7 @@
  */
 
 #include "core.h"
-#include "account_data.h"
+#include "account.h"
 #include "log.h"
 #include "service_model.h"
 #include "ui.h"
@@ -92,7 +92,7 @@ void Core::Start() {
   /*
    * Map service object with loaded accounts
    */
-  for (AccountData* account : data()->accounts()) {
+  for (Account* account : data()->accounts()) {
     if (services_.count(account->GetServiceSignature()) > 0) {
       Service* service = services_[account->GetServiceSignature()];
       account->SetService(service);
@@ -129,7 +129,7 @@ void Core::Exit() {
 }
 
 void Core::Init() {
-  config_manager_ = new ConfigManager(this);
+  config_manager_ = new DataManager(this);
   plugin_manager_ = new PluginManager(this);
   event_manager_ = new EventManager(this);
 }
@@ -143,7 +143,7 @@ void Core::Exec() {
   }
   onGuiPrepared();
   // activate enabled accounts
-  for (AccountData* account : data()->accounts()) {
+  for (Account* account : data()->accounts()) {
     if (account->IsEnabled()) {
       this->ActivateAccount(account);
     }
@@ -172,7 +172,7 @@ void Core::ExecUi() {
  * ServiceModels handling
  */
 
-void Core::ActivateAccount(AccountData* account) {
+void Core::ActivateAccount(Account* account) {
   // create account resource directory if none exists
   filesystem::path p(account->GetDir());
   if (!filesystem::exists(p)) {
@@ -200,7 +200,7 @@ void Core::ActivateAccount(AccountData* account) {
   onAccountActivated(account->GetId());
 }
 
-void Core::DeactivateAccount(AccountData* account) {
+void Core::DeactivateAccount(Account* account) {
   if (service_models_map_.count(account->GetId()) == 0)
     return;
   ServiceModel* model = service_models_map_[account->GetId()];

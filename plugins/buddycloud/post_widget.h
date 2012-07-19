@@ -8,7 +8,7 @@
 #include <QMap>
 
 class CommentWidget;
-class Post1;
+class Post;
 class Comment;
 
 class PostWidget : public QWidget, public AbstractPresenter {
@@ -16,7 +16,7 @@ class PostWidget : public QWidget, public AbstractPresenter {
     Q_OBJECT
 
  public:
-  PostWidget(AbstractPresenter* presenter, Post1* post);
+  PostWidget(AbstractPresenter* presenter, Post* post);
   ~PostWidget();
 
  public slots:
@@ -31,7 +31,7 @@ class PostWidget : public QWidget, public AbstractPresenter {
 
  private:
   Ui::PostWidgetClass ui;
-  Post1* post_;
+  Post* post_;
   QList<Comment*> comments_order_;
   QMap<Comment*, CommentWidget*> comments_;
 };

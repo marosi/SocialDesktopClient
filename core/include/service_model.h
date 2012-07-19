@@ -15,7 +15,7 @@
 
 namespace sdc {
 
-class AccountData;
+class Account;
 class Service;
 
 class ServiceModel : public CoreAnchor {
@@ -23,7 +23,7 @@ class ServiceModel : public CoreAnchor {
   friend class Core;
   friend class ServiceManager;
 
-  ServiceModel(AccountData* account);
+  ServiceModel(Account* account);
   virtual ~ServiceModel() {}
 
   virtual void Run()=0;
@@ -31,13 +31,13 @@ class ServiceModel : public CoreAnchor {
   virtual void Connect()=0;
   virtual void Disconnect()=0;
 
-  AccountData* account() const { return account_; }
+  Account* account() const { return account_; }
   Service* service() const { return service_; }
 
  private:
   void DoRun();
 
-  AccountData* account_;
+  Account* account_;
   Service* service_; // set in Core class
 };
 

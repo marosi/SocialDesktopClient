@@ -1,5 +1,5 @@
 /**
- * @file config_manager.h
+ * @file data_manager.h
  * @brief SDC configuration interface. User specific configuration data.
  *
  * @author Maros Kasinec
@@ -9,7 +9,7 @@
 #ifndef CORE_CONFIGMANAGER_H_
 #define CORE_CONFIGMANAGER_H_
 
-#include "account_data.h"
+#include "account.h"
 #include "abstract_manager.h"
 #include "properties.h"
 #include "boost/serialization/nvp.hpp"
@@ -39,16 +39,16 @@ class Library {
   }
 };
 
-class AccountData;
+class Account;
 
 /// @class ConfigManager
 /// @brief Maintains application configuration and provides interface for other managers.
-class ConfigManager : public AbstractManager, public Properties {
+class DataManager : public AbstractManager, public Properties {
  public:
   friend class boost::serialization::access;
   friend class Core;
 
-  ConfigManager(Core* core) : AbstractManager(core) {}
+  DataManager(Core* core) : AbstractManager(core) {}
   void Init();
 
   void SetEnabledAccount(int index, bool is_enabled) {
@@ -63,13 +63,13 @@ class ConfigManager : public AbstractManager, public Properties {
     }
   }
 
-  void AddAccount(AccountData* account) {
+  void AddAccount(Account* account) {
     accounts_.push_back(account);
     SetEnabledAccount(accounts_.size() - 1, true);
     onAccountsChanged();
   }
 
-  void SetAccount(int index, AccountData* data) {
+  void SetAccount(int index, Account* data) {
     accounts_[index] = data;
     onAccountsChanged();
   }
@@ -80,28 +80,28 @@ class ConfigManager : public AbstractManager, public Properties {
     onAccountsChanged();
   }
 
-  AccountData* GetAccount(int index) {
+  Account* GetAccount(int index) {
     return accounts_[index];
   }
 
-  std::vector<AccountData*> GetAccounts() const {
+  std::vector<Account*> GetAccounts() const {
     return accounts_;
   }
 
   void OnExit();
 
   boost::signals2::signal<void ()> onAccountsChanged;
-  boost::signals2::signal<void (AccountData*)> onAccountEnabled;
-  boost::signals2::signal<void (AccountData*)> onAccountDisabled;
+  boost::signals2::signal<void (Account*)> onAccountEnabled;
+  boost::signals2::signal<void (Account*)> onAccountDisabled;
 
  private:
-  std::vector<AccountData*>& accounts() {
+  std::vector<Account*>& accounts() {
     return accounts_;
   }
 
   static const std::string kConfFile;
   std::vector<Library> libraries_;
-  std::vector<AccountData*> accounts_;
+  std::vector<Account*> accounts_;
 
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version) {

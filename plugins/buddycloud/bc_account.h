@@ -11,9 +11,9 @@
 #ifndef BC_ACCOUNT_H_
 #define BC_ACCOUNT_H_
 
-#include "sdc.h"
+#include "account.h"
 
-class BcAccount : public sdc::AccountData {
+class BcAccount : public sdc::Account {
 
 };
 

@@ -24,7 +24,7 @@ class NewAccountDialog : public QDialog, public QtView
   /**
    * Fills fields of certain account based on index
    */
-  void SetAccountForEditing(AccountData* account);
+  void SetAccountForEditing(Account* account);
 
  public slots:
   void accept();
@@ -38,7 +38,7 @@ class NewAccountDialog : public QDialog, public QtView
   QMap<QString, int> combobox_service_index_;
   QMap<QString, NewAccountWidget*> service_panes_;
   NewAccountWidget* current_pane_;
-  AccountData* account_;
+  Account* account_;
 };
 
 } /* namespace sdc */

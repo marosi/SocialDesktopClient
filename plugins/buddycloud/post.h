@@ -18,7 +18,7 @@
 #include "boost/date_time/posix_time/ptime.hpp"
 #include <string>
 
-class ChannelController;
+class Channel;
 class Comment;
 
 class Content : public AbstractModel {
@@ -44,12 +44,12 @@ class Content : public AbstractModel {
   boost::posix_time::ptime published_;
 };
 
-class Post1 : public Content {
+class Post : public Content {
  public:
-  friend class ChannelController;
+  friend class Channel;
   friend class BcModel;
 
-  Post1(ChannelController* channel);
+  Post(Channel* channel);
   void Delete();
   void PostComment(const std::string &content);
 
@@ -57,7 +57,7 @@ class Post1 : public Content {
     return comments_;
   }
 
-  const ChannelController* channel() const {
+  const Channel* channel() const {
     return channel_;
   }
 
@@ -66,22 +66,22 @@ class Post1 : public Content {
  private:
   Comment* AddComment(Atom::ref atom, bool signal = true);
 
-  ChannelController* channel_;
+  Channel* channel_;
   std::vector<Comment*> comments_;
 };
 
 class Comment : public Content {
  public:
-  Comment(Post1* post);
+  Comment(Post* post);
 
   const std::string& GetCommentedID() const;
 
-  const Post1* post() const {
+  const Post* post() const {
     return post_;
   }
 
  private:
-  Post1* post_;
+  Post* post_;
   std::string comment_on_id_;
 };
 

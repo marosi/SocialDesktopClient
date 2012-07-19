@@ -4,7 +4,7 @@
 #include "Swiften/Disco/CapsMemoryStorage.h"
 #include "Swiften/Roster/RosterMemoryStorage.h"
 
-FilesystemStorages::FilesystemStorages(const std::string &service_dir, sdc::AccountData* account) {
+FilesystemStorages::FilesystemStorages(const std::string &service_dir, sdc::Account* account) {
   vcard_storage_ = new Swift::VCardMemoryStorage();
   avatar_storage_ = new AvatarFilesystemStorage(service_dir, account);
   caps_storage_ = new Swift::CapsMemoryStorage();

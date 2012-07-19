@@ -15,6 +15,6 @@ BcContact::BcContact(BcModel* model, const Swift::JID &jid)
       model_(model),
       jid_(jid) {}
 
-ChannelController* BcContact::GetChannel() {
+Channel* BcContact::GetChannel() {
   return model_->GetChannel(jid_);
 }

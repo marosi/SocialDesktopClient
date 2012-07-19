@@ -7,13 +7,13 @@
 
 namespace sdc {
 
-class AccountData;
+class Account;
 
 }
 
 class FilesystemStorages : public Swift::Storages {
  public:
-  FilesystemStorages(const std::string &service_dir, sdc::AccountData* account);
+  FilesystemStorages(const std::string &service_dir, sdc::Account* account);
   ~FilesystemStorages();
 
   Swift::VCardStorage* getVCardStorage() const;

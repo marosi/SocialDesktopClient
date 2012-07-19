@@ -18,6 +18,8 @@
 #include "boost/shared_ptr.hpp"
 #include <fstream>
 
+#include "account.h"
+
 using namespace Swift;
 using namespace boost;
 using namespace sdc;
@@ -68,7 +70,7 @@ using std::vector;
 /**
  * PUBLIC INTERFACE
  */
-BcModel::BcModel(sdc::AccountData* account)
+BcModel::BcModel(sdc::Account* account)
     : QtServiceModel(account),
       own_channel_(0) {
   // initialize
@@ -151,7 +153,7 @@ BcModel::~BcModel() {
   LOG(TRACE) << "Buddycloud service model is destroying";
   if (own_channel_)
     delete own_channel_;
-  for (ChannelController* ch : channels_) {
+  for (Channel* ch : channels_) {
     delete ch;
   }
   for (BcContact* c : contacts_) {
@@ -228,7 +230,7 @@ BcContact* BcModel::GetContact(const Swift::JID &jid) {
     return 0;
 }
 
-ChannelController* BcModel::GetChannel(const Swift::JID &jid) {
+Channel* BcModel::GetChannel(const Swift::JID &jid) {
   if (channels_map_.count(jid) > 0)
     return channels_map_[jid];
   return CreateChannel(jid);
@@ -279,14 +281,14 @@ void BcModel::handleConnected() {
   // initialize own channel
   if (!own_channel_) {
     own_channel_ = CreateChannel(jid_);
-    own_channel_->onChannelsServiceAvailable.connect([&] (ChannelController::ChannelServiceInfo info) {
+    own_channel_->onChannelsServiceAvailable.connect([&] (Channel::ChannelServiceInfo info) {
       service_jid_ = info.jid;
       is_service_registration_available_ = info.is_registration_available;
     });
     // Handle errors
-    own_channel_->onError.connect([&] (ChannelController::Error error) {
+    own_channel_->onError.connect([&] (Channel::Error error) {
       switch (error) {
-        case ChannelController::UserChannelNotPresent:
+        case Channel::UserChannelNotPresent:
           LOG(WARNING) << "Jabber user '" << jid_ << "' has not registered channel yet. \n";
           if (is_service_registration_available_) {
             LOG(TRACE) << "Trying to register user to service '" << service_jid_.toString() << "'.";
@@ -307,7 +309,7 @@ void BcModel::handleConnected() {
             LOG(ERROR) << "Registration to channel service '" << service_jid_.toString() << "' is not available!";
           }
           break;
-        case ChannelController::ChannelsServiceUnavailable:
+        case Channel::ChannelsServiceUnavailable:
           break;
         default:
           assert(false);
@@ -334,19 +336,19 @@ void BcModel::handleMessageReceived(Message::ref message) {
   // is message event payload
   if (EventPayload::ref event = message->getPayload<EventPayload>()) {
     LOG(DEBUG2) << "Event from node: " << event->getNode();
-    for (ChannelController* channel : channels_) {
+    for (Channel* channel : channels_) {
       LOG(DEBUG3) << "Iterating through channel: " << channel->posts_node_;
       if (channel->posts_node_ == event->getNode()) {
         for (Atom::ref atom : event->getItems()->get()) {
           if (atom->getObjectType() == Atom::Comment) {
             LOG(DEBUG4) << "In reply to: " << atom->getInReplyTo();
-            Post1* post = channel->GetPost(atom->getInReplyTo());
+            Post* post = channel->GetPost(atom->getInReplyTo());
             if (post) {
               Comment* comment = post->AddComment(atom);
               onNewComment(comment);
             }
           } else {
-            Post1* post = channel->AddPost(atom);
+            Post* post = channel->AddPost(atom);
             onNewPost(post);
           }
         }
@@ -524,10 +526,10 @@ void BcModel::AddContact(const Swift::XMPPRosterItem &item) {
   }
 }
 
-ChannelController* BcModel::CreateChannel(const Swift::JID &jid) {
+Channel* BcModel::CreateChannel(const Swift::JID &jid) {
   if (channels_map_.count(jid) > 0)
     return channels_map_[jid];
-  ChannelController* channel = new ChannelController(this, jid);
+  Channel* channel = new Channel(this, jid);
   channels_.push_back(channel);
   channels_map_[jid] = channel;
   return channel;

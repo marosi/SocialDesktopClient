@@ -1,14 +1,13 @@
+#include "account.h"
 #include "core.h"
-#include "new_account_dialog.h"
+#include "data_manager.h"
 #include "log.h"
+#include "new_account_dialog.h"
 #include "new_account_widget.h"
 #include "service.h"
 #include "qt_service.h"
-#include "config_manager.h"
-#include "account_data.h"
 #include <QVariant>
 #include <QMessageBox>
-#include "boost/foreach.hpp"
 #include "boost/cast.hpp"
 
 namespace sdc {
@@ -48,7 +47,7 @@ NewAccountDialog::NewAccountDialog(QWidget *parent)
 
 NewAccountDialog::~NewAccountDialog() {}
 
-void NewAccountDialog::SetAccountForEditing(AccountData* account) {
+void NewAccountDialog::SetAccountForEditing(Account* account) {
   QString signature = QString::fromStdString(account->GetServiceSignature());
   ui.servicesComboBox->setCurrentIndex(combobox_service_index_[signature]);
   service_panes_[signature]->BindDataFrom(account);
@@ -61,7 +60,7 @@ void NewAccountDialog::accept() {
     if (account_) {
       current_pane_->BindDataTo(account_);
     } else { // Create new account
-      AccountData* account = current_pane_->CreateNew();
+      Account* account = current_pane_->CreateNew();
       QVariant data = ui.servicesComboBox->itemData(ui.servicesComboBox->currentIndex());
       account->SetServiceSignature(data.toString().toStdString());
       core()->data()->AddAccount(account);

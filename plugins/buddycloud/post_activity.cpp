@@ -3,7 +3,7 @@
 #include "channel.h"
 #include "post.h"
 
-PostActivity::PostActivity(BcPresenter* parent, const Post1* post)
+PostActivity::PostActivity(BcPresenter* parent, const Post* post)
     : presenter_(parent), post_(post) {
   image_label()->setPixmap(presenter_->GetAvatar(post_->GetAuthorJID())->GetPixmap());
   QString text = QString::fromStdString(post_->GetAuthor() + " posted on " + post_->channel()->JID().toString());

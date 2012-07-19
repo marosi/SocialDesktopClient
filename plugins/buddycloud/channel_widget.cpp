@@ -13,7 +13,7 @@
 #include <QtAlgorithms>
 #include <algorithm>
 
-ChannelWidget::ChannelWidget(AbstractPresenter* presenter, ChannelController* channel)
+ChannelWidget::ChannelWidget(AbstractPresenter* presenter, Channel* channel)
     : AbstractPresenter(presenter),
       channel_(channel) {
   { // set new post button
@@ -44,8 +44,8 @@ ChannelWidget::ChannelWidget(AbstractPresenter* presenter, ChannelController* ch
   connect(scroll_bar_, SIGNAL(valueChanged(int)),
       this, SLOT(OnScrollBarValueChanged(int)));
   // bind model events
-  sdc::bind(channel_->onNewPostsRetrieved, [&] (const std::vector<Post1*> posts) {
-    for (Post1* post : posts) {
+  sdc::bind(channel_->onNewPostsRetrieved, [&] (const std::vector<Post*> posts) {
+    for (Post* post : posts) {
       ShowPostInOrder(post);
     }
   });
@@ -55,12 +55,12 @@ ChannelWidget::ChannelWidget(AbstractPresenter* presenter, ChannelController* ch
   sdc::bind(channel_->onChannelDescriptionChange, [&] (const std::string description) {
     setToolTip(QString::fromStdString(description));
   });
-  sdc::bind(channel_->onPostAdded, [&] (Post1* post) {
+  sdc::bind(channel_->onPostAdded, [&] (Post* post) {
     ShowPostInOrder(post);
   });
   sdc::bind(channel_->onPostDeleted, [&] (const std::string id) {
-    QList<Post1*>::iterator it = std::find_if(posts_order_.begin(), posts_order_.end(),
-        [&] (const Post1* p) { return p->GetID() == id; });
+    QList<Post*>::iterator it = std::find_if(posts_order_.begin(), posts_order_.end(),
+        [&] (const Post* p) { return p->GetID() == id; });
     PostWidget* pw = posts_[*it];
     posts_.remove(*it);
     posts_order_.erase(it);
@@ -94,10 +94,10 @@ void ChannelWidget::OnScrollBarValueChanged(int value) {
   old_scroll_bar_value_ = value;
 }
 
-void ChannelWidget::ShowPostInOrder(Post1* post) {
+void ChannelWidget::ShowPostInOrder(Post* post) {
   PostWidget* pw = new PostWidget(this, post);
-  QList<Post1*>::iterator it = qUpperBound(posts_order_.begin(), posts_order_.end(), post,
-      [&] (const Post1* p1, const Post1* p2) { return p1->GetPublished() > p2->GetPublished(); });
+  QList<Post*>::iterator it = qUpperBound(posts_order_.begin(), posts_order_.end(), post,
+      [&] (const Post* p1, const Post* p2) { return p1->GetPublished() > p2->GetPublished(); });
   posts_order_.insert(it, post);
   posts_[post] = pw;
   content_layout()->insertWidget(posts_order_.indexOf(post), pw);

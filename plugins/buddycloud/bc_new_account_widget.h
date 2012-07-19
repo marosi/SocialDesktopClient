@@ -16,17 +16,17 @@ class BcNewAccountWidget : public sdc::NewAccountWidget
   }
   ~BcNewAccountWidget() {}
 
-  void BindDataTo(sdc::AccountData* account) {
+  void BindDataTo(sdc::Account* account) {
     account->SetUid(ui.usernameLineEdit->text().toStdString());
     account->SetPassword(ui.passwordLineEdit->text().toStdString());
   }
 
-  void BindDataFrom(const sdc::AccountData* account) {
+  void BindDataFrom(const sdc::Account* account) {
     ui.usernameLineEdit->setText(QString::fromStdString(account->GetUid()));
     ui.passwordLineEdit->setText(QString::fromStdString(account->GetPassword()));
   }
 
-  sdc::AccountData* CreateNew() {
+  sdc::Account* CreateNew() {
     BcAccount* account = new BcAccount;
     this->BindDataTo(account);
     return account;

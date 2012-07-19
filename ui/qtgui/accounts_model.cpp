@@ -1,7 +1,7 @@
 #include "accounts_model.h"
+#include "data_manager.h"
 #include "bind.h"
 #include "core.h"
-#include "config_manager.h"
 #include <string>
 
 using std::string;

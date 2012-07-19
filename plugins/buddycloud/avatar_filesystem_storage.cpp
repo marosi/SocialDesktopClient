@@ -1,6 +1,6 @@
 #include "avatar_filesystem_storage.h"
 #include "boost/filesystem.hpp"
-#include "account_data.h"
+#include "account.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Base/ByteArray.h"
 #include <fstream>
@@ -8,8 +8,8 @@
 using namespace boost::filesystem;
 using namespace Swift;
 
-AvatarFilesystemStorage::AvatarFilesystemStorage(const std::string &service_dir, sdc::AccountData* account)
-    : service_dir_(service_dir), account_dir_(account->GetDir()), account_(account)  {LOG(DEBUG) << "IN AFS CTOR";}
+AvatarFilesystemStorage::AvatarFilesystemStorage(const std::string &service_dir, sdc::Account* account)
+    : service_dir_(service_dir), account_dir_(account->GetDir()), account_(account) {}
 
 AvatarFilesystemStorage::~AvatarFilesystemStorage() {}
 

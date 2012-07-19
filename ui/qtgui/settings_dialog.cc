@@ -1,12 +1,11 @@
 #include "core.h"
+#include "data_manager.h"
 #include "settings_dialog.h"
 #include "new_account_dialog.h"
 #include "service.h"
 #include "accounts_model.h"
 #include <QMessageBox>
 #include "boost/cast.hpp"
-#include "boost/foreach.hpp"
-#include "config_manager.h"
 
 namespace sdc {
 
@@ -79,7 +78,7 @@ void SettingsDialog::DeleteAccount() {
 void SettingsDialog::EditAccount() {
   NewAccountDialog* dialog = new NewAccountDialog(this);
   int index = ui.tableView->selectionModel()->selectedIndexes().first().row();
-  AccountData* account = core()->data()->GetAccount(index);
+  Account* account = core()->data()->GetAccount(index);
   dialog->SetAccountForEditing(account);
 }
 

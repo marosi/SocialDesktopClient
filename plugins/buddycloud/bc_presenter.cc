@@ -56,7 +56,7 @@ void BcPresenter::Init() {
     main_window()->AddContact(this, widget);
   });
 
-  sdc::bind(model_->onNewPost, [&] (const Post1* post) {
+  sdc::bind(model_->onNewPost, [&] (const Post* post) {
     PostActivity* act = new PostActivity(this, post);
     main_window()->activities()->AddActivity(act);
   });

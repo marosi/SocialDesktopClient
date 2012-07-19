@@ -18,7 +18,7 @@ namespace sdc {
 
 class ServiceController;
 class ServiceModel;
-class AccountData;
+class Account;
 
 /// @class Service
 /// @brief TODO:
@@ -44,7 +44,7 @@ class Service {
     return signature_;
   }
 
-  virtual ServiceModel* CreateServiceModel(AccountData*)=0;
+  virtual ServiceModel* CreateServiceModel(Account*)=0;
 
  protected:
   void SetName(const std::string &name) {

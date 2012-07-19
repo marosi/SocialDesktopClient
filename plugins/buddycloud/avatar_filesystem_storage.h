@@ -5,13 +5,13 @@
 
 namespace sdc {
 
-class AccountData;
+class Account;
 
 }
 
 class AvatarFilesystemStorage : public Swift::AvatarStorage {
  public:
-  AvatarFilesystemStorage(const std::string &service_dir, sdc::AccountData* account);
+  AvatarFilesystemStorage(const std::string &service_dir, sdc::Account* account);
   virtual ~AvatarFilesystemStorage();
 
   virtual bool hasAvatar(const std::string& hash) const;
@@ -28,7 +28,7 @@ class AvatarFilesystemStorage : public Swift::AvatarStorage {
 
   boost::filesystem::path service_dir_;
   boost::filesystem::path account_dir_;
-  sdc::AccountData* account_;
+  sdc::Account* account_;
 };
 
 #endif // AVATAR_FILESYSTEM_STORAGE_H

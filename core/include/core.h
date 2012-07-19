@@ -10,7 +10,7 @@
 #define CORE_SOCIALDESKTOPCLIENT_H_
 
 #include "common.h"
-#include "config_manager.h"
+#include "data_manager.h"
 #include "event_manager.h"
 #include "plugin_manager.h"
 #include "boost/noncopyable.hpp"
@@ -23,13 +23,13 @@
 
 namespace sdc {
 
-class AccountData;
+class Account;
 class Service;
 class ServiceModel;
 class UI;
 
 class PluginManager;
-class ConfigManager;
+class DataManager;
 class EventManager;
 class ServiceManager;
 
@@ -47,7 +47,7 @@ class Core : boost::noncopyable {
   EventManager* events() {
     return event_manager_;
   }
-  ConfigManager* data() {
+  DataManager* data() {
     return config_manager_;
 	}
 	PluginManager* plugins() {
@@ -81,14 +81,14 @@ class Core : boost::noncopyable {
   /*
    * Accounts
    */
-  void ActivateAccount(AccountData* data);
-  void DeactivateAccount(AccountData* data);
+  void ActivateAccount(Account* data);
+  void DeactivateAccount(Account* data);
   void MakeServiceThread(ServiceModel* model);
   /*
    * Managers
    */
   PluginManager* plugin_manager_;
-  ConfigManager* config_manager_;
+  DataManager* config_manager_;
   EventManager* event_manager_;
   /*
    * Threading

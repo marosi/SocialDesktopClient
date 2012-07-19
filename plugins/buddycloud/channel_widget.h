@@ -26,7 +26,7 @@ class ChannelWidget : public sdc::ContentPanel, public AbstractPresenter {
     Q_OBJECT
 
  public:
-  ChannelWidget(AbstractPresenter* presenter, ChannelController* channel);
+  ChannelWidget(AbstractPresenter* presenter, Channel* channel);
   ~ChannelWidget();
 
  public slots:
@@ -34,11 +34,11 @@ class ChannelWidget : public sdc::ContentPanel, public AbstractPresenter {
   void OnScrollBarValueChanged(int value);
 
  private:
-  void ShowPostInOrder(Post1* post);
+  void ShowPostInOrder(Post* post);
 
-  ChannelController* channel_;
-  QList<Post1*> posts_order_;
-  QMap<Post1*, PostWidget*> posts_;
+  Channel* channel_;
+  QList<Post*> posts_order_;
+  QMap<Post*, PostWidget*> posts_;
   QToolButton* new_post_button_;
   QWidget* new_post_;
   Ui::NewPostClass new_post_ui;

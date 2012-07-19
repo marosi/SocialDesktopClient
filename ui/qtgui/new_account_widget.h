@@ -11,16 +11,17 @@
 #ifndef NEW_ACCOUNT_WIDGET_H_
 #define NEW_ACCOUNT_WIDGET_H_
 
-#include "account_data.h"
 #include <QWidget>
 
 namespace sdc {
 
+class Account;
+
 class NewAccountWidget : public QWidget {
  public:
-  virtual void BindDataTo(AccountData* account)=0;
-  virtual void BindDataFrom(const AccountData* account)=0;
-  virtual AccountData* CreateNew()=0;
+  virtual void BindDataTo(Account* account)=0;
+  virtual void BindDataFrom(const Account* account)=0;
+  virtual Account* CreateNew()=0;
   virtual bool IsDataValid()=0;
 
   QString GetErrorMessage() {

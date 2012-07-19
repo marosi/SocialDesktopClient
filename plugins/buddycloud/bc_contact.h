@@ -16,13 +16,13 @@
 #include "Swiften/JID/JID.h"
 
 class BcModel;
-class ChannelController;
+class Channel;
 
 class BcContact : public sdc::Contact, public AbstractModel {
  public:
   BcContact(BcModel* model, const Swift::JID &jid);
 
-  ChannelController* GetChannel();
+  Channel* GetChannel();
   const Swift::JID& GetJID() { return jid_; }
 
   boost::signals2::signal<void ()> onChannelRetrieved;
