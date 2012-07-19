@@ -63,7 +63,7 @@ void QtGui::ActivateAccount(const std::string account_id) {
   // create presenter
   ServicePresenter* presenter = model->GetQtService()->CreateServicePresenter();
   // create account button
-  AccountButton* button = new AccountButton(main_window_, model);
+  AccountButton* button = new AccountButton(model);
   main_window_->AddAccountButton(button);
   buttons_[account_id] = button;
   // initialize presenter members

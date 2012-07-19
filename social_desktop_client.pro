@@ -32,11 +32,16 @@ HEADERS += \
     sdc/qtgui/content_panel.h \
     sdc/qtgui/contact_widget.h \
     sdc/qtgui/bind.h \
-    sdc/qtgui/activity_panel.h \
     sdc/qtgui/activity.h \
     sdc/qtgui/accounts_model.h \
     sdc/qtgui/account_button.h \
-    sdc/core/contact.h
+    sdc/core/contact.h \
+    sdc/qtgui/prime_button.h \
+    sdc/qtgui/contacts_button.h \
+    sdc/qtgui/activities_button.h \
+    sdc/qtgui/contacts_panel.h \
+    sdc/qtgui/activities_panel.h \
+    sdc/qtgui/main_button.h
 SOURCES += \
     sdc/core/service_model.cc \
     sdc/core/ui.cc \
@@ -57,10 +62,15 @@ SOURCES += \
     sdc/qtgui/main_window.cpp \
     sdc/qtgui/content_panel.cpp \
     sdc/qtgui/contact_widget.cpp \
-    sdc/qtgui/activity_panel.cpp \
     sdc/qtgui/activity.cpp \
     sdc/qtgui/accounts_model.cpp \
-    sdc/qtgui/account_button.cpp
+    sdc/qtgui/account_button.cpp \
+    sdc/qtgui/prime_button.cpp \
+    sdc/qtgui/contacts_button.cpp \
+    sdc/qtgui/activities_button.cpp \
+    sdc/qtgui/contacts_panel.cpp \
+    sdc/qtgui/activities_panel.cpp \
+    sdc/qtgui/main_button.cpp
 FORMS += \
     sdc/qtgui/settings_dialog.ui \
     sdc/qtgui/new_contact_dialog.ui \
@@ -69,7 +79,8 @@ FORMS += \
     sdc/qtgui/content_panel.ui \
     sdc/qtgui/contact_widget.ui \
     sdc/qtgui/activity.ui \
-    sdc/qtgui/account_button.ui
+    sdc/qtgui/account_button.ui \
+    sdc/qtgui/prime_button.ui
 RESOURCES += 
 INCLUDEPATH += \
     sdc \

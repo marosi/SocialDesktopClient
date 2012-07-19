@@ -15,7 +15,7 @@
 #include "post_activity.h"
 #include "sdc/core/log.h"
 #include "sdc/qtgui/activity.h"
-#include "sdc/qtgui/activity_panel.h"
+#include "sdc/qtgui/activities_panel.h"
 #include <QFile>
 #include <QIcon>
 #include <QPixmap>
@@ -97,5 +97,5 @@ void BcPresenter::UpdateAvatar(const JID &jid) {
 void BcPresenter::SetOwnAvatar(const std::string &file_path) {
   QString path = QString::fromStdString(file_path);
   if (QFile::exists(path))
-    account_button()->tool_button()->setIcon(QIcon(path));
+    account_button()->button()->setIcon(QIcon(path));
 }

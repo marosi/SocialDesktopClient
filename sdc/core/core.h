@@ -39,8 +39,11 @@ class ServiceManager;
  */
 class Core : boost::noncopyable {
  public:
-	Core(int argc, char* argv[]);
-	~Core();
+  static Core* Instance();
+  void SetUI(UI* ui) {
+    ui_ = ui;
+  }
+
 	void Start();
 	void Exit();
 
@@ -75,6 +78,10 @@ class Core : boost::noncopyable {
   boost::signals2::signal<void (const std::string)> onAccountDeactivated;
 
  private:
+  Core();
+  ~Core();
+  static Core* instance_;
+
 	void Init();
 	void Exec();
 	void ExecUi();

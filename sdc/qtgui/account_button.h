@@ -1,28 +1,22 @@
 #ifndef ACCOUNT_BUTTON_H
 #define ACCOUNT_BUTTON_H
 
-#include "qt_view.h"
-#include <QtGui/QWidget>
-#include "ui_account_button.h"
+#include "prime_button.h"
 
 namespace sdc {
 
-class ServiceModel;
+class QtServiceModel;
 
-class AccountButton : public QWidget, public QtView {
+class AccountButton : public PrimeButton {
 
     Q_OBJECT
 
  public:
-  AccountButton(QWidget *parent, QtServiceModel* model);
+  AccountButton(QtServiceModel* model);
   virtual ~AccountButton();
 
   QMenu* menu() {
     return menu_;
-  }
-
-  QToolButton* tool_button() {
-    return ui.toolButton;
   }
 
  protected slots:
@@ -31,10 +25,8 @@ class AccountButton : public QWidget, public QtView {
   void GoOffline();
 
  protected:
-  Ui::AccountButtonClass ui;
   QMenu* menu_;
-
-  ServiceModel* model_; // TODO: Temporary, change to some other account fingerprint
+  QtServiceModel* model_;
 };
 
 } /* namespace sdc */

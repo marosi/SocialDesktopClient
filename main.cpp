@@ -1,10 +1,13 @@
 #include "core.h"
+#include "qt_gui.h"
 
 int main(int argc, char *argv[]) {
 
-  sdc::Core core(argc, argv);
+  // TODO: temporary workaround to set core UI ...
+  sdc::Core* c = sdc::Core::Instance();
+  sdc::Core::Instance()->SetUI(new sdc::QtGui(c, argc, argv));
 
-  core.Start();
+  sdc::Core::Instance()->Start();
 
-  return core.GetReturnCode();
+  return sdc::Core::Instance()->GetReturnCode();
 }

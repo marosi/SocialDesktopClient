@@ -6,11 +6,12 @@
 #include "service_model.h"
 #include "new_contact_widget.h"
 #include <QtGui/QMessageBox>
+#include "boost/cast.hpp"
 
 namespace sdc {
 
 NewContactDialog::NewContactDialog(QWidget *parent)
-    : QDialog(parent), QtView(parent) {
+    : QDialog(parent) {
 	ui.setupUi(this);
 
 
@@ -20,7 +21,7 @@ NewContactDialog::NewContactDialog(QWidget *parent)
 	    this, SLOT(ChangeServicePane(int)));
 
   int i = 1;
-  for (const ServiceModel* model : core()->models()) {
+  for (const ServiceModel* model : Core::Instance()->models()) {
     QString id = QString::fromStdString(model->account()->GetId());
     QVariant data(id);
     ui.servicesComboBox->insertItem(i, QString::fromStdString(model->account()->GetUid()), data);
@@ -44,7 +45,7 @@ void NewContactDialog::ChangeServicePane(int index) {
 
   if (index > 1) {
     std::string account_id = ui.servicesComboBox->itemData(index).toString().toStdString();
-    Service* s = core()->model(account_id)->service();
+    Service* s = Core::Instance()->model(account_id)->service();
     QtService* qs = boost::polymorphic_downcast<QtService*>(s);
     contact_pane_ = qs->CreateNewContactWidget();
     boost::polymorphic_downcast<QVBoxLayout*>(layout())->insertWidget(1, contact_pane_);
@@ -55,7 +56,7 @@ void NewContactDialog::ChangeServicePane(int index) {
 void NewContactDialog::accept() {
   if (contact_pane_->IsInputValid()) {
     std::string id = ui.servicesComboBox->itemData(ui.servicesComboBox->currentIndex()).toString().toStdString();
-    contact_pane_->Process(core()->model(id));
+    contact_pane_->Process(Core::Instance()->model(id));
     this->close();
   } else {
     QMessageBox::warning(this, "Contact error", contact_pane_->GetErrorMessage());

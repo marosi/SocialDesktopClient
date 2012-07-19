@@ -7,11 +7,14 @@
 
 #include "main_window.h"
 #include "account.h"
-#include "activity_panel.h"
+#include "activities_button.h"
+#include "activities_panel.h"
 #include "contact_widget.h"
+#include "contacts_button.h"
+#include "contacts_panel.h"
 #include "content_panel.h"
 #include "log.h"
-#include "new_contact_dialog.h"
+#include "main_button.h"
 #include "qt_service_model.h"
 #include "service_presenter.h"
 #include "settings_dialog.h"
@@ -61,27 +64,46 @@ MainWindow::MainWindow(QtGui* qtgui) :
   ui.setupUi(this);
   ui.statusbar->hide();
   connect(ui.actionSettings, SIGNAL(triggered()), this, SLOT(ShowSettingsDialog()));
-  connect(ui.addContactButton, SIGNAL(clicked()), this, SLOT(ShowNewContactDialog()));
   // grouping
   grouped_by_account_ = new GroupedBy<ServicePresenter*>(
-      [&] (const ContactWidget* w, const ServicePresenter* p) { return QString::fromStdString(p->model()->account()->GetUid()); });
-  ui.contactsContents->setLayout(grouped_by_account_->GetLayout());
+      [&] (const ContactWidget*, const ServicePresenter* p) { return QString::fromStdString(p->model()->account()->GetUid()); });
+
+  //layout()->setSizeConstraint(QLayout::SetFixedSize);
+
+  main_button_ = new MainButton;
+  ui.primesLayout->insertWidget(0, main_button_);
+
+  contacts_button_ = new ContactsButton;
+  ui.primesLayout->insertWidget(2, contacts_button_);
+
+  activities_button_ = new ActivitiesButton;
+  ui.primesLayout->insertWidget(3, activities_button_);
+
+  // contacts
+  contacts_panel_ = new ContactsPanel;
+  contacts_button_->SetPanel(contacts_panel_);
+  ui.contentFrame->layout()->addWidget(contacts_panel_);
+
+  delete contacts_panel_->content_pane()->layout();
+  contacts_panel_->content_pane()->setLayout(grouped_by_account_->GetLayout());
+
   // activities
-  activities_ = new ActivityPanel();
+  activities_ = new ActivitiesPanel;
+  activities_button_->SetPanel(activities_);
   ui.contentFrame->layout()->addWidget(activities_);
 }
 
 MainWindow::~MainWindow() {}
 
 void MainWindow::AddAccountButton(AccountButton* button) {
-  ui.accountsLayout->addWidget(button);
+  ui.primesLayout->addWidget(button);
   buttons_ << button;
 }
 
 void MainWindow::RemoveAccountButton(AccountButton* button) {
   if (buttons_.contains(button)) {
     buttons_.removeOne(button);
-    ui.accountsLayout->removeWidget(button);
+    ui.primesLayout->removeWidget(button);
     delete button;
   }
 }
@@ -92,6 +114,7 @@ void MainWindow::AddContact(ServicePresenter* parent, ContactWidget* contact) {
       qtgui()->GetModel(parent)->account()->GetUid();
   contact->setToolTip(QString::fromStdString(tooltip));
   contacts_.insert(parent, contact);
+  //contacts_panel_->content_layout()
   grouped_by_account_->Insert(contact, parent);
 }
 
@@ -115,11 +138,6 @@ void MainWindow::RemoveAllContentPanels(ServicePresenter* parent) {
 
 void MainWindow::ShowSettingsDialog() {
   settings_ = new SettingsDialog(this);
-}
-
-void MainWindow::ShowNewContactDialog() {
-  NewContactDialog* dialog = new NewContactDialog(this);
-  dialog->exec();
 }
 
 } /* namespace sdc */

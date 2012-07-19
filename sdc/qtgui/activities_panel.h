@@ -1,5 +1,5 @@
-#ifndef ACTIVITY_PANEL_H
-#define ACTIVITY_PANEL_H
+#ifndef ACTIVITIES_PANEL_H
+#define ACTIVITIES_PANEL_H
 
 #include "content_panel.h"
 #include <QList>
@@ -8,9 +8,9 @@ namespace sdc {
 
 class Activity;
 
-class ActivityPanel : public ContentPanel {
+class ActivitiesPanel : public ContentPanel {
  public:
-  ActivityPanel();
+  ActivitiesPanel();
 
   void AddActivity(Activity* activity);
 

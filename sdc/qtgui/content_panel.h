@@ -30,12 +30,21 @@ class ContentPanel : public QFrame {
     return ui.scrollArea;
   }
 
-  QVBoxLayout* content_layout() {
-    return boost::polymorphic_downcast<QVBoxLayout*>(ui.contentScrollArea->layout());
+  QWidget* content_pane() {
+    return ui.contentWiget;
   }
 
+  QVBoxLayout* content_layout() {
+    return boost::polymorphic_downcast<QVBoxLayout*>(ui.contentWiget->layout());
+  }
+
+ signals:
+  void closed();
 
  protected:
+  virtual void closeEvent(QCloseEvent *);
+
+ private:
   Ui::ContentPanelClass ui;
   MainWindow* main_window_;
 };

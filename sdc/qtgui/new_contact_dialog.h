@@ -1,7 +1,6 @@
 #ifndef NEW_CONTACT_DIALOG_H
 #define NEW_CONTACT_DIALOG_H
 
-#include "qt_view.h"
 #include <QtGui/QDialog>
 #include "ui_new_contact_dialog.h"
 
@@ -9,7 +8,7 @@ namespace sdc {
 
 class NewContactWidget;
 
-class NewContactDialog : public QDialog, public QtView {
+class NewContactDialog : public QDialog {
 
     Q_OBJECT
 

@@ -3,6 +3,8 @@
 #include <QStandardItemModel>
 #include "boost/cast.hpp"
 
+#include "log.h"
+
 namespace sdc {
 
 ContentPanel::ContentPanel(QWidget* parent)
@@ -10,7 +12,7 @@ ContentPanel::ContentPanel(QWidget* parent)
   ui.setupUi(this);
   // close action
   connect(ui.closeButton, SIGNAL(clicked()),
-      this, SLOT(hide()));
+      this, SLOT(close()));
 }
 
 ContentPanel::~ContentPanel() {}
@@ -26,6 +28,10 @@ void ContentPanel::SetHeaderWidget(QWidget* widget) {
   ui.panelWidget = widget;
   ui.panelWidget->show();
   boost::polymorphic_downcast<QVBoxLayout*>(layout())->insertWidget(1, ui.panelWidget);
+}
+
+void ContentPanel::closeEvent(QCloseEvent *) {
+  emit closed();
 }
 
 } /* namespace sdc */

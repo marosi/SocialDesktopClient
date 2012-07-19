@@ -8,18 +8,16 @@
 
 namespace sdc {
 
-AccountButton::AccountButton(QWidget* parent, QtServiceModel* model)
-    : QWidget(parent), QtView(parent), model_(model) {
-	ui.setupUi(this);
-
+AccountButton::AccountButton(QtServiceModel* model)
+    : model_(model) {
 	QString account_name = QString::fromStdString(model_->account()->GetUid());
 
-	QColor color;
-	color.setNamedColor("sienna");
-	QPalette palette;
-	palette.setColor(QPalette::Button, color);
-	ui.toolButton->setPalette(palette);
-	ui.toolButton->setToolTip(account_name);
+//	QColor color;
+//	color.setNamedColor("sienna");
+//	QPalette palette;
+//	palette.setColor(QPalette::Button, color);
+//	ui.toolButton->setPalette(palette);
+//	ui.toolButton->setToolTip(account_name);
 
 	menu_ = new QMenu(account_name, this);
 	QAction* title = menu_->addAction(QString::fromStdString(model->account()->GetUid()));
@@ -30,7 +28,7 @@ AccountButton::AccountButton(QWidget* parent, QtServiceModel* model)
 	connect(menu_->addAction("Offline"), SIGNAL(triggered()),
 	    this, SLOT(GoOffline()));
 
-	connect(ui.toolButton, SIGNAL(clicked()),
+  connect(button(), SIGNAL(clicked()),
 	    this, SLOT(ShowMenu()));
 
 }

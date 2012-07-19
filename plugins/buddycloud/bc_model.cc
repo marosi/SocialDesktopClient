@@ -176,18 +176,24 @@ void BcModel::Run() {
 }
 
 void BcModel::Stop() {
-  LOG(INFO) << "Buddycloud service model stopped.";
+  if (client_->isActive())
+    client_->disconnect();
   loop_->stop();
+  LOG(INFO) << "Buddycloud service model stopped.";
 }
 
 void BcModel::Connect() {
-  client_->connect();
-  LOG(TRACE) << "Connecting Swiften XMPP client.";
+  if (!client_->isActive()) {
+    client_->connect();
+    LOG(TRACE) << "Connecting Swiften XMPP client.";
+  }
 }
 
 void BcModel::Disconnect() {
-  client_->disconnect();
-  LOG(TRACE) << "Disconnecting Swiften XMPP client.";
+  if (client_->isActive()) {
+    client_->disconnect();
+    LOG(TRACE) << "Disconnecting Swiften XMPP client.";
+  }
 }
 
 void BcModel::AddNewContact(const JID &jid) {

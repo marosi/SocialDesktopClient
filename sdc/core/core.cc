@@ -48,10 +48,16 @@ Service* Core::service(const PluginSignature &signature) {
 /**
  * Construct Core.
  */
-Core::Core(int argc, char* argv[]) :
-    is_gui_prepared_(false),
-    ui_(new QtGui(this, argc, argv)) // Initialization point for specific GUI (Qt)
-{
+Core* Core::instance_ = NULL;
+
+Core* Core::Instance() {
+  if (!instance_)
+    instance_ = new Core();
+  return instance_;
+}
+
+Core::Core() :
+    is_gui_prepared_(false) {
   Init();
 }
 
