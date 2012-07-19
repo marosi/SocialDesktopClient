@@ -3,6 +3,8 @@
 #include "bc_presenter.h"
 #include "comment_widget.h"
 #include "post.h"
+#include <QMessageBox>
+
 // from sdc
 #include "bind.h"
 #include "boost/date_time/posix_time/time_formatters.hpp"

@@ -24,7 +24,6 @@ HEADERS += ui/qtgui/bind.h \
     core/include/ui.h \
     core/include/content.h \
     core/include/service_model.h \
-    core/include/connection.h \
     core/include/event_manager.h \
     core/include/abstract_manager.h \
     core/include/core.h \
@@ -32,7 +31,6 @@ HEADERS += ui/qtgui/bind.h \
     core/include/common.h \
     core/include/service.h \
     core/include/config_manager.h \
-    core/include/connection_manager.h \
     core/include/plugin_manager.h \
     core/include/properties.h \
     ui/qtgui/accounts_model.h \
@@ -51,13 +49,11 @@ SOURCES += ui/qtgui/service_presenter.cc \
     ui/qtgui/qt_gui.cc \
     ui/qtgui/settings_dialog.cc \
     core/ui.cc \
-    core/connection.cc \
     core/event_manager.cc \
     core/core.cc \
     core/log.cc \
     core/service.cc \
     core/config_manager.cc \
-    core/connection_manager.cc \
     core/plugin_manager.cc \
     main.cpp \
     ui/qtgui/accounts_model.cpp \

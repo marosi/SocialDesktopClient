@@ -11,17 +11,22 @@
 #ifndef BUDDYCLOUD_BOT_H_
 #define BUDDYCLOUD_BOT_H_
 
-#include "buddycloud_connection.h"
-
 // sdc
 #include "qt_service.h"
+#include "qt_service_model.h"
 
 #include "Swiften/Client/Client.h"
 #include "Swiften/Client/ClientXMLTracer.h"
+#include "Swiften/Elements/DiscoInfo.h"
+#include "Swiften/Elements/Message.h"
+#include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/VCard.h"
+//#include "Swiften/Swiften.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Network/NetworkFactories.h"
+#include "Swiften/Roster/XMPPRosterItem.h"
+
 #include "boost/signals2.hpp"
 #include <vector>
 #include <set>
@@ -39,10 +44,12 @@ class BcModel : public sdc::QtServiceModel {
 
     BcModel(sdc::AccountData* account);
     ~BcModel();
-    sdc::Connection* CreateConnection() {
-      connection_ = new BuddycloudConnection(this);
-      return connection_;
-    }
+
+    void Run();
+    void Stop();
+    void Connect();
+    void Disconnect();
+
 
     //GetSoftwareVersionRequest::ref gsvr = GetSoftwareVersionRequest::create("localhost", client_->getIQRouter());
     //GetVCardRequest::ref gvcr = GetVCardRequest::create(to, client_->getIQRouter());
@@ -127,7 +134,6 @@ class BcModel : public sdc::QtServiceModel {
      * SDC data
      */
     sdc::AccountData* account_;
-    BuddycloudConnection* connection_; // TODO: Rename to ChannelConnection
     std::vector<BcContact*> contacts_;
     std::map<Swift::JID, BcContact*> contacts_map_;
     /**

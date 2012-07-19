@@ -24,7 +24,6 @@
 
 namespace sdc {
 
-class Connection;
 class Service;
 class PluginManager;
 
@@ -114,7 +113,6 @@ class PluginManager : public AbstractManager {
   LibSignature GetLibrarySignature(const std::string &) const;
   PluginSignature GetClassSignature(const ClassDataRegistration & class_data) const;
 
-  PluginProvider<Connection> connection_provider_;
   PluginProvider<Service> connectionconfigmodel_provider_;
   std::map<PluginSignature, ClassDataRegistration> class_data_;
   std::map<LibSignature, LIB_HANDLE_TYPE> lib_handles_;

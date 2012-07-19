@@ -26,7 +26,6 @@ BcPresenter::BcPresenter() : AbstractPresenter(this), channel_(0) {}
 BcPresenter::~BcPresenter() {}
 
 void BcPresenter::Init() {
-  LOG(DEBUG) << " BcPresenter thread ID: " << boost::this_thread::get_id();
   model_ = model<BcModel>();
   qRegisterMetaType<JID>("JID");
 

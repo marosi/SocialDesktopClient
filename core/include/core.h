@@ -11,16 +11,15 @@
 
 #include "common.h"
 #include "config_manager.h"
-#include "connection_manager.h"
 #include "event_manager.h"
 #include "plugin_manager.h"
 #include "boost/noncopyable.hpp"
 #include "boost/thread.hpp"
 #include "boost/shared_ptr.hpp"
 #include "boost/signals2.hpp"
-#include <vector>
 #include <map>
 #include <set>
+#include <vector>
 
 namespace sdc {
 
@@ -32,7 +31,7 @@ class UI;
 class PluginManager;
 class ConfigManager;
 class EventManager;
-class ConnectionManager;
+class ServiceManager;
 
 /**
  * @class SocialDesktopClient
@@ -47,11 +46,8 @@ class Core : boost::noncopyable {
 
   EventManager* events() {
     return event_manager_;
-	}
-	ConnectionManager* connections() {
-    return connection_manager_;
-	}
-	ConfigManager* data() {
+  }
+  ConfigManager* data() {
     return config_manager_;
 	}
 	PluginManager* plugins() {
@@ -87,17 +83,19 @@ class Core : boost::noncopyable {
    */
   void ActivateAccount(AccountData* data);
   void DeactivateAccount(AccountData* data);
+  void MakeServiceThread(ServiceModel* model);
   /*
    * Managers
    */
   PluginManager* plugin_manager_;
   ConfigManager* config_manager_;
   EventManager* event_manager_;
-  ConnectionManager* connection_manager_;
   /*
    * Threading
    */
 	boost::thread core_;
+  boost::thread_group model_threads_;
+  std::map<ServiceModel*, boost::thread*> model_threads_map_;
 	boost::mutex mutex_;
 	boost::condition_variable gui_unprepared_;
 	bool is_gui_prepared_;

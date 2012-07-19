@@ -7,7 +7,6 @@
 
 #include "core.h"
 #include "account_data.h"
-#include "connection.h"
 #include "log.h"
 #include "service_model.h"
 #include "ui.h"
@@ -20,6 +19,8 @@
 
 #include "qt_service.h"
 #include "boost/cast.hpp"
+
+#include <exception>
 
 using namespace boost;
 using namespace std;
@@ -45,52 +46,6 @@ Service* Core::service(const PluginSignature &signature) {
 }
 
 /**
- * Private interface
- */
-void Core::ActivateAccount(AccountData* account) {
-  // create account resource directory if none exists
-  filesystem::path p(account->GetDir());
-  if (!filesystem::exists(p)) {
-    if (!filesystem::create_directory(p)) {
-      LOG(ERROR) << "Cannot create directory for account '" << account->GetId() << "'.";
-    }
-  }
-  // TODO: initialize account properly
-  Service* s = service(account->GetServiceSignature());
-  account->SetService(s);
-
-  // create service model
-  ServiceModel* model = s->CreateServiceModel(account);
-
-  model->SetCore(this);
-  account->SetServiceModel(model);
-
-  service_models_.push_back(model);
-  service_models_map_[account->GetId()] = model;
-
-  // connection
-  Connection* conn = model->CreateConnection();
-  connections()->MakeConnection(conn);
-  // hook model with its service and connection
-  model->connection_ = conn;
-
-  // signal activated account
-  onAccountActivated(account->GetId());
-}
-
-void Core::DeactivateAccount(AccountData* account) {
-  if (service_models_map_.count(account->GetId()) == 0)
-    return;
-  ServiceModel* model = service_models_map_[account->GetId()];
-  service_models_map_.erase(account->GetId());
-  vector<ServiceModel*>::iterator it = find(service_models_.begin(), service_models_.end(), model);
-  //delete (*it);
-  service_models_.erase(it);
-  // signal deactivated account
-  onAccountDeactivated(account->GetId());
-}
-
-/**
  * Construct Core.
  */
 Core::Core(int argc, char* argv[]) :
@@ -103,7 +58,6 @@ Core::Core(int argc, char* argv[]) :
 Core::~Core() {
   delete ui_;
   delete config_manager_;
-  delete connection_manager_;
   delete plugin_manager_;
   delete event_manager_;
 }
@@ -169,7 +123,6 @@ void Core::Start() {
 
 void Core::Exit() {
   plugin_manager_->OnExit();
-  connection_manager_->OnExit();
   config_manager_->OnExit();
   // stop event loop
   event_manager_->Stop();
@@ -177,7 +130,6 @@ void Core::Exit() {
 
 void Core::Init() {
   config_manager_ = new ConfigManager(this);
-  connection_manager_ = new ConnectionManager(this);
   plugin_manager_ = new PluginManager(this);
   event_manager_ = new EventManager(this);
 }
@@ -213,6 +165,65 @@ void Core::ExecUi() {
   }
   gui_unprepared_.notify_one();
   return_code_ = ui_->Exec();
+}
+
+
+/**
+ * ServiceModels handling
+ */
+
+void Core::ActivateAccount(AccountData* account) {
+  // create account resource directory if none exists
+  filesystem::path p(account->GetDir());
+  if (!filesystem::exists(p)) {
+    if (!filesystem::create_directory(p)) {
+      LOG(ERROR) << "Cannot create directory for account '" << account->GetId() << "'.";
+    }
+  }
+  // TODO: initialize account properly
+  Service* s = service(account->GetServiceSignature());
+  account->SetService(s);
+
+  // create service model
+  ServiceModel* model = s->CreateServiceModel(account);
+
+  model->SetCore(this);
+  account->SetServiceModel(model);
+
+  service_models_.push_back(model);
+  service_models_map_[account->GetId()] = model;
+
+  MakeServiceThread(model);
+  // hook model with its service and connection
+
+  // signal activated account
+  onAccountActivated(account->GetId());
+}
+
+void Core::DeactivateAccount(AccountData* account) {
+  if (service_models_map_.count(account->GetId()) == 0)
+    return;
+  ServiceModel* model = service_models_map_[account->GetId()];
+  model->Stop();
+  model_threads_.remove_thread(model_threads_map_[model]);
+  model_threads_map_.erase(model);
+  service_models_map_.erase(account->GetId());
+  vector<ServiceModel*>::iterator it = find(service_models_.begin(), service_models_.end(), model);
+  //delete (*it);
+  service_models_.erase(it);
+  // signal deactivated account
+  onAccountDeactivated(account->GetId());
+}
+
+void Core::MakeServiceThread(ServiceModel* model) {
+  try {
+    thread* thrd = new thread(&ServiceModel::DoRun, model);
+    model_threads_map_[model] = thrd;
+    model_threads_.add_thread(thrd);
+    LOG(DEBUG) << "number of threads ... "<< model_threads_.size();
+  } catch (std::exception& e) {
+    LOG(ERROR) << "Problem when making service model thread:" << e.what();
+  }
 }
 
 } /* namespace sdc */

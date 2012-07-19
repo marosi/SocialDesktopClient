@@ -12,7 +12,6 @@
 #define SDC_H_
 
 #include "plugin_manager.h" // for the Registration type
-#include "connection.h"
 #include "qt_view.h"
 #include "log.h"
 #include "service.h"

@@ -6,12 +6,6 @@
  */
 
 #include "ui.h"
-#include "connection.h"
-#include "connection_manager.h"
-#include "core.h"
-#include "service_model.h"
-#include "boost/shared_ptr.hpp"
-#include "boost/foreach.hpp"
 
 namespace sdc {
 

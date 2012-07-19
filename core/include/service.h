@@ -16,7 +16,6 @@
 
 namespace sdc {
 
-class Connection;
 class ServiceController;
 class ServiceModel;
 class AccountData;
@@ -45,8 +44,6 @@ class Service {
     return signature_;
   }
 
-  /// @brief Factory method for user connection.
-  virtual Connection* CreateConnection()=0;
   virtual ServiceModel* CreateServiceModel(AccountData*)=0;
 
  protected:

@@ -21,7 +21,6 @@ class BuddycloudService : public sdc::QtService {
     SetDir("resources/buddycloud");
   }
 
-  sdc::Connection* CreateConnection();
   sdc::ServiceModel* CreateServiceModel(sdc::AccountData* account_data);
   sdc::ServicePresenter* CreateServicePresenter();
 

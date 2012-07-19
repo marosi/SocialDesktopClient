@@ -30,7 +30,6 @@ namespace sdc {
 // PluginManager
 PluginManager::PluginManager(Core* core)
     : AbstractManager(core),
-      connection_provider_(this),
       connectionconfigmodel_provider_(this) {}
 PluginManager::~PluginManager() {}
 

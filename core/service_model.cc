@@ -7,7 +7,6 @@
 
 #include "service_model.h"
 #include "account_data.h"
-#include "connection.h"
 
 namespace sdc {
 
@@ -16,12 +15,10 @@ ServiceModel::ServiceModel(AccountData* account)
   service_ = account->GetService();
 }
 
-void ServiceModel::Connect() {
-  connection_->Connect();
-}
-
-void ServiceModel::Disconnect() {
-  connection_->Disconnect();
+void ServiceModel::DoRun() {
+  LOG(TRACE) << "Service model for " << account_->GetId() << " is running.";
+  Run();
+  LOG(TRACE) << "Service model for " << account_->GetId() << " stopped.";
 }
 
 } /* namespace sdc */

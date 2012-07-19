@@ -13,7 +13,6 @@ HEADERS += \
     channel.h \
     channel_widget.h \
     ui_new_post_widget.h \
-    buddycloud_connection.h \
     bc_presenter.h \
     bc_new_contact_widget.h \
     bc_new_account_widget.h \
@@ -43,7 +42,6 @@ SOURCES += \
     main.cc \
     channel.cc \
     channel_widget.cpp \
-    buddycloud_connection.cc \
     bc_presenter.cc \
     bc_model.cc \
     bc_contact.cc \

@@ -6,7 +6,6 @@
  */
 
 #include "buddycloud_service.h"
-#include "buddycloud_connection.h"
 #include "bc_model.h"
 #include "bc_new_account_widget.h"
 #include "bc_contact_widget.h"
@@ -17,9 +16,6 @@
 
 using namespace sdc;
 
-Connection* BuddycloudService::CreateConnection() {
-  return new BuddycloudConnection();
-}
 ServiceModel* BuddycloudService::CreateServiceModel(AccountData* account_data) {
   return new BcModel(account_data);
 }

@@ -165,6 +165,28 @@ BcModel::~BcModel() {
   }
   delete tracer_;
   delete client_;
+  delete loop_;
+  delete network_;
+}
+
+void BcModel::Run() {
+  LOG(INFO) << "Buddycloud service model is running.";
+  loop_->run();
+}
+
+void BcModel::Stop() {
+  LOG(INFO) << "Buddycloud service model stopped.";
+  loop_->stop();
+}
+
+void BcModel::Connect() {
+  client_->connect();
+  LOG(TRACE) << "Connecting Swiften XMPP client.";
+}
+
+void BcModel::Disconnect() {
+  client_->disconnect();
+  LOG(TRACE) << "Disconnecting Swiften XMPP client.";
 }
 
 void BcModel::AddNewContact(const JID &jid) {

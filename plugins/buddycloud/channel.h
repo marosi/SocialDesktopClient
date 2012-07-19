@@ -105,7 +105,6 @@ class ChannelController : public AbstractModel {
     return jid_;
   }
 
-
   boost::signals2::signal<void (Error)> onError;
   boost::signals2::signal<void (ChannelServiceInfo)> onChannelsServiceAvailable;
   boost::signals2::signal<void ()> onChannelAvailable;
