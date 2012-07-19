@@ -67,7 +67,7 @@ INCLUDEPATH += \
 	/home/xangel/projects/swift \
 	/home/xangel/projects/swift/3rdParty/LibIDN/src \
 	/home/xangel/projects/swift/3rdParty/LibExpat/src \
-	../.. \
+  ../.. \ # path to SDC base dir
   ../../sdc/core \
   ../../sdc/qtgui
 
@@ -76,7 +76,10 @@ QMAKE_CXXFLAGS += \
     -DBOOST_ALL_NO_LIB -DBOOST_SYSTEM_NO_DEPRECATED -DBOOST_FILESYSTEM_VERSION=2 -DIDNA_STATIC -DXML_STATIC \
     -std=c++0x
 
-DEFINES += BOOST_TT_HAS_OPERATOR_HPP_INCLUDED # because of parse error in BOOST_JOIN macro in moc files
+DEFINES += \
+  LOG_PRODUCER=Buddycloud \
+  BOOST_TT_HAS_OPERATOR_HPP_INCLUDED # because of parse error in BOOST_JOIN macro in moc files
+
  
 LIBS += \
     -L/home/xangel/projects/swift/Swiften \

@@ -5,7 +5,6 @@ QT += core \
 HEADERS += \
     sdc/core/core_anchor.h \
     sdc/core/ui.h \
-    sdc/core/content.h \
     sdc/core/service_model.h \
     sdc/core/event_manager.h \
     sdc/core/abstract_manager.h \
@@ -36,7 +35,8 @@ HEADERS += \
     sdc/qtgui/activity_panel.h \
     sdc/qtgui/activity.h \
     sdc/qtgui/accounts_model.h \
-    sdc/qtgui/account_button.h
+    sdc/qtgui/account_button.h \
+    sdc/core/contact.h
 SOURCES += \
     sdc/core/service_model.cc \
     sdc/core/ui.cc \

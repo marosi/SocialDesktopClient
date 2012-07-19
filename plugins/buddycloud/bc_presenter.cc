@@ -13,13 +13,12 @@
 #include "comment_activity.h"
 #include "post.h"
 #include "post_activity.h"
+#include "sdc/core/log.h"
+#include "sdc/qtgui/activity.h"
+#include "sdc/qtgui/activity_panel.h"
 #include <QFile>
 #include <QIcon>
 #include <QPixmap>
-
-#include "log.h"
-#include "activity.h"
-#include "activity_panel.h"
 
 BcPresenter::BcPresenter() : AbstractPresenter(this), channel_(0) {}
 

@@ -11,7 +11,7 @@
 #ifndef BUDDYCLOUD_SERVICE_H_
 #define BUDDYCLOUD_SERVICE_H_
 
-#include "sdc.h"
+#include "sdc/qtgui/qt_service.h"
 
 class BuddycloudService : public sdc::QtService {
  public:

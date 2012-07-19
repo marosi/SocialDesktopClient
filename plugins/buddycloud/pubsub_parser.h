@@ -12,7 +12,7 @@
 #define PUBSUB_PAYLOAD_PARSER_H_
 
 #include "payloads/items.h"
-#include "sdc.h"
+#include "sdc/core/log.h"
 #include "Swiften/Parser/GenericPayloadParser.h"
 #include "Swiften/Parser/PayloadParser.h"
 #include "Swiften/Parser/PayloadParserFactoryCollection.h"

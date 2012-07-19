@@ -2,8 +2,7 @@
 #include "bc_contact.h"
 #include "bc_presenter.h"
 #include "channel_widget.h"
-
-#include "bind.h"
+#include "sdc/qtgui/bind.h"
 #include <QMouseEvent>
 
 BcContactWidget::BcContactWidget(BcPresenter* presenter, BcContact* contact)

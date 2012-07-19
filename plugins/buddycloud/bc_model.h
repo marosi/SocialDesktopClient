@@ -11,22 +11,18 @@
 #ifndef BUDDYCLOUD_BOT_H_
 #define BUDDYCLOUD_BOT_H_
 
-// sdc
-#include "qt_service.h"
-#include "qt_service_model.h"
-
+#include "sdc/qtgui/qt_service.h"
+#include "sdc/qtgui/qt_service_model.h"
 #include "Swiften/Client/Client.h"
 #include "Swiften/Client/ClientXMLTracer.h"
 #include "Swiften/Elements/DiscoInfo.h"
 #include "Swiften/Elements/Message.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/VCard.h"
-//#include "Swiften/Swiften.h"
 #include "Swiften/EventLoop/SimpleEventLoop.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Network/NetworkFactories.h"
 #include "Swiften/Roster/XMPPRosterItem.h"
-
 #include "boost/signals2.hpp"
 #include <vector>
 #include <set>

@@ -12,8 +12,7 @@
 #define BC_CONTACT_WIDGET_H_
 
 #include "abstract_presenter.h"
-#include "contact_widget.h"
-// includes from sdc
+#include "sdc/qtgui/contact_widget.h"
 
 class BcContact;
 class BcPresenter;

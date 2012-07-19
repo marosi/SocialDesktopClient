@@ -11,8 +11,9 @@
 #ifndef QT_SERVICE_H_
 #define QT_SERVICE_H_
 
+
+#include "contact.h"
 #include "service.h"
-#include "content.h"
 #include <QWidget>
 
 namespace sdc {

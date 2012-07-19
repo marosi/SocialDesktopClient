@@ -10,7 +10,6 @@
 #include "Swiften/Serializer/PayloadSerializers/FormSerializer.h"
 #include "Swiften/Serializer/XML/XMLElement.h"
 #include "Swiften/Serializer/XML/XMLRawTextNode.h"
-#include "sdc.h"
 #include "boost/make_shared.hpp"
 
 using namespace Swift;

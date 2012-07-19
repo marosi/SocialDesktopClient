@@ -1,7 +1,7 @@
 #ifndef POST_ACTIVITY_H
 #define POST_ACTIVITY_H
 
-#include "activity.h"
+#include "sdc/qtgui/activity.h"
 
 class BcPresenter;
 class Post;

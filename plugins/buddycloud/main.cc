@@ -9,6 +9,7 @@
  */
 
 #include "buddycloud_service.h"
+#include "sdc/core/plugin_manager.h"
 
 extern "C" {
 

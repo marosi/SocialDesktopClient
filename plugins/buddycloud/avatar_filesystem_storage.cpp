@@ -1,8 +1,8 @@
 #include "avatar_filesystem_storage.h"
-#include "boost/filesystem.hpp"
-#include "account.h"
+#include "sdc/core/account.h"
 #include "Swiften/JID/JID.h"
 #include "Swiften/Base/ByteArray.h"
+#include "boost/filesystem.hpp"
 #include <fstream>
 
 using namespace boost::filesystem;

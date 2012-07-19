@@ -12,7 +12,7 @@
 #define BC_CONTACT_H_
 
 #include "abstract_model.h"
-#include "content.h"
+#include "sdc/core/contact.h"
 #include "Swiften/JID/JID.h"
 
 class BcModel;

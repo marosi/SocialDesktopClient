@@ -9,16 +9,15 @@
 #include "bc_contact.h"
 #include "channel.h"
 #include "filesystem_storages.h"
-#include "post.h"
 #include "payloads/pubsub.h"
+#include "post.h"
 #include "pubsub_requests.h"
 #include "pubsub_parser.h"
 #include "pubsub_serializer.h"
+#include "sdc/core/account.h"
 #include "Swiften/Swiften.h"
 #include "boost/shared_ptr.hpp"
 #include <fstream>
-
-#include "account.h"
 
 using namespace Swift;
 using namespace boost;

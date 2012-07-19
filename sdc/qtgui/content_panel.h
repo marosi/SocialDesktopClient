@@ -1,9 +1,9 @@
 #ifndef CONTENT_PANEL_H
 #define CONTENT_PANEL_H
 
-#include <QtGui/QFrame>
 #include "ui_content_panel.h"
-#include "content.h"
+#include <QtGui/QFrame>
+#include "sdc/core/contact.h"
 #include "boost/cast.hpp"
 
 namespace sdc {

@@ -1,8 +1,8 @@
 #ifndef NEW_ACCOUNT_WIDGET_H
 #define NEW_ACCOUNT_WIDGET_H
 
-#include "sdc.h"
 #include "bc_account.h"
+#include "sdc/qtgui/new_account_widget.h"
 #include <QtGui/QWidget>
 #include "ui_bc_new_account_widget.h"
 

@@ -12,9 +12,9 @@
 #define CHANNEL_WIDGET_H_
 
 #include "abstract_presenter.h"
-#include "content_panel.h"
 #include "channel.h"
 #include "ui_new_post_widget.h"
+#include "sdc/qtgui/content_panel.h"
 #include "boost/date_time/posix_time/ptime.hpp"
 #include <QList>
 #include <QMap>

@@ -1,5 +1,5 @@
 /**
- * @file content.h
+ * @file contact.h
  * @brief TODO:
  *	
  * TODO: Complete detailed description
@@ -8,8 +8,8 @@
  *   @date Feb 12, 2012
  */
 
-#ifndef CORE_CONTENT_H_
-#define CORE_CONTENT_H_
+#ifndef CORE_CONTACT_H_
+#define CORE_CONTACT_H_
 
 #include "boost/shared_ptr.hpp"
 #include "boost/signals2/signal.hpp"
@@ -53,4 +53,4 @@ class Contact {
 
 }  /* namespace sdc */
 
-#endif /* CORE_CONTENT_H_ */
+#endif /* CORE_CONTACT_H_ */

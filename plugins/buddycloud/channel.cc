@@ -5,14 +5,12 @@
  *  Created on: Jul 7, 2012
  */
 
-// sdc
-#include "log.h"
-
 #include "channel.h"
 #include "bc_model.h"
 #include "post.h"
 #include "payloads/pubsub.h"
 #include "pubsub_requests.h"
+#include "sdc/core/log.h"
 #include "Swiften/Swiften.h"
 #include <algorithm>
 

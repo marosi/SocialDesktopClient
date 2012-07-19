@@ -1,9 +1,9 @@
 #ifndef BC_NEW_CONTACT_WIDGET_H
 #define BC_NEW_CONTACT_WIDGET_H
 
-#include "sdc.h"
 #include "bc_contact.h"
 #include "bc_model.h"
+#include "sdc/qtgui/new_contact_widget.h"
 #include <QtGui/QWidget>
 #include "ui_bc_new_contact_widget.h"
 #include "boost/cast.hpp"

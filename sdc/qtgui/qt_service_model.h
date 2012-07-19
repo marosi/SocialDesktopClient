@@ -12,7 +12,7 @@
 #define QT_SERVICE_MODEL_H_
 
 #include "service_model.h"
-#include "content.h"
+#include "contact.h"
 #include "qt_service.h"
 #include <QObject>
 

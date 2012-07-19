@@ -1,12 +1,10 @@
 #include "post_widget.h"
+#include "comment_widget.h"
 #include "bc_model.h"
 #include "bc_presenter.h"
-#include "comment_widget.h"
 #include "post.h"
+#include "sdc/qtgui/bind.h"
 #include <QMessageBox>
-
-// from sdc
-#include "bind.h"
 #include "boost/date_time/posix_time/time_formatters.hpp"
 
 PostWidget::PostWidget(AbstractPresenter* presenter, Post* post)

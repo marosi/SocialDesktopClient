@@ -1,7 +1,7 @@
 #ifndef COMMENT_ACTIVITY_H
 #define COMMENT_ACTIVITY_H
 
-#include "activity.h"
+#include "sdc/qtgui/activity.h"
 
 class BcPresenter;
 class Comment;

@@ -8,7 +8,7 @@
 #include "channel_widget.h"
 #include "post_widget.h"
 #include "post.h"
-#include "bind.h"
+#include "sdc/qtgui/bind.h"
 #include <QScrollBar>
 #include <QtAlgorithms>
 #include <algorithm>

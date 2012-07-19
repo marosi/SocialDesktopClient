@@ -1,6 +1,7 @@
 #include "pubsub_parser.h"
 #include "payloads/pubsub.h"
 #include "pubsub_parser_factories.h"
+#include "boost/optional.hpp"
 
 /*
  * ITEMS PARSER

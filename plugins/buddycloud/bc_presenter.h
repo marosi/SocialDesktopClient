@@ -12,8 +12,8 @@
 #define BC_PRESENTER_H_
 
 #include "abstract_presenter.h"
-#include "service_presenter.h"
 #include "avatar.h"
+#include "sdc/qtgui/service_presenter.h"
 #include "Swiften/JID/JID.h"
 #include <QList>
 #include <QMap>

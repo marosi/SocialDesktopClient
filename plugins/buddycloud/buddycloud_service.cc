@@ -8,11 +8,8 @@
 #include "buddycloud_service.h"
 #include "bc_model.h"
 #include "bc_new_account_widget.h"
-#include "bc_contact_widget.h"
 #include "bc_new_contact_widget.h"
 #include "bc_presenter.h"
-#include "channel_widget.h"
-#include "post_widget.h"
 
 using namespace sdc;
 

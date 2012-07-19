@@ -1,6 +1,6 @@
 #include "contact_widget.h"
 #include "bind.h"
-#include "content.h"
+#include "contact.h"
 #include "main_window.h"
 #include "boost/cast.hpp"
 #include "boost/bind.hpp"
