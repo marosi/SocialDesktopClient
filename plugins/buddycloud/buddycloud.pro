@@ -68,8 +68,8 @@ INCLUDEPATH += \
 	/home/xangel/projects/swift/3rdParty/LibIDN/src \
 	/home/xangel/projects/swift/3rdParty/LibExpat/src \
 	../.. \
-	../../ui/qtgui \
-	../../core/include
+  ../../sdc/core \
+  ../../sdc/qtgui
 
 QMAKE_CXXFLAGS += \
     -fmessage-length=0 -fPIC \
