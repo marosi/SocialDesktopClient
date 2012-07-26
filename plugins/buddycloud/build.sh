@@ -11,3 +11,7 @@ LIBS="LIBS += "`./3rdparty/swift/Swiften/Config/swiften-config --libs`
 
 echo "$CFLAGS
 $LIBS" > swiften.pro
+
+# run qmake & make
+qmake buddycloud.pro
+make
