@@ -1,0 +1,17 @@
+Import("swiften_env")
+
+objects = swiften_env.SwiftenObject([
+			"ByteArray.cpp",
+			"DateTime.cpp",
+			"SafeByteArray.cpp",
+			"Error.cpp",
+			"Log.cpp",
+			"Paths.cpp",
+			"String.cpp",
+			"IDGenerator.cpp",
+			"SimpleIDGenerator.cpp",
+			"RandomGenerator.cpp",
+			"BoostRandomGenerator.cpp",
+			"sleep.cpp",
+		])
+swiften_env.Append(SWIFTEN_OBJECTS = [objects])

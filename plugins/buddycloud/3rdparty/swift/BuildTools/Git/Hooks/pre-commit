@@ -1,0 +1,13 @@
+#!/bin/sh
+
+echo "Checking tabs ..."
+if ! BuildTools/CheckTabs.py; then
+	echo "Expanded tabs found. Aborting commit."
+	exit -1
+fi
+
+echo "Checking copyrights ..."
+if ! BuildTools/Copyrighter.py check-all-copyrights; then
+	echo "Copyright error found. Aborting commit."
+	exit -1
+fi

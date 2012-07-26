@@ -86,8 +86,7 @@ INCLUDEPATH += \
     sdc \
     sdc/core \
     sdc/qtgui \
-    /home/xangel/projects/boost_1_48_0
-LIBS += -L/home/xangel/projects/boost_1_48_0/stage/lib \
+LIBS += \
     -lboost_system \
     -lboost_thread \
     -lboost_serialization \
@@ -95,4 +94,4 @@ LIBS += -L/home/xangel/projects/boost_1_48_0/stage/lib \
 QMAKE_LFLAGS += -export-dynamic
 QMAKE_CXXFLAGS += -std=c++0x
 
-DEFINES = BOOST_FILESYSTEM_VERSION=3
+DEFINES = BOOST_FILESYSTEM_VERSION=2

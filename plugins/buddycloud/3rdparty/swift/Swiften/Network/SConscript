@@ -1,0 +1,93 @@
+Import("swiften_env")
+
+myenv = swiften_env.Clone()
+
+sourceList = [
+			"ProxiedConnection.cpp",
+			"HTTPConnectProxiedConnection.cpp",
+			"HTTPConnectProxiedConnectionFactory.cpp",
+			"SOCKS5ProxiedConnection.cpp",
+			"SOCKS5ProxiedConnectionFactory.cpp",
+			"BoostConnection.cpp",
+			"BoostConnectionFactory.cpp",
+			"BoostConnectionServer.cpp",
+			"BoostConnectionServerFactory.cpp",
+			"BoostIOServiceThread.cpp",
+			"BOSHConnection.cpp",
+			"BOSHConnectionPool.cpp",
+			"CachingDomainNameResolver.cpp",
+			"ConnectionFactory.cpp",
+			"ConnectionServer.cpp",
+			"ConnectionServerFactory.cpp",
+			"DummyConnection.cpp",
+			"FakeConnection.cpp",
+ 			"ChainedConnector.cpp",
+ 			"Connector.cpp",
+ 			"Connection.cpp",
+			"TimerFactory.cpp",
+			"DummyTimerFactory.cpp",
+			"BoostTimerFactory.cpp",
+			"DomainNameResolver.cpp",
+			"DomainNameAddressQuery.cpp",
+			"DomainNameServiceQuery.cpp",
+			"PlatformDomainNameResolver.cpp",
+			"PlatformDomainNameServiceQuery.cpp",
+			"PlatformDomainNameAddressQuery.cpp",
+			"StaticDomainNameResolver.cpp",
+			"HostAddress.cpp",
+			"HostAddressPort.cpp",
+			"HostNameOrAddress.cpp",
+			"NetworkFactories.cpp",
+			"BoostNetworkFactories.cpp",
+			"NetworkEnvironment.cpp",
+			"Timer.cpp",
+			"TLSConnection.cpp",
+			"TLSConnectionFactory.cpp",
+			"BoostTimer.cpp",
+			"ProxyProvider.cpp",
+			"NullProxyProvider.cpp",
+			"NATTraverser.cpp",
+			"NullNATTraverser.cpp",
+			"NATTraversalGetPublicIPRequest.cpp",
+			"NATTraversalForwardPortRequest.cpp",
+			"NATTraversalRemovePortForwardingRequest.cpp",
+			"NATTraversalInterface.cpp",
+	]
+		
+if myenv["PLATFORM"] == "darwin" :
+	myenv.Append(FRAMEWORKS = ["CoreServices", "SystemConfiguration"])
+	sourceList += [ "MacOSXProxyProvider.cpp" ]
+	sourceList += [ "UnixNetworkEnvironment.cpp" ]
+elif myenv["PLATFORM"] == "win32" :
+	sourceList += [ "WindowsProxyProvider.cpp" ]
+	sourceList += [ "WindowsNetworkEnvironment.cpp" ]
+else :
+	sourceList += [ "UnixNetworkEnvironment.cpp" ]
+	sourceList += [ "UnixProxyProvider.cpp" ]
+	sourceList += [ "EnvironmentProxyProvider.cpp" ]
+	if myenv.get("HAVE_GCONF", 0) :
+		myenv.Append(CPPDEFINES = "HAVE_GCONF")
+		myenv.MergeFlags(myenv["GCONF_FLAGS"])
+		sourceList += [ "GConfProxyProvider.cpp" ]
+
+objects = myenv.SwiftenObject(sourceList)
+
+if myenv["experimental"] :
+	# LibNATPMP classes
+	natpmp_env = myenv.Clone()
+	natpmp_env.Append(CPPDEFINES = natpmp_env["LIBNATPMP_FLAGS"].get("INTERNAL_CPPDEFINES", []))
+	objects += natpmp_env.SwiftenObject([
+				"NATPMPInterface.cpp",
+			])
+
+	# LibMINIUPnP classes
+	upnp_env = myenv.Clone()
+	upnp_env.Append(CPPDEFINES = upnp_env["LIBMINIUPNPC_FLAGS"].get("INTERNAL_CPPDEFINES", []))
+	objects += upnp_env.SwiftenObject([
+				"MiniUPnPInterface.cpp",
+			])
+	objects += myenv.SwiftenObject([
+				"PlatformNATTraversalWorker.cpp",
+			])
+
+swiften_env.Append(SWIFTEN_OBJECTS = [objects])

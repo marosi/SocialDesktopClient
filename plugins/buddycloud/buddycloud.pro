@@ -62,35 +62,18 @@ FORMS += \
     comment_widget.ui
 RESOURCES += 
 
+include(swiften.pro)
+
 INCLUDEPATH += \
-	/home/xangel/projects/boost_1_48_0 \
-	/home/xangel/projects/swift \
-	/home/xangel/projects/swift/3rdParty/LibIDN/src \
-	/home/xangel/projects/swift/3rdParty/LibExpat/src \
+  3rdparty/swift \
   ../.. \ # path to SDC base dir
   ../../sdc/core \
   ../../sdc/qtgui
 
 QMAKE_CXXFLAGS += \
     -fmessage-length=0 -fPIC \
-    -DBOOST_ALL_NO_LIB -DBOOST_SYSTEM_NO_DEPRECATED -DBOOST_FILESYSTEM_VERSION=2 -DIDNA_STATIC -DXML_STATIC \
     -std=c++0x
 
 DEFINES += \
   LOG_PRODUCER=Buddycloud \
   BOOST_TT_HAS_OPERATOR_HPP_INCLUDED # because of parse error in BOOST_JOIN macro in moc files
-
- 
-LIBS += \
-    -L/home/xangel/projects/swift/Swiften \
-    -L/home/xangel/projects/swift/3rdParty/Boost \
-    -L/home/xangel/projects/swift/3rdParty/LibIDN \
-    -L/home/xangel/projects/swift/3rdParty/Expat \
-    \
-    -lSwiften -lSwiften_Boost -lSwiften_IDN -lSwiften_Expat \
-    -lz -lssl -lcrypto -lresolv -lpthread -ldl -lm -lc -lstdc++
-    
-
-OTHER_FILES += \
-    buddycloud.pro.user
-

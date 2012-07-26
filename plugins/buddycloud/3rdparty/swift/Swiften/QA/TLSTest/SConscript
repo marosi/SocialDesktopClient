@@ -1,0 +1,16 @@
+import os
+
+Import("env")
+
+if env["TEST"] :
+	myenv = env.Clone()
+	myenv.MergeFlags(myenv["CHECKER_FLAGS"])
+	myenv.MergeFlags(myenv["SWIFTOOLS_FLAGS"])
+	myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
+	myenv.MergeFlags(myenv["SWIFTEN_DEP_FLAGS"])
+	myenv.MergeFlags(myenv["CPPUNIT_FLAGS"])
+	
+	tester = myenv.Program("TLSTest", [
+			"CertificateTest.cpp",
+		])
+	myenv.Test(tester, "system")
