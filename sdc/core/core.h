@@ -39,10 +39,8 @@ class ServiceManager;
  */
 class Core : boost::noncopyable {
  public:
+  static void Create(UI* ui);
   static Core* Instance();
-  void SetUI(UI* ui) {
-    ui_ = ui;
-  }
 
 	void Start();
 	void Exit();
@@ -78,7 +76,7 @@ class Core : boost::noncopyable {
   boost::signals2::signal<void (const std::string)> onAccountDeactivated;
 
  private:
-  Core();
+  Core(UI* ui);
   ~Core();
   static Core* instance_;
 
@@ -100,6 +98,7 @@ class Core : boost::noncopyable {
   /*
    * Threading
    */
+  UI* ui_;
 	boost::thread core_;
   boost::thread_group model_threads_;
   std::map<ServiceModel*, boost::thread*> model_threads_map_;
@@ -107,7 +106,6 @@ class Core : boost::noncopyable {
 	boost::condition_variable gui_unprepared_;
 	bool is_gui_prepared_;
 	//boost::thread ui_; // Qt GUI cannot run in secondary thread
-  UI* ui_;
 	int return_code_;
   /*
    * Models & accounts

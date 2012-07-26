@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/Activity Monitor.ico</file>
+        <file>icons/Xcode.ico</file>
+        <file>icons/Address Book.ico</file>
+        <file>icons/Setting.ico</file>
+        <file>icons/System Preferences.ico</file>
+    </qresource>
+</RCC>

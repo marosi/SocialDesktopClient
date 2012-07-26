@@ -7,6 +7,9 @@ ActivitiesButton::ActivitiesButton() {
   button()->setText("A");
   button()->setCheckable(true);
   button()->setChecked(true);
+  // set icon
+  button()->setIcon(QIcon(":/icons/Activity Monitor.ico"));
+  button()->setIconSize(QSize(30, 30));
 }
 
 void ActivitiesButton::SetPanel(ActivitiesPanel* panel) {

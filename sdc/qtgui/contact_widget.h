@@ -1,7 +1,6 @@
 #ifndef CONTACT_WIDGET_H
 #define CONTACT_WIDGET_H
 
-#include "qt_view.h"
 #include <QtGui/QWidget>
 #include <QToolButton>
 #include "ui_contact_widget.h"

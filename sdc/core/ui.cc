@@ -9,7 +9,7 @@
 
 namespace sdc {
 
-UI::UI(Core* core) : CoreAnchor(core) {}
+UI::UI() {}
 
 UI::~UI() {}
 

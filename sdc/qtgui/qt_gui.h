@@ -35,9 +35,8 @@ class QtGui : public QObject, public UI {
     Q_OBJECT
 
  public:
-  QtGui(Core* core, int argc, char* argv[])
-      : UI(core),
-        app_(argc, argv),
+  QtGui(int argc, char* argv[])
+      : app_(argc, argv),
         main_window_(0) {}
   ~QtGui();
 

@@ -5,9 +5,22 @@
 
 namespace sdc {
 
+class MainWindow;
+class SettingsDialog;
+
 class MainButton : public PrimeButton {
+
+    Q_OBJECT
+
  public:
-  MainButton();
+  MainButton(MainWindow* main_window_);
+
+ private slots:
+  void ShowSettingsDialog();
+
+ private:
+  MainWindow* main_window_;
+  SettingsDialog* settings_;
 };
 
 } /* namepsace sdc */

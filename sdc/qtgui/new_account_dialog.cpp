@@ -13,8 +13,8 @@
 namespace sdc {
 
 NewAccountDialog::NewAccountDialog(QWidget *parent)
-    : QDialog(parent), QtView(parent), action_(NEW), account_(0)
-{
+    : QDialog(parent), action_(NEW), account_(0) {
+
 	ui.setupUi(this);
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -25,7 +25,7 @@ NewAccountDialog::NewAccountDialog(QWidget *parent)
 	ui.servicesComboBox->insertSeparator(1);
 	// load available services
 	int i = 2;
-  for (Service* s : core()->services()) {
+  for (Service* s : Core::Instance()->services()) {
     QString signature = QString::fromStdString(s->signature());
     QVariant data(signature);
     ui.servicesComboBox->insertItem(i, QString::fromStdString(s->name()), data);
@@ -63,7 +63,7 @@ void NewAccountDialog::accept() {
       Account* account = current_pane_->CreateNew();
       QVariant data = ui.servicesComboBox->itemData(ui.servicesComboBox->currentIndex());
       account->SetServiceSignature(data.toString().toStdString());
-      core()->data()->AddAccount(account);
+      Core::Instance()->data()->AddAccount(account);
     }
     this->close();
   } else {

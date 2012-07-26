@@ -50,14 +50,18 @@ Service* Core::service(const PluginSignature &signature) {
  */
 Core* Core::instance_ = NULL;
 
+void Core::Create(UI* ui) {
+  if (!instance_) {
+    instance_ = new Core(ui);
+  }
+}
+
 Core* Core::Instance() {
-  if (!instance_)
-    instance_ = new Core();
   return instance_;
 }
 
-Core::Core() :
-    is_gui_prepared_(false) {
+Core::Core(UI* ui)
+  : ui_(ui), is_gui_prepared_(false) {
   Init();
 }
 

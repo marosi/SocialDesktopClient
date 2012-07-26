@@ -3,6 +3,8 @@
 
 #include "prime_button.h"
 
+class QIcon;
+
 namespace sdc {
 
 class QtServiceModel;
@@ -15,18 +17,16 @@ class AccountButton : public PrimeButton {
   AccountButton(QtServiceModel* model);
   virtual ~AccountButton();
 
-  QMenu* menu() {
-    return menu_;
-  }
+  void SetAccountIcon(const QIcon &icon);
 
  protected slots:
-  void ShowMenu();
   void GoOnline();
   void GoOffline();
 
- protected:
-  QMenu* menu_;
+ private:
   QtServiceModel* model_;
+  QMenu* menu_;
+  QAction* title_;
 };
 
 } /* namespace sdc */

@@ -16,11 +16,14 @@
 #include "log.h"
 #include "main_button.h"
 #include "qt_service_model.h"
+#include "qt_gui.h"
 #include "service_presenter.h"
 #include "settings_dialog.h"
 #include <QToolButton>
 #include <QGroupBox>
+#include <QTreeWidget>
 #include "boost/function.hpp"
+#include "boost/cast.hpp"
 
 namespace sdc {
 
@@ -29,48 +32,94 @@ class MainWindow::GroupedBy {
  public:
   GroupedBy(boost::function<QString (const ContactWidget*, const T)> titler)  {
     titler_ = titler;
-    layout_ = new QVBoxLayout();
+    layout_ = new QVBoxLayout;
+    tree_ = new QTreeWidget;
+    tree_->setObjectName("ContactsTreeWidget");
+    tree_->setStyleSheet(
+      "QTreeWidget#ContactsTreeWidget {"
+        "margin: 3px;"
+      //"background-color: yellow;"
+      //"background-clip: border;"
+      //"background-origin: border;"
+      "}"
+      "QTreeWidget#ContactsTreeWidget::branch {"
+        "border: none;"
+      "}"
+      "QTreeWidget#ContactsTreeWidget::branch:has-children:!has-siblings:closed {"
+      "background: yellow;}"
+      "QTreeWidget#ContactsTreeWidget::branch:has-children:open {"
+      "background: red;}"
+      "QTreeWidget#ContactsTreeWidget::item {"
+        "padding: 3px;"
+      "}"
+    );
+    tree_->setFrameStyle(QFrame::NoFrame); // a frame must be removed for the stylesheet to work
+    tree_->viewport()->setObjectName("ContactsViewport");
+    tree_->viewport()->setStyleSheet(
+      "QWidget#ContactsViewport {"
+      "border: 0px solid black;"
+      "border-radius: 5px;"
+      "background: white;"
+      "}"
+    );
+    tree_->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Preferred);
+    tree_->setColumnCount(1);
+    tree_->setHeaderHidden(true);
+    //tree_->setRootIsDecorated(false);
+    tree_->setIndentation(0);
+    tree_->setAnimated(true);
+    layout_->addWidget(tree_);
   }
 
   QLayout* GetLayout() { return layout_; }
 
   void Insert(ContactWidget* widget, const T key){
     if (!map_.contains(key)) {
-      QGroupBox* box = new QGroupBox(titler_(widget, key));
-      box->setLayout(new QVBoxLayout);
-      boxes_[key] = box;
-      layout_->addWidget(boxes_[key]);
+      QTreeWidgetItem* item = new QTreeWidgetItem;
+      item->setData(0, Qt::DisplayRole, titler_(widget, key));
+      item->setChildIndicatorPolicy(QTreeWidgetItem::DontShowIndicatorWhenChildless);
+      items_[key] = item;
+      tree_->addTopLevelItem(item);
     }
     map_.insert(key, widget);
-    boxes_[key]->layout()->addWidget(widget);
+    QTreeWidgetItem* item = new QTreeWidgetItem;
+    items_[key]->addChild(item);
+    items_[key]->setExpanded(true);
+    tree_->setItemWidget(item, 0, widget);
   }
 
   void RemoveGroup(const T key) {
-    map_.remove(key);
-    delete boxes_[key];
-    boxes_.remove(key);
+    if (map_.contains(key)) {
+      QTreeWidgetItem* item = items_[key];
+      int i = tree_->indexOfTopLevelItem(item);
+      tree_->takeTopLevelItem(i);
+      items_.remove(key);
+      map_.remove(key);
+      delete item;
+    }
   }
 
  private:
   boost::function<QString (const ContactWidget*, const T)> titler_;
   QMultiMap<T, ContactWidget*> map_;
-  QMap<T, QGroupBox*> boxes_;
   QVBoxLayout* layout_;
+  QTreeWidget* tree_;
+  QMap<T, QTreeWidgetItem*> items_;
 };
 
-MainWindow::MainWindow(QtGui* qtgui) :
-    QtView(qtgui) {
+MainWindow::MainWindow(QtGui* qtgui)
+  : qtgui_(qtgui) {
   // setting Qt GUI layer object to the main View object
   ui.setupUi(this);
   ui.statusbar->hide();
-  connect(ui.actionSettings, SIGNAL(triggered()), this, SLOT(ShowSettingsDialog()));
   // grouping
   grouped_by_account_ = new GroupedBy<ServicePresenter*>(
       [&] (const ContactWidget*, const ServicePresenter* p) { return QString::fromStdString(p->model()->account()->GetUid()); });
 
   //layout()->setSizeConstraint(QLayout::SetFixedSize);
 
-  main_button_ = new MainButton;
+  // setup buttons
+  main_button_ = new MainButton(this);
   ui.primesLayout->insertWidget(0, main_button_);
 
   contacts_button_ = new ContactsButton;
@@ -84,8 +133,10 @@ MainWindow::MainWindow(QtGui* qtgui) :
   contacts_button_->SetPanel(contacts_panel_);
   ui.contentFrame->layout()->addWidget(contacts_panel_);
 
-  delete contacts_panel_->content_pane()->layout();
-  contacts_panel_->content_pane()->setLayout(grouped_by_account_->GetLayout());
+  // set tree widget to whole scroll area of content panel not content pane,
+  // because content pane has a spacer within that makes tree widget cover only a half of the height
+  delete contacts_panel_->content_scroll_area()->layout();
+  contacts_panel_->content_scroll_area()->setLayout(grouped_by_account_->GetLayout());
 
   // activities
   activities_ = new ActivitiesPanel;
@@ -109,9 +160,9 @@ void MainWindow::RemoveAccountButton(AccountButton* button) {
 }
 
 void MainWindow::AddContact(ServicePresenter* parent, ContactWidget* contact) {
-  std::string tooltip = qtgui()->GetService(parent)->name() +
+  std::string tooltip = qtgui_->GetService(parent)->name() +
       " - " +
-      qtgui()->GetModel(parent)->account()->GetUid();
+      qtgui_->GetModel(parent)->account()->GetUid();
   contact->setToolTip(QString::fromStdString(tooltip));
   contacts_.insert(parent, contact);
   //contacts_panel_->content_layout()
@@ -119,9 +170,9 @@ void MainWindow::AddContact(ServicePresenter* parent, ContactWidget* contact) {
 }
 
 void MainWindow::RemoveAllContacts(ServicePresenter* parent) {
+  grouped_by_account_->RemoveGroup(parent);
   for (ContactWidget* widget : contacts_.values(parent))
     delete widget;
-  grouped_by_account_->RemoveGroup(parent);
   contacts_.remove(parent);
 }
 
@@ -134,10 +185,6 @@ void MainWindow::RemoveAllContentPanels(ServicePresenter* parent) {
   for (ContentPanel* panel : contents_.values(parent))
     delete panel;
   contents_.remove(parent);
-}
-
-void MainWindow::ShowSettingsDialog() {
-  settings_ = new SettingsDialog(this);
 }
 
 } /* namespace sdc */

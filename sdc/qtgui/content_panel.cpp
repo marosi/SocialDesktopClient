@@ -1,9 +1,9 @@
 #include "content_panel.h"
 #include "main_window.h"
+#include <QPainter>
 #include <QStandardItemModel>
 #include "boost/cast.hpp"
 
-#include "log.h"
 
 namespace sdc {
 

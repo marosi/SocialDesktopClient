@@ -10,15 +10,14 @@
 namespace sdc {
 
 SettingsDialog::SettingsDialog(QWidget *parent)
-    : QDialog(parent),
-      QtView(parent) {
+    : QDialog(parent) {
   // set up gui
 	ui.setupUi(this);
   // setup accounts page
   SettingsListItem* it1 = new SettingsListItem(ui.listWidget, ui.accountsPage);
   it1->setText("Accounts");
 
-  AccountsModel* model = new AccountsModel(core());
+  AccountsModel* model = new AccountsModel(Core::Instance());
   ui.tableView->setModel(model);
   ui.tableView->setColumnWidth(1, 50);
   ui.tableView->setColumnWidth(0, 280);
@@ -71,14 +70,14 @@ void SettingsDialog::DeleteAccount() {
   confirm.setDefaultButton(QMessageBox::No);
   int result = confirm.exec();
   if (result == QMessageBox::Yes) {
-    core()->data()->RemoveAccount(index);
+    Core::Instance()->data()->RemoveAccount(index);
   }
 }
 
 void SettingsDialog::EditAccount() {
   NewAccountDialog* dialog = new NewAccountDialog(this);
   int index = ui.tableView->selectionModel()->selectedIndexes().first().row();
-  Account* account = core()->data()->GetAccount(index);
+  Account* account = Core::Instance()->data()->GetAccount(index);
   dialog->SetAccountForEditing(account);
 }
 

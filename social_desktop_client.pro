@@ -19,7 +19,6 @@ HEADERS += \
     sdc/qtgui/widget_factory.h \
     sdc/qtgui/settings_dialog.h \
     sdc/qtgui/service_presenter.h \
-    sdc/qtgui/qt_view.h \
     sdc/qtgui/qt_service_model.h \
     sdc/qtgui/qt_service.h \
     sdc/qtgui/qt_gui.h \
@@ -81,7 +80,8 @@ FORMS += \
     sdc/qtgui/activity.ui \
     sdc/qtgui/account_button.ui \
     sdc/qtgui/prime_button.ui
-RESOURCES += 
+RESOURCES += \  
+    sdc/qtgui/resources/sdc.qrc
 INCLUDEPATH += \
     sdc \
     sdc/core \

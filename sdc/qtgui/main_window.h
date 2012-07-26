@@ -1,7 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "qt_view.h"
 #include "ui_main_window.h"
 #include <QtGui/QMainWindow>
 #include <QList>
@@ -20,8 +19,9 @@ class ContentPanel;
 class MainButton;
 class QtGui;
 class QtServiceModel;
+class ServicePresenter;
 
-class MainWindow : public QMainWindow, public sdc::QtView {
+class MainWindow : public QMainWindow {
 
     Q_OBJECT
 
@@ -39,15 +39,12 @@ class MainWindow : public QMainWindow, public sdc::QtView {
 
   ActivitiesPanel* activities() { return activities_; }
 
- public slots:
-  void ShowSettingsDialog();
-
  private:
   template<class T>
   class GroupedBy;
 
   Ui::MainWindowClass ui;
-  QWidget* settings_;
+  QtGui* qtgui_;
   QList<AccountButton*> buttons_;
   QMultiMap<ServicePresenter*, ContactWidget*> contacts_;
   QMultiMap<ServicePresenter*, ContentPanel*> contents_;

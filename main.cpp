@@ -3,9 +3,7 @@
 
 int main(int argc, char *argv[]) {
 
-  // TODO: temporary workaround to set core UI ...
-  sdc::Core* c = sdc::Core::Instance();
-  sdc::Core::Instance()->SetUI(new sdc::QtGui(c, argc, argv));
+  sdc::Core::Create(new sdc::QtGui(argc, argv));
 
   sdc::Core::Instance()->Start();
 

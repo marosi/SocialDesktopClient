@@ -16,6 +16,7 @@
 #include "main_window.h"
 #include "qt_service_model.h"
 #include <QObject>
+#include "boost/cast.hpp"
 
 namespace sdc {
 
@@ -40,7 +41,7 @@ class ServicePresenter : public QObject {
 
   template<class T>
   T* model() const {
-      return boost::polymorphic_downcast<T*>(service_model_);
+    return boost::polymorphic_downcast<T*>(service_model_);
   }
 
   AccountButton* account_button() const {

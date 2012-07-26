@@ -4,9 +4,12 @@
 namespace sdc {
 
 ContactsButton::ContactsButton() {
-  button()->setText("C");
+  button()->setText("Contacts");
   button()->setCheckable(true);
   button()->setChecked(true);
+  // set icon
+  button()->setIcon(QIcon(":/icons/Address Book.ico"));
+  button()->setIconSize(QSize(30, 30));
 }
 
 void ContactsButton::SetPanel(ContactsPanel* panel) {

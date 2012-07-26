@@ -1,7 +1,6 @@
 #ifndef SETTINGS_DIALOG_H
 #define SETTINGS_DIALOG_H
 
-#include "qt_view.h"
 #include <QtGui/QDialog>
 #include "ui_settings_dialog.h"
 
@@ -23,7 +22,7 @@ class SettingsListItem : public QListWidgetItem {
   QWidget* page_;
 };
 
-class SettingsDialog : public QDialog, public QtView
+class SettingsDialog : public QDialog
 {
     Q_OBJECT
 

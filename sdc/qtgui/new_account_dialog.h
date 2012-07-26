@@ -1,15 +1,15 @@
 #ifndef NEW_ACCOUNT_WIDGET_H
 #define NEW_ACCOUNT_WIDGET_H
 
-#include "qt_view.h"
 #include <QtGui/QDialog>
 #include "ui_new_account_dialog.h"
 
 namespace sdc {
 
+class Account;
 class NewAccountWidget;
 
-class NewAccountDialog : public QDialog, public QtView
+class NewAccountDialog : public QDialog
 {
     Q_OBJECT
 

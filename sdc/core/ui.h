@@ -11,16 +11,14 @@
 #ifndef GUI_H_
 #define GUI_H_
 
-#include "core_anchor.h"
-
 namespace sdc {
 
 class Service;
 class ServiceController;
 
-class UI : public CoreAnchor { // TODO: Abstract manager holds anchor to Core, should Ui be Manager or should AbstractManager be kind of Core referent
+class UI {
  public:
-  UI(Core* core);
+  UI();
   virtual ~UI();
 
   /**

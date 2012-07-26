@@ -10,33 +10,25 @@ namespace sdc {
 
 AccountButton::AccountButton(QtServiceModel* model)
     : model_(model) {
-	QString account_name = QString::fromStdString(model_->account()->GetUid());
-
-//	QColor color;
-//	color.setNamedColor("sienna");
-//	QPalette palette;
-//	palette.setColor(QPalette::Button, color);
-//	ui.toolButton->setPalette(palette);
-//	ui.toolButton->setToolTip(account_name);
-
-	menu_ = new QMenu(account_name, this);
-	QAction* title = menu_->addAction(QString::fromStdString(model->account()->GetUid()));
-	title->setEnabled(false);
-	menu_->addSeparator();
-	connect(menu_->addAction("Online"), SIGNAL(triggered()),
-	    this, SLOT(GoOnline()));
-	connect(menu_->addAction("Offline"), SIGNAL(triggered()),
-	    this, SLOT(GoOffline()));
-
-  connect(button(), SIGNAL(clicked()),
-	    this, SLOT(ShowMenu()));
-
+  // set menu
+  menu_ = new QMenu(this);
+  QString account_name = QString::fromStdString(model_->account()->GetUid());
+  title_ = menu_->addAction(account_name);
+  menu_->addSeparator();
+  // online/offline actions
+  connect(menu_->addAction("Online"), SIGNAL(triggered()),
+      this, SLOT(GoOnline()));
+  connect(menu_->addAction("Offline"), SIGNAL(triggered()),
+      this, SLOT(GoOffline()));
+  // ...and install in button
+  button()->setMenu(menu_);
+  button()->setPopupMode(QToolButton::InstantPopup);
 }
 
 AccountButton::~AccountButton() {}
 
-void AccountButton::ShowMenu() {
-  QAction* action = menu_->exec(QCursor::pos());
+void AccountButton::SetAccountIcon(const QIcon &icon) {
+  title_->setIcon(icon);
 }
 
 void AccountButton::GoOnline() {

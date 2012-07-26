@@ -38,8 +38,8 @@ void QtGui::Init() {
   /*
    * Bind to core signals
    */
-  sdc::bind(core()->onAccountActivated, boost::bind(&QtGui::ActivateAccount, this, _1));
-  sdc::bind(core()->onAccountDeactivated, boost::bind(&QtGui::DeativateAccount, this, _1));
+  sdc::bind(Core::Instance()->onAccountActivated, boost::bind(&QtGui::ActivateAccount, this, _1));
+  sdc::bind(Core::Instance()->onAccountDeactivated, boost::bind(&QtGui::DeativateAccount, this, _1));
   /*
    * Qt settings for storing GUI state
    */
@@ -59,7 +59,7 @@ void QtGui::Init() {
 }
 
 void QtGui::ActivateAccount(const std::string account_id) {
-  QtServiceModel* model = boost::polymorphic_downcast<QtServiceModel*>(core()->model(account_id));
+  QtServiceModel* model = boost::polymorphic_downcast<QtServiceModel*>(Core::Instance()->model(account_id));
   // create presenter
   ServicePresenter* presenter = model->GetQtService()->CreateServicePresenter();
   // create account button
