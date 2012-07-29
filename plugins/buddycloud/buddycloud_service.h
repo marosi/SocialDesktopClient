@@ -16,8 +16,8 @@
 class BuddycloudService : public sdc::QtService {
  public:
   BuddycloudService() {
-    SetName("Buddycloud");
-    SetDescription("Buddycloud channels service.");
+    SetName("buddycloud");
+    SetDescription("buddycloud Channels Service.");
     SetDir("resources/buddycloud");
   }
 

@@ -3,5 +3,6 @@
         <file>icons/Activity Monitor.ico</file>
         <file>icons/Address Book.ico</file>
         <file>icons/Setting.ico</file>
+        <file>icons/accounts.png</file>
     </qresource>
 </RCC>

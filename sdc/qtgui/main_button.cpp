@@ -9,9 +9,11 @@ MainButton::MainButton(MainWindow* main_window)
   : main_window_(main_window), settings_(0) {
   button()->setText("Main");
   button()->setObjectName("MainButton");
+
   // set icon
   button()->setIcon(QIcon(":/icons/Setting.ico"));
   button()->setIconSize(QSize(30, 30));
+
   // set menu
   QMenu* menu = new QMenu;
   QAction* settings = menu->addAction("Settings");
@@ -19,6 +21,7 @@ MainButton::MainButton(MainWindow* main_window)
   QAction* quit = menu->addAction("Quit");
   button()->setMenu(menu);
   button()->setPopupMode(QToolButton::DelayedPopup);
+
   // bind signal and slots
   connect(quit, SIGNAL(triggered()), main_window_, SLOT(close()));
   connect(settings, SIGNAL(triggered()), this, SLOT(ShowSettingsDialog()));
@@ -26,10 +29,10 @@ MainButton::MainButton(MainWindow* main_window)
 }
 
 void MainButton::ShowSettingsDialog() {
-  if (!settings_)
+  if (!settings_) {
     settings_ = new SettingsDialog(this);
-  else
-    settings_->show();
+  }
+  settings_->exec();
 }
 
 } /* namespace sdc */

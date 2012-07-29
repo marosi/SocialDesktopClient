@@ -15,12 +15,19 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 	ui.setupUi(this);
   // setup accounts page
   SettingsListItem* it1 = new SettingsListItem(ui.listWidget, ui.accountsPage);
-  it1->setText("Accounts");
 
+  QLabel* accounts = new QLabel;
+  accounts->setPixmap(QPixmap(":/icons/accounts.png"));
+  accounts->setScaledContents(true);
+  accounts->setMaximumWidth(70);
+  accounts->setMaximumHeight(70);
+  it1->setSizeHint(QSize(70, 70));
+  ui.listWidget->setItemWidget(it1, accounts);
+
+  // setup accounts model and view
   AccountsModel* model = new AccountsModel(Core::Instance());
   ui.tableView->setModel(model);
-  ui.tableView->setColumnWidth(1, 50);
-  ui.tableView->setColumnWidth(0, 280);
+  ui.tableView->horizontalHeader()->setResizeMode(1, QHeaderView::Stretch);
 
   connect(ui.addAccountButton, SIGNAL(clicked()),
       this, SLOT(ShowNewAccountDialog()));
@@ -44,8 +51,6 @@ SettingsDialog::SettingsDialog(QWidget *parent)
   // dialog OK and Cancel buttons
   connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
   connect(ui.buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
-
-	show();
 }
 
 SettingsDialog::~SettingsDialog() {}

@@ -1,7 +1,8 @@
 #include "accounts_model.h"
-#include "data_manager.h"
 #include "bind.h"
 #include "core.h"
+#include "data_manager.h"
+#include "service.h"
 #include <string>
 
 using std::string;
@@ -19,7 +20,7 @@ int AccountsModel::rowCount(const QModelIndex &/*parent*/) const {
 }
 
 int AccountsModel::columnCount(const QModelIndex &/*parent*/) const {
-  return 2;
+  return 3;
 }
 
 QVariant AccountsModel::headerData(int section, Qt::Orientation orientation, int role) const {
@@ -29,8 +30,10 @@ QVariant AccountsModel::headerData(int section, Qt::Orientation orientation, int
   if (orientation == Qt::Horizontal) {
     switch (section) {
       case 0:
-        return QVariant("Account Name");
+        return QVariant("Service");
       case 1:
+        return QVariant("Account");
+      case 2:
         return QVariant("Enabled");
       default:
         return QVariant();
@@ -43,16 +46,20 @@ QVariant AccountsModel::data(const QModelIndex &index, int role) const {
   if (role == Qt::DisplayRole) {
     switch (index.column()) {
       case 0: {
+        string service = core_->service(core_->data()->GetAccount(index.row())->GetServiceSignature())->name();
+        return QString::fromStdString(service);
+      }
+      case 1: {
         string name = core_->data()->GetAccount(index.row())->GetUid();
         return QString::fromStdString(name);
       }
-      case 1: {
+      case 2: {
         return QVariant();
       }
       default:
         return QVariant();
     }
-  } else if (role == Qt::CheckStateRole && index.column() == 1) {
+  } else if (role == Qt::CheckStateRole && index.column() == 2) {
     bool enabled = core_->data()->GetAccount(index.row())->IsEnabled();
     if (enabled)
       return QVariant(Qt::Checked);
@@ -64,7 +71,7 @@ QVariant AccountsModel::data(const QModelIndex &index, int role) const {
 
 bool AccountsModel::setData(const QModelIndex &index, const QVariant &value, int role) {
   if (role == Qt::CheckStateRole) {
-    if (index.column() == 1) {
+    if (index.column() == 2) {
       if (value.toInt() == Qt::Checked) {
         core_->data()->SetEnabledAccount(index.row(), true);
         emit dataChanged(index, index);
@@ -83,9 +90,12 @@ bool AccountsModel::setData(const QModelIndex &index, const QVariant &value, int
 Qt::ItemFlags AccountsModel::flags(const QModelIndex &index) const {
   switch (index.column()) {
     case 0: {
-      return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+      return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
     }
     case 1: {
+      return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+    }
+    case 2: {
       return QAbstractItemModel::flags(index) | Qt::ItemIsUserCheckable | Qt::ItemIsEditable;
     }
     default:
