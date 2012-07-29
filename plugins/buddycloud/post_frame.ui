@@ -45,7 +45,7 @@
        </property>
       </widget>
      </item>
-     <item>
+     <item alignment="Qt::AlignTop">
       <widget class="QToolButton" name="deleteButton">
        <property name="maximumSize">
         <size>
@@ -54,10 +54,10 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>Close panel</string>
+        <string>Delete Post</string>
        </property>
        <property name="text">
-        <string>X</string>
+        <string/>
        </property>
       </widget>
      </item>

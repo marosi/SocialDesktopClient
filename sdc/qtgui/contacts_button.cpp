@@ -5,6 +5,7 @@ namespace sdc {
 
 ContactsButton::ContactsButton() {
   button()->setText("Contacts");
+  button()->setObjectName("ContactsButton");
   button()->setCheckable(true);
   button()->setChecked(true);
   // set icon

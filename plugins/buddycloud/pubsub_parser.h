@@ -53,6 +53,7 @@ class ItemParser : public Swift::GenericPayloadParser<Items<T> > {
   std::vector<Swift::PayloadParserFactory*> factories_;
   Swift::PayloadParser* curr_parser_;
   std::string character_data_;
+  bool is_item_;
 };
 
 class LogParser : public Swift::PayloadParser {
@@ -143,7 +144,6 @@ class PubsubSubscribeRequestParser : public Swift::GenericPayloadParser<PubsubSu
 class PubsubParser : public Swift::PayloadParser {
  public:
   PubsubParser();
-
   ~PubsubParser();
 
   void handleStartElement(const std::string&  element, const std::string&  ns, const Swift::AttributeMap&  attributes);

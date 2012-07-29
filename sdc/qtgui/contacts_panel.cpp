@@ -6,7 +6,9 @@ namespace sdc {
 
 ContactsPanel::ContactsPanel() {
   title_label()->setText("Contacts");
+  setObjectName("ContactsPanel");
   add_button_ = new QToolButton(this);
+  add_button_->setObjectName("AddButton");
   AddTitleBarButton(add_button_);
   connect(add_button_, SIGNAL(clicked()), this, SLOT(ShowNewContactDialog()));
 }

@@ -10,16 +10,20 @@ namespace sdc {
 
 AccountButton::AccountButton(QtServiceModel* model)
     : model_(model) {
+  button()->setObjectName("AccountButton");
+
   // set menu
   menu_ = new QMenu(this);
   QString account_name = QString::fromStdString(model_->account()->GetUid());
   title_ = menu_->addAction(account_name);
   menu_->addSeparator();
+
   // online/offline actions
   connect(menu_->addAction("Online"), SIGNAL(triggered()),
       this, SLOT(GoOnline()));
   connect(menu_->addAction("Offline"), SIGNAL(triggered()),
       this, SLOT(GoOffline()));
+
   // ...and install in button
   button()->setMenu(menu_);
   button()->setPopupMode(QToolButton::InstantPopup);

@@ -51,6 +51,9 @@
        <property name="text">
         <string>Panel Title</string>
        </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item>
@@ -60,9 +63,6 @@
        </property>
        <property name="toolButtonStyle">
         <enum>Qt::ToolButtonIconOnly</enum>
-       </property>
-       <property name="arrowType">
-        <enum>Qt::DownArrow</enum>
        </property>
       </widget>
      </item>

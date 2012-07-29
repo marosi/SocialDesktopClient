@@ -16,7 +16,7 @@
 
 class BcContact;
 class BcPresenter;
-class ChannelWidget;
+class ChannelPanel;
 
 class BcContactWidget : public sdc::ContactWidget, public AbstractPresenter {
  public:
@@ -33,7 +33,7 @@ class BcContactWidget : public sdc::ContactWidget, public AbstractPresenter {
 
  private:
   BcContact* contact_;
-  ChannelWidget* channel_;
+  ChannelPanel* channel_;
 };
 
 #endif /* BC_CONTACT_WIDGET_H_ */

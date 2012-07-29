@@ -4,7 +4,8 @@
 namespace sdc {
 
 ActivitiesButton::ActivitiesButton() {
-  button()->setText("A");
+  button()->setText("Activities");
+  button()->setObjectName("ActivitiesButton");
   button()->setCheckable(true);
   button()->setChecked(true);
   // set icon

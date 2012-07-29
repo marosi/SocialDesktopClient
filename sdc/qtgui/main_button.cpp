@@ -7,7 +7,7 @@ namespace sdc {
 
 MainButton::MainButton(MainWindow* main_window)
   : main_window_(main_window), settings_(0) {
-  button()->setText("Global");
+  button()->setText("Main");
   button()->setObjectName("MainButton");
   // set icon
   button()->setIcon(QIcon(":/icons/Setting.ico"));

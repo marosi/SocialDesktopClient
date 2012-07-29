@@ -20,6 +20,8 @@
 #include <QIcon>
 #include <QPixmap>
 
+#include "sdc/core/log.h"
+
 BcPresenter::BcPresenter() : AbstractPresenter(this), channel_(0) {}
 
 BcPresenter::~BcPresenter() {}
@@ -29,8 +31,12 @@ void BcPresenter::Init() {
   qRegisterMetaType<JID>("JID");
 
   // set avatar
-  SetOwnAvatar(model_->GetOwnAvatarPath());
   UpdateAvatar(model_->GetOwnJID());
+
+  // set buddycloud icon on account button
+  QIcon icon(":/icon.svg");
+  account_button()->button()->setIcon(icon);
+  account_button()->button()->setIconSize(QSize(32, 32));
 
   // set stylesheet
   QFile file("plugins/buddycloud/resources/bc.qss");
@@ -41,7 +47,7 @@ void BcPresenter::Init() {
   // bindings
   sdc::bind(model_->onConnected, [&] () {
     if (!channel_) {
-      channel_ = new ChannelWidget(this, model_->GetOwnChannel());
+      channel_ = new ChannelPanel(this, model_->GetOwnChannel());
       channels_[model_->GetOwnJID()] = channel_;
       main_window()->AddContentPanel(this, channel_);
     }
@@ -49,7 +55,7 @@ void BcPresenter::Init() {
   });
 
   sdc::bind(model_->onOwnAvatarChanged, [&] () {
-    SetOwnAvatar(model_->GetOwnAvatarPath());
+    //SetOwnAvatar(model_->GetOwnAvatarPath());
   });
 
   sdc::bind(model_->onAvatarChanged, [&] (const JID jid) {
@@ -89,7 +95,7 @@ void BcPresenter::ShowChannel(const JID &jid) {
   if (channels_.contains(jid))
     channels_[jid]->show();
   else {
-    ChannelWidget* cw = new ChannelWidget(this, model_->GetChannel(jid.toString()));
+    ChannelPanel* cw = new ChannelPanel(this, model_->GetChannel(jid.toString()));
     channels_[jid] = cw;
     main_window()->AddContentPanel(this, cw);
     cw->show();
@@ -102,10 +108,4 @@ void BcPresenter::UpdateAvatar(const JID &jid) {
   } else {
     avatars_[jid] = new Avatar(model_->GetAvatarPath(jid));
   }
-}
-
-void BcPresenter::SetOwnAvatar(const std::string &file_path) {
-  QString path = QString::fromStdString(file_path);
-  if (QFile::exists(path))
-    account_button()->button()->setIcon(QIcon(path));
 }

@@ -5,6 +5,7 @@ namespace sdc {
 
 ActivitiesPanel::ActivitiesPanel() {
   title_label()->setText("Activities");
+  setObjectName("ActivitiesPanel");
 }
 
 void ActivitiesPanel::AddActivity(Activity* activity) {

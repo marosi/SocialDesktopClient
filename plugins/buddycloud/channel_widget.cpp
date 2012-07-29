@@ -13,10 +13,10 @@
 #include <QtAlgorithms>
 #include <algorithm>
 
-ChannelWidget::ChannelWidget(AbstractPresenter* presenter, Channel* channel)
+ChannelPanel::ChannelPanel(AbstractPresenter* presenter, Channel* channel)
     : AbstractPresenter(presenter),
       channel_(channel) {
-  setObjectName("Channel");
+  setObjectName("ChannelPanel");
   setMinimumWidth(300);
   { // set new post button
     new_post_button_ = new QToolButton(this);
@@ -72,14 +72,14 @@ ChannelWidget::ChannelWidget(AbstractPresenter* presenter, Channel* channel)
   channel_->Sync();
 }
 
-ChannelWidget::~ChannelWidget() {
+ChannelPanel::~ChannelPanel() {
   delete new_post_;
   delete new_post_button_;
   for (PostFrame* widget : posts_.values())
     delete widget;
 }
 
-void ChannelWidget::SendPost() {
+void ChannelPanel::SendPost() {
   // publish
   channel_->PublishPost(new_post_ui.textEdit->toPlainText().toStdString());
   // tidy up text edit
@@ -88,7 +88,7 @@ void ChannelWidget::SendPost() {
   new_post_button_->setChecked(false);
 }
 
-void ChannelWidget::OnScrollBarValueChanged(int value) {
+void ChannelPanel::OnScrollBarValueChanged(int value) {
   if (value == old_scroll_bar_value_)
     return;
   if (value >= scroll_bar_->maximum())
@@ -96,7 +96,7 @@ void ChannelWidget::OnScrollBarValueChanged(int value) {
   old_scroll_bar_value_ = value;
 }
 
-void ChannelWidget::ShowPostInOrder(Post* post) {
+void ChannelPanel::ShowPostInOrder(Post* post) {
   PostFrame* pw = new PostFrame(this, post);
   QList<Post*>::iterator it = qUpperBound(posts_order_.begin(), posts_order_.end(), post,
       [&] (const Post* p1, const Post* p2) { return p1->GetPublished() > p2->GetPublished(); });

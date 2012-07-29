@@ -8,7 +8,7 @@
  */
 
 template<class T>
-ItemParser<T>::ItemParser() : level_(TopLevel), curr_parser_(0) {}
+ItemParser<T>::ItemParser() : level_(TopLevel), curr_parser_(0), is_item_(false) {}
 
 template<class T>
 ItemParser<T>::~ItemParser() {
@@ -31,8 +31,13 @@ void ItemParser<T>::handleStartElement(const std::string& element, const std::st
   } else {
     if (!curr_parser_) {
       Swift::PayloadParserFactory* factory = parsers_.getPayloadParserFactory(element, ns, attributes);
-      assert(factory);
-      curr_parser_ = factory->createPayloadParser(); // FIX: each item, new parser is created, is that necessary for ItemParser?
+      if (factory) {
+        curr_parser_ = factory->createPayloadParser(); // FIX: each item, new parser is created, is that necessary for ItemParser?
+        is_item_ = true;
+      } else {
+        curr_parser_ = new LogParser;
+        is_item_ = false;
+      }
     }
     assert(curr_parser_);
     curr_parser_->handleStartElement(element, ns, attributes);
@@ -43,7 +48,7 @@ void ItemParser<T>::handleStartElement(const std::string& element, const std::st
 template<class T>
 void ItemParser<T>::handleEndElement(const std::string& element, const std::string& ns) {
   --level_;
-  if (level_ == TopLevel && element == "item") {
+  if (level_ == TopLevel && element == "item" && is_item_) {
     // push back handled payload in item element
     assert(curr_parser_);
     getPayloadInternal()->appendPayload(boost::dynamic_pointer_cast<T>(curr_parser_->getPayload())); // FIX: not efficient
@@ -164,7 +169,7 @@ void PubsubItemsRequestParser::handleStartElement(const std::string& element, co
       is_parsing_items_ = true;
     } else if (element == "set") {
       // because there isn't always RSM payload create parser dynamicaly
-      rsm_parser_ = new RsmParser();
+      rsm_parser_ = new RsmParser;
       is_parsing_rsm_ = true;
     }
   } else if (level_ > TopLevel) {

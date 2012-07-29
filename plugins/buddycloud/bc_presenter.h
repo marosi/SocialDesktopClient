@@ -21,7 +21,7 @@
 
 class BcModel;
 class BcContactWidget;
-class ChannelWidget;
+class ChannelPanel;
 
 class BcPresenter : public sdc::ServicePresenter, public AbstractPresenter {
 
@@ -40,12 +40,11 @@ class BcPresenter : public sdc::ServicePresenter, public AbstractPresenter {
   void ShowChannel(const JID &jid);
 
  private:
-  void SetOwnAvatar(const std::string &file_path);
   void UpdateAvatar(const JID &jid);
 
   BcModel* model_;
-  ChannelWidget* channel_;
-  QMap<JID, ChannelWidget*> channels_;
+  ChannelPanel* channel_;
+  QMap<JID, ChannelPanel*> channels_;
   QList<BcContactWidget*> contacts_;
   QMap<JID, Avatar*> avatars_;
 };

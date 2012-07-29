@@ -1,4 +1,14 @@
 /*
+ * sdc.qss
+ *
+ * Qt StyleSheet for whole application.
+ */
+
+QMainWindow {
+/*background: white*/
+}
+
+/*
  * Prime Buttons
  */
 QToolButton#MainButton::menu-indicator {
@@ -8,19 +18,60 @@ image: none;
 /*
  * Content Panel
  */
+QFrame[contentPanel="true"] {
+border-radius: 5px;
+border-width: 2px;
+border-style: solid;
+border-color: black;
+}
 QFrame[contentPanel="true"] > QToolButton#actionButton::menu-indicator {
 image: none;
 }
 
 QFrame[contentPanel="true"] > QToolButton#actionButton {
-margin-right: 3px;
-border-radius: 3px;
+width: 0px;
 background: grey;
+}
+
+QFrame[contentPanel="true"] > QLabel#titleLabel {
+font-size: 10pt;
+font-weight: bold;
+}
+
+/*
+ * Common Buttons
+ */
+QToolButton#MainButton {
+width: 0px;
+background: grey;
+}
+
+QToolButton#ContactsButton {
+background: rgb(226, 140, 53);
+}
+
+QToolButton#ActivitiesButton {
+background: rgb(48, 147, 211);
+}
+
+/*
+ * Common Panels
+ */
+QFrame#ContactsPanel {
+border-color: rgb(226, 140, 53);
+}
+
+QFrame#ActivitiesPanel {
+border-color: rgb(48, 147, 211);
 }
 
 /*
  * Contacts Panel
  */
+QFrame#ContactsPanel > QToolButton#AddButton {
+background: rgb(226, 140, 53);
+}
+
 QTreeWidget#ContactsTreeWidget {
 margin: 3px;
 border-radius: 1px;
@@ -37,4 +88,3 @@ background: blue;
 QTreeWidget#ContactsTreeWidget::branch:open:has-children {
 background: white;
 }
-

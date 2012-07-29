@@ -13,17 +13,21 @@ PostFrame::PostFrame(AbstractPresenter* presenter, Post* post)
       post_(post) {
 	ui.setupUi(this);
   ui.commentLineEdit->hide();
+
   // set post data
   ui.authorLabel->setText(QString::fromStdString(post_->GetAuthor()));
   ui.contentLabel->setText(QString::fromStdString(post_->GetContent()));
   setToolTip(QString::fromStdString(boost::posix_time::to_simple_string(post_->GetPublished())));
+
   // setup avatar
   Avatar* avatar = this->presenter()->GetAvatar(post_->GetAuthor());
   ui.avatarLabel->setPixmap(avatar->GetPixmap());
   connect(avatar, SIGNAL(changed(QPixmap)), ui.avatarLabel, SLOT(setPixmap(QPixmap)));
+
   // set focusing policy
   setFocusPolicy(Qt::StrongFocus);
   setFocusProxy(ui.commentLineEdit);
+
   // bindings
 	connect(ui.deleteButton, SIGNAL(clicked()),
 	    this, SLOT(DeletePost()));
@@ -32,6 +36,7 @@ PostFrame::PostFrame(AbstractPresenter* presenter, Post* post)
   sdc::bind(post_->onCommentAdded, [&] (Comment* comment) {
     ShowCommentInOrder(comment);
   });
+
   // show comments
   for (Comment* comment : post_->comments()) {
     ShowCommentInOrder(comment);

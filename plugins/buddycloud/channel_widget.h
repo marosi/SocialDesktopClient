@@ -21,13 +21,13 @@
 
 class PostFrame;
 
-class ChannelWidget : public sdc::ContentPanel, public AbstractPresenter {
+class ChannelPanel : public sdc::ContentPanel, public AbstractPresenter {
 
     Q_OBJECT
 
  public:
-  ChannelWidget(AbstractPresenter* presenter, Channel* channel);
-  ~ChannelWidget();
+  ChannelPanel(AbstractPresenter* presenter, Channel* channel);
+  ~ChannelPanel();
 
  public slots:
   void SendPost();

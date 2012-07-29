@@ -1,3 +1,7 @@
+QFrame#ChannelPanel {
+border-color: rgb(239, 236, 223);
+}
+
 QFrame#PostFrame, QFrame#CommentFrame, QFrame#PostActivity, QFrame#CommentActivity {
 border-radius: 3px;
 }
@@ -11,10 +15,19 @@ QFrame#CommentFrame, QFrame#CommentActivity {
 background-color: rgb(196, 206, 209);
 }
 
-
 QFrame#PostFrame > QLabel#authorLabel, QFrame#CommentFrame > QLabel#authorLabel {
 font-size: 10px;
 font-weight: bold;
 border-color: rgb(196, 206, 209);
 border-radius: 4px;
 }
+
+QFrame#PostFrame > QToolButton#deleteButton {
+background: rgb(172, 29, 33);
+}
+
+QToolButton#AccountButton {
+width: 0px;
+background: white;
+}
+

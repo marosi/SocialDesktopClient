@@ -77,7 +77,6 @@ FORMS += \
     sdc/qtgui/main_window.ui \
     sdc/qtgui/content_panel.ui \
     sdc/qtgui/contact_widget.ui \
-    sdc/qtgui/account_button.ui \
     sdc/qtgui/prime_button.ui \
     sdc/qtgui/activity.ui
 RESOURCES += \  
