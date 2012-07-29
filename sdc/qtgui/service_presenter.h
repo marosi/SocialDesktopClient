@@ -48,7 +48,10 @@ class ServicePresenter : public QObject {
     return account_button_;
   }
 
+  void SetStylesheet(const QString &stylesheet);
+
  private:
+  QtGui* qtgui_;
   MainWindow* main_window_;
   QtServiceModel* service_model_;
   AccountButton* account_button_;

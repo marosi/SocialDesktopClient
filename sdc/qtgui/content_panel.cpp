@@ -1,5 +1,6 @@
 #include "content_panel.h"
 #include "main_window.h"
+#include <QMenu>
 #include <QPainter>
 #include <QStandardItemModel>
 #include "boost/cast.hpp"
@@ -11,7 +12,10 @@ ContentPanel::ContentPanel(QWidget* parent)
     : QFrame(parent) {
   ui.setupUi(this);
   // close action
-  connect(ui.closeButton, SIGNAL(clicked()),
+  QMenu* menu = new QMenu;
+  QAction* close = menu->addAction("Close");
+  ui.actionButton->setMenu(menu);
+  connect(close, SIGNAL(triggered()),
       this, SLOT(close()));
 }
 

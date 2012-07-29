@@ -19,7 +19,7 @@
 #include <QList>
 #include <QMap>
 
-class PostWidget;
+class PostFrame;
 
 class ChannelWidget : public sdc::ContentPanel, public AbstractPresenter {
 
@@ -38,7 +38,7 @@ class ChannelWidget : public sdc::ContentPanel, public AbstractPresenter {
 
   Channel* channel_;
   QList<Post*> posts_order_;
-  QMap<Post*, PostWidget*> posts_;
+  QMap<Post*, PostFrame*> posts_;
   QToolButton* new_post_button_;
   QWidget* new_post_;
   Ui::NewPostClass new_post_ui;

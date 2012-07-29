@@ -13,6 +13,7 @@
 #include "service_model.h"
 #include "service_presenter.h"
 #include "qt_service_model.h"
+#include <QFile>
 #include <QSettings>
 #include "boost/foreach.hpp"
 #include "boost/bind.hpp"
@@ -44,10 +45,16 @@ void QtGui::Init() {
    * Qt settings for storing GUI state
    */
   QCoreApplication::setOrganizationName("SDC");
-  //QCoreApplication::setOrganizationDomain("socialdesktopclient.net");
   QCoreApplication::setApplicationName("Social Desktop Client");
   //QSettings settings;
   //LOG(DEBUG) << "QSettings testing :: " << settings.value("sample").toInt();
+  /*
+   * Read stylesheet from file
+   */
+  QFile file("sdc/qtgui/resources/sdc.qss");
+  file.open(QFile::ReadOnly);
+  QString stylesheet = QLatin1String(file.readAll());
+  app_.setStyleSheet(stylesheet);
   /*
    * Main window creation
    */
@@ -56,6 +63,10 @@ void QtGui::Init() {
    * Show main window finally
    */
   main_window_->show();
+}
+
+void QtGui::AppendStyleSheet(const QString &stylesheet) {
+  app_.setStyleSheet(app_.styleSheet() + stylesheet);
 }
 
 void QtGui::ActivateAccount(const std::string account_id) {
@@ -67,6 +78,7 @@ void QtGui::ActivateAccount(const std::string account_id) {
   main_window_->AddAccountButton(button);
   buttons_[account_id] = button;
   // initialize presenter members
+  presenter->qtgui_ = this;
   presenter->account_button_ = button;
   presenter->main_window_ = main_window_;
   presenter->service_model_ = model;

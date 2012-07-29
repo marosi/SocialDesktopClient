@@ -1,0 +1,40 @@
+/*
+ * Prime Buttons
+ */
+QToolButton#MainButton::menu-indicator {
+image: none;
+}
+
+/*
+ * Content Panel
+ */
+QFrame[contentPanel="true"] > QToolButton#actionButton::menu-indicator {
+image: none;
+}
+
+QFrame[contentPanel="true"] > QToolButton#actionButton {
+margin-right: 3px;
+border-radius: 3px;
+background: grey;
+}
+
+/*
+ * Contacts Panel
+ */
+QTreeWidget#ContactsTreeWidget {
+margin: 3px;
+border-radius: 1px;
+}
+
+QTreeWidget#ContactsTreeWidget::item:!has-children {
+margin-left: -10px;
+}
+
+QTreeWidget#ContactsTreeWidget::branch:closed:has-children {
+background: blue;
+}
+
+QTreeWidget#ContactsTreeWidget::branch:open:has-children {
+background: white;
+}
+

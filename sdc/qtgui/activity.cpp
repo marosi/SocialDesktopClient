@@ -3,8 +3,8 @@
 
 namespace sdc {
 
-Activity::Activity(QWidget *parent)
-  : QWidget(parent),
+Activity::Activity(QFrame *parent)
+  : QFrame(parent),
     ui(new Ui::Activity) {
   ui->setupUi(this);
 }

@@ -2,22 +2,22 @@
 #define POST_WIDGET_H
 
 #include "abstract_presenter.h"
-#include "ui_post_widget.h"
-#include <QtGui/QWidget>
+#include "ui_post_frame.h"
+#include <QFrame>
 #include <QList>
 #include <QMap>
 
-class CommentWidget;
+class CommentFrame;
 class Post;
 class Comment;
 
-class PostWidget : public QWidget, public AbstractPresenter {
+class PostFrame : public QFrame, public AbstractPresenter {
 
     Q_OBJECT
 
  public:
-  PostWidget(AbstractPresenter* presenter, Post* post);
-  ~PostWidget();
+  PostFrame(AbstractPresenter* presenter, Post* post);
+  ~PostFrame();
 
  public slots:
   void DeletePost();
@@ -30,10 +30,10 @@ class PostWidget : public QWidget, public AbstractPresenter {
   void ShowCommentInOrder(Comment* comment);
 
  private:
-  Ui::PostWidgetClass ui;
+  Ui::PostFrame ui;
   Post* post_;
   QList<Comment*> comments_order_;
-  QMap<Comment*, CommentWidget*> comments_;
+  QMap<Comment*, CommentFrame*> comments_;
 };
 
 #endif // POST_WIDGET_H

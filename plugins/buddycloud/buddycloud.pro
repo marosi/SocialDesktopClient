@@ -7,7 +7,6 @@ HEADERS += \
     pubsub_requests.h \
     pubsub_parser.h \
     post.h \
-    post_widget.h \
     xmpp_commands.h \
     buddycloud_service.h \
     channel.h \
@@ -24,7 +23,6 @@ HEADERS += \
     payloads/pubsub.h \
     payloads/items.h \
     payloads/atom.h \
-    comment_widget.h \
     abstract_model.h \
     abstract_presenter.h \
     avatar.h \
@@ -32,11 +30,12 @@ HEADERS += \
     avatar_filesystem_storage.h \
     bc_account.h \
     post_activity.h \
-    comment_activity.h
+    comment_activity.h \
+    post_frame.h \
+    comment_frame.h
 SOURCES += \
     pubsub_serializer.cc \
     post.cc \
-    post_widget.cpp \
     xmpp_commands.cpp \
     buddycloud_service.cc \
     main.cc \
@@ -46,21 +45,23 @@ SOURCES += \
     bc_model.cc \
     bc_contact.cc \
     pubsub_parser.cc \
-    comment_widget.cpp \
     bc_contact_widget.cc \
     filesystem_storages.cpp \
     avatar_filesystem_storage.cpp \
     pubsub_requests.cc \
     post_activity.cpp \
-    comment_activity.cpp
+    comment_activity.cpp \
+    post_frame.cpp \
+    comment_frame.cpp
 FORMS += \
-    post_widget.ui \
     new_post_widget.ui \
     xmpp_commands.ui \
     bc_new_contact_widget.ui \
     bc_new_account_widget.ui \
-    comment_widget.ui
-RESOURCES += 
+    post_frame.ui \
+    comment_frame.ui
+RESOURCES += \  
+    resources/bc.qrc
 
 include(swiften.pro)
 
@@ -77,3 +78,6 @@ QMAKE_CXXFLAGS += \
 DEFINES += \
   LOG_PRODUCER=Buddycloud \
   BOOST_TT_HAS_OPERATOR_HPP_INCLUDED # because of parse error in BOOST_JOIN macro in moc files
+
+OTHER_FILES += \
+    resources/bc.qss

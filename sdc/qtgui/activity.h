@@ -1,7 +1,7 @@
 #ifndef ACTIVITY_H
 #define ACTIVITY_H
 
-#include <QWidget>
+#include <QFrame>
 #include <QLabel>
 
 namespace Ui {
@@ -10,12 +10,12 @@ class Activity;
 
 namespace sdc {
 
-class Activity : public QWidget {
+class Activity : public QFrame {
 
     Q_OBJECT
     
  public:
-  explicit Activity(QWidget *parent = 0);
+  explicit Activity(QFrame *parent = 0);
   virtual ~Activity();
 
   QLabel* image_label();

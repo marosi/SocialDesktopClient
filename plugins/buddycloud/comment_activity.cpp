@@ -5,6 +5,7 @@
 
 CommentActivity::CommentActivity(BcPresenter* parent, const Comment* comment)
     : presenter_(parent), comment_(comment) {
+  setObjectName("CommentActivity");
   image_label()->setPixmap(presenter_->GetAvatar(comment_->GetAuthorJID())->GetPixmap());
   QString text = QString::fromStdString(comment_->GetAuthor() + " commented on " + comment_->post()->channel()->JID().toString());
   text_label()->setText(text);

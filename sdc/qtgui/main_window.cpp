@@ -35,38 +35,11 @@ class MainWindow::GroupedBy {
     layout_ = new QVBoxLayout;
     tree_ = new QTreeWidget;
     tree_->setObjectName("ContactsTreeWidget");
-    tree_->setStyleSheet(
-      "QTreeWidget#ContactsTreeWidget {"
-        "margin: 3px;"
-      //"background-color: yellow;"
-      //"background-clip: border;"
-      //"background-origin: border;"
-      "}"
-      "QTreeWidget#ContactsTreeWidget::branch {"
-        "border: none;"
-      "}"
-      "QTreeWidget#ContactsTreeWidget::branch:has-children:!has-siblings:closed {"
-      "background: yellow;}"
-      "QTreeWidget#ContactsTreeWidget::branch:has-children:open {"
-      "background: red;}"
-      "QTreeWidget#ContactsTreeWidget::item {"
-        "padding: 3px;"
-      "}"
-    );
     tree_->setFrameStyle(QFrame::NoFrame); // a frame must be removed for the stylesheet to work
-    tree_->viewport()->setObjectName("ContactsViewport");
-    tree_->viewport()->setStyleSheet(
-      "QWidget#ContactsViewport {"
-      "border: 0px solid black;"
-      "border-radius: 5px;"
-      "background: white;"
-      "}"
-    );
     tree_->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Preferred);
     tree_->setColumnCount(1);
     tree_->setHeaderHidden(true);
-    //tree_->setRootIsDecorated(false);
-    tree_->setIndentation(0);
+    tree_->setIndentation(10);
     tree_->setAnimated(true);
     layout_->addWidget(tree_);
   }
@@ -82,7 +55,7 @@ class MainWindow::GroupedBy {
       tree_->addTopLevelItem(item);
     }
     map_.insert(key, widget);
-    QTreeWidgetItem* item = new QTreeWidgetItem;
+    QTreeWidgetItem* item = new QTreeWidgetItem(1001);
     items_[key]->addChild(item);
     items_[key]->setExpanded(true);
     tree_->setItemWidget(item, 0, widget);

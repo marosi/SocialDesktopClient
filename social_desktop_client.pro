@@ -77,15 +77,15 @@ FORMS += \
     sdc/qtgui/main_window.ui \
     sdc/qtgui/content_panel.ui \
     sdc/qtgui/contact_widget.ui \
-    sdc/qtgui/activity.ui \
     sdc/qtgui/account_button.ui \
-    sdc/qtgui/prime_button.ui
+    sdc/qtgui/prime_button.ui \
+    sdc/qtgui/activity.ui
 RESOURCES += \  
     sdc/qtgui/resources/sdc.qrc
 INCLUDEPATH += \
     sdc \
     sdc/core \
-    sdc/qtgui \
+    sdc/qtgui
 LIBS += \
     -lboost_system \
     -lboost_thread \
@@ -95,3 +95,6 @@ QMAKE_LFLAGS += -export-dynamic
 QMAKE_CXXFLAGS += -std=c++0x
 
 DEFINES = BOOST_FILESYSTEM_VERSION=2
+
+OTHER_FILES += \
+    sdc/qtgui/resources/sdc.qss

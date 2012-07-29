@@ -1,20 +1,22 @@
-#include "post_widget.h"
-#include "comment_widget.h"
+#include "post_frame.h"
+#include "comment_frame.h"
 #include "bc_model.h"
 #include "bc_presenter.h"
 #include "post.h"
 #include "sdc/qtgui/bind.h"
 #include <QMessageBox>
+#include <QAbstractTextDocumentLayout>
 #include "boost/date_time/posix_time/time_formatters.hpp"
 
-PostWidget::PostWidget(AbstractPresenter* presenter, Post* post)
+PostFrame::PostFrame(AbstractPresenter* presenter, Post* post)
     : AbstractPresenter(presenter),
       post_(post) {
 	ui.setupUi(this);
   ui.commentLineEdit->hide();
   // set post data
-  ui.authorLabel->setText(QString::fromStdString(post_->GetAuthor() + " " + boost::posix_time::to_simple_string(post_->GetPublished())));
-  ui.contentTextEdit->setText(QString::fromStdString(post_->GetContent()));
+  ui.authorLabel->setText(QString::fromStdString(post_->GetAuthor()));
+  ui.contentLabel->setText(QString::fromStdString(post_->GetContent()));
+  setToolTip(QString::fromStdString(boost::posix_time::to_simple_string(post_->GetPublished())));
   // setup avatar
   Avatar* avatar = this->presenter()->GetAvatar(post_->GetAuthor());
   ui.avatarLabel->setPixmap(avatar->GetPixmap());
@@ -36,12 +38,12 @@ PostWidget::PostWidget(AbstractPresenter* presenter, Post* post)
   }
 }
 
-PostWidget::~PostWidget() {
-  for (CommentWidget* widget : comments_)
+PostFrame::~PostFrame() {
+  for (CommentFrame* widget : comments_)
     delete widget;
 }
 
-void PostWidget::DeletePost() {
+void PostFrame::DeletePost() {
   QMessageBox confirm;
   confirm.setText("Do you really want to delete this post?");
   confirm.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
@@ -52,21 +54,21 @@ void PostWidget::DeletePost() {
   }
 }
 
-void PostWidget::mouseReleaseEvent(QMouseEvent *) {
+void PostFrame::mouseReleaseEvent(QMouseEvent *) {
   ui.commentLineEdit->show();
   setFocus();
 }
 
-void PostWidget::PostComment() {
+void PostFrame::PostComment() {
   post_->PostComment(ui.commentLineEdit->text().toStdString());
   ui.commentLineEdit->clear();
 }
 
-void PostWidget::ShowCommentInOrder(Comment* comment) {
+void PostFrame::ShowCommentInOrder(Comment* comment) {
   QList<Comment*>::iterator it = qUpperBound(comments_order_.begin(), comments_order_.end(), comment,
       [&] (const Comment* c1, const Comment* c2) { return c1->GetPublished() < c2->GetPublished(); });
   comments_order_.insert(it, comment);
-  CommentWidget* cw = new CommentWidget(this, comment);
+  CommentFrame* cw = new CommentFrame(this, comment);
   comments_[comment] = cw;
   ui.commentsLayout->insertWidget(comments_order_.indexOf(comment), cw);
 }

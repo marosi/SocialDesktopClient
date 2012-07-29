@@ -2,7 +2,7 @@
 #define CONTENT_PANEL_H
 
 #include "ui_content_panel.h"
-#include <QtGui/QFrame>
+#include <QFrame>
 #include "sdc/core/contact.h"
 #include "boost/cast.hpp"
 
@@ -38,6 +38,10 @@ class ContentPanel : public QFrame {
     return boost::polymorphic_downcast<QVBoxLayout*>(ui.contentWiget->layout());
   }
 
+  QToolButton* action_button() {
+    return ui.actionButton;
+  }
+
  signals:
   void closed();
 
@@ -45,7 +49,7 @@ class ContentPanel : public QFrame {
   virtual void closeEvent(QCloseEvent *);
 
  private:
-  Ui::ContentPanelClass ui;
+  Ui::ContentPanel ui;
   MainWindow* main_window_;
 };
 

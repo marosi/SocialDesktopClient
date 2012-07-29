@@ -15,3 +15,4 @@ $LIBS" > swiften.pro
 # run qmake & make
 qmake buddycloud.pro
 make
+cp libbuddycloud.so.1.0.0 ../libbuddycloud.so

@@ -1,6 +1,6 @@
 
 # install dev tools 
-apt-get install build-essentials libboost-all-dev qt4-dev-tools openssl
+apt-get install build-essential libboost-all-dev qt4-dev-tools openssl
 
 # build SocialDesktopClient
 cd SocialDesktopClient

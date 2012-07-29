@@ -13,6 +13,7 @@
 
 #include "ui.h"
 #include <QApplication>
+#include <QString>
 #include <map>
 #include <vector>
 
@@ -57,6 +58,8 @@ class QtGui : public QObject, public UI {
   QtService* GetService(ServicePresenter* presenter) {
     return presenter_to_service_[presenter];
   }
+
+  void AppendStyleSheet(const QString &stylesheet);
 
  private:
   void ActivateAccount(const std::string account_id);

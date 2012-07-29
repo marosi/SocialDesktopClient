@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CommentWidget</class>
- <widget class="QWidget" name="CommentWidget">
+ <class>CommentFrame</class>
+ <widget class="QFrame" name="CommentFrame">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>184</width>
-    <height>59</height>
+    <width>220</width>
+    <height>65</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Frame</string>
+  </property>
+  <property name="frameShape">
+   <enum>QFrame::NoFrame</enum>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
-   <item>
+   <item alignment="Qt::AlignTop">
     <widget class="QLabel" name="avatarLabel">
      <property name="minimumSize">
       <size>
@@ -29,26 +32,29 @@
       </size>
      </property>
      <property name="text">
-      <string>TextLabel</string>
+      <string>img</string>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QLabel" name="userLabel">
+      <widget class="QLabel" name="authorLabel">
        <property name="text">
         <string>TextLabel</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QTextBrowser" name="contentTextBrowser">
-       <property name="minimumSize">
-        <size>
-         <width>50</width>
-         <height>30</height>
-        </size>
+      <widget class="QLabel" name="contentLabel">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

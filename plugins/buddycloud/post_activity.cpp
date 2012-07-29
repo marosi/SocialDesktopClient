@@ -5,6 +5,7 @@
 
 PostActivity::PostActivity(BcPresenter* parent, const Post* post)
     : presenter_(parent), post_(post) {
+  setObjectName("PostActivity");
   image_label()->setPixmap(presenter_->GetAvatar(post_->GetAuthorJID())->GetPixmap());
   QString text = QString::fromStdString(post_->GetAuthor() + " posted on " + post_->channel()->JID().toString());
   text_label()->setText(text);

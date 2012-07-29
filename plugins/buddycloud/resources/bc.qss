@@ -1,0 +1,20 @@
+QFrame#PostFrame, QFrame#CommentFrame, QFrame#PostActivity, QFrame#CommentActivity {
+border-radius: 3px;
+}
+
+QFrame#PostFrame, QFrame#PostActivity {
+background-color: rgb(239, 236, 223);
+}
+
+
+QFrame#CommentFrame, QFrame#CommentActivity {
+background-color: rgb(196, 206, 209);
+}
+
+
+QFrame#PostFrame > QLabel#authorLabel, QFrame#CommentFrame > QLabel#authorLabel {
+font-size: 10px;
+font-weight: bold;
+border-color: rgb(196, 206, 209);
+border-radius: 4px;
+}

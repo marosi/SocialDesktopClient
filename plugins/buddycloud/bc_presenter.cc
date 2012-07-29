@@ -28,9 +28,17 @@ void BcPresenter::Init() {
   model_ = model<BcModel>();
   qRegisterMetaType<JID>("JID");
 
+  // set avatar
   SetOwnAvatar(model_->GetOwnAvatarPath());
   UpdateAvatar(model_->GetOwnJID());
 
+  // set stylesheet
+  QFile file("plugins/buddycloud/resources/bc.qss");
+  file.open(QFile::ReadOnly);
+  QString stylesheet = QLatin1String(file.readAll());
+  SetStylesheet(stylesheet);
+
+  // bindings
   sdc::bind(model_->onConnected, [&] () {
     if (!channel_) {
       channel_ = new ChannelWidget(this, model_->GetOwnChannel());
@@ -64,6 +72,8 @@ void BcPresenter::Init() {
     CommentActivity* act = new CommentActivity(this, comment);
     main_window()->activities()->AddActivity(act);
   });
+
+  model_->Connect();
 }
 
 Avatar* BcPresenter::GetAvatar(const JID &jid) {

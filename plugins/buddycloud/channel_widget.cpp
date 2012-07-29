@@ -6,7 +6,7 @@
  */
 
 #include "channel_widget.h"
-#include "post_widget.h"
+#include "post_frame.h"
 #include "post.h"
 #include "sdc/qtgui/bind.h"
 #include <QScrollBar>
@@ -16,6 +16,8 @@
 ChannelWidget::ChannelWidget(AbstractPresenter* presenter, Channel* channel)
     : AbstractPresenter(presenter),
       channel_(channel) {
+  setObjectName("Channel");
+  setMinimumWidth(300);
   { // set new post button
     new_post_button_ = new QToolButton(this);
     new_post_button_->setChecked(false);
@@ -37,7 +39,7 @@ ChannelWidget::ChannelWidget(AbstractPresenter* presenter, Channel* channel)
   connect(new_post_button_, SIGNAL(toggled(bool)),
       new_post_, SLOT(setVisible(bool)));
   // send button
-  connect(new_post_ui.sendToolButton, SIGNAL(clicked()),
+  connect(new_post_ui.postToolButton, SIGNAL(clicked()),
       this, SLOT(SendPost()));
   // handle scrollbar event and retrieve new posts
   scroll_bar_ = content_scroll_area()->verticalScrollBar();
@@ -61,7 +63,7 @@ ChannelWidget::ChannelWidget(AbstractPresenter* presenter, Channel* channel)
   sdc::bind(channel_->onPostDeleted, [&] (const std::string id) {
     QList<Post*>::iterator it = std::find_if(posts_order_.begin(), posts_order_.end(),
         [&] (const Post* p) { return p->GetID() == id; });
-    PostWidget* pw = posts_[*it];
+    PostFrame* pw = posts_[*it];
     posts_.remove(*it);
     posts_order_.erase(it);
     delete pw;
@@ -73,7 +75,7 @@ ChannelWidget::ChannelWidget(AbstractPresenter* presenter, Channel* channel)
 ChannelWidget::~ChannelWidget() {
   delete new_post_;
   delete new_post_button_;
-  for (PostWidget* widget : posts_.values())
+  for (PostFrame* widget : posts_.values())
     delete widget;
 }
 
@@ -95,7 +97,7 @@ void ChannelWidget::OnScrollBarValueChanged(int value) {
 }
 
 void ChannelWidget::ShowPostInOrder(Post* post) {
-  PostWidget* pw = new PostWidget(this, post);
+  PostFrame* pw = new PostFrame(this, post);
   QList<Post*>::iterator it = qUpperBound(posts_order_.begin(), posts_order_.end(), post,
       [&] (const Post* p1, const Post* p2) { return p1->GetPublished() > p2->GetPublished(); });
   posts_order_.insert(it, post);
