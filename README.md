@@ -8,13 +8,13 @@ Development is currently focused on [buddycloud channel protocol](https://buddyc
 
 <b>IMPORTANT</b>: Client is not stable and buddycloud protocol implementation is not finished yet.
 
-This is how it looks like so far ...
+To get an image, this is how it looks like so far ...
 
 ![screenshot](http://i.imgur.com/9hTTm.png)
 
 ## Building
 
-Here are the steps to build <b>SocialDesktopClient</b> and <b>buddycloud plugin</b>. Tested on Ubuntu 11.10 (oneiric).
+Here are the steps to build and run <b>SocialDesktopClient</b> and <b>buddycloud plugin</b>. Tested on Ubuntu 11.10 (oneiric).
 
 1. Install dev tools 
 
@@ -33,6 +33,11 @@ Here are the steps to build <b>SocialDesktopClient</b> and <b>buddycloud plugin<
 
         cd plugins/buddycloud  
         ./build.sh
+        
+5. Run program
+
+        cd ../..
+        ./social_desktop_client
 
 ## Contact
    
