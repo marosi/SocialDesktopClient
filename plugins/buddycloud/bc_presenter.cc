@@ -18,6 +18,7 @@
 #include "sdc/qtgui/activities_panel.h"
 #include <QFile>
 #include <QIcon>
+#include <QMenu>
 #include <QPixmap>
 
 #include "sdc/core/log.h"
@@ -37,6 +38,9 @@ void BcPresenter::Init() {
   QIcon icon(":/icon.svg");
   account_button()->button()->setIcon(icon);
   account_button()->button()->setIconSize(QSize(32, 32));
+
+  connect(account_button()->title_action(), SIGNAL(triggered()),
+          this, SLOT(ShowOwnChannel()));
 
   // set stylesheet
   QFile file("plugins/buddycloud/resources/bc.qss");
@@ -100,6 +104,10 @@ void BcPresenter::ShowChannel(const JID &jid) {
     main_window()->AddContentPanel(this, cw);
     cw->show();
   }
+}
+
+void BcPresenter::ShowOwnChannel() {
+  channel_->show();
 }
 
 void BcPresenter::UpdateAvatar(const JID &jid) {

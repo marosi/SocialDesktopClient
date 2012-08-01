@@ -18,23 +18,25 @@ ChannelPanel::ChannelPanel(AbstractPresenter* presenter, Channel* channel)
       channel_(channel) {
   setObjectName("ChannelPanel");
   setMinimumWidth(300);
-  { // set new post button
-    new_post_button_ = new QToolButton(this);
-    new_post_button_->setChecked(false);
-    new_post_button_->setCheckable(true);
-    new_post_button_->setToolTip("Post new message");
-    new_post_button_->setText("+");
-    QPalette p;
-    QColor c;
-    c.setNamedColor("yellowgreen");
-    p.setColor(QPalette::Button, c);
-    new_post_button_->setPalette(p);
-    AddTitleBarButton(new_post_button_);
-    new_post_ = new QWidget(this);
-    new_post_ui.setupUi(new_post_);
-    SetHeaderWidget(new_post_);
-    new_post_->hide();
-  }
+
+  // set new post button
+  new_post_button_ = new QToolButton(this);
+  new_post_button_->setObjectName("NewPostButton");
+  new_post_button_->setCheckable(true);
+  new_post_button_->setToolTip("New Post");
+  AddTitleBarButton(new_post_button_);
+  new_post_ = new QWidget(this);
+  new_post_ui.setupUi(new_post_);
+  SetHeaderWidget(new_post_);
+  new_post_->hide();
+
+  QToolButton* retrieve_next_btn_ = new QToolButton;
+  retrieve_next_btn_->setText("Next");
+  retrieve_next_btn_->setObjectName("NextButton");
+  dynamic_cast<QVBoxLayout*>(content_scroll_area()->widget()->layout())->insertWidget(2, retrieve_next_btn_, Qt::AlignCenter);
+
+  connect(retrieve_next_btn_, SIGNAL(clicked()), this, SLOT(RetrieveNext()));
+
   // show hide new post widget
   connect(new_post_button_, SIGNAL(toggled(bool)),
       new_post_, SLOT(setVisible(bool)));
@@ -94,6 +96,10 @@ void ChannelPanel::OnScrollBarValueChanged(int value) {
   if (value >= scroll_bar_->maximum())
     channel_->RetrieveNextPosts();
   old_scroll_bar_value_ = value;
+}
+
+void ChannelPanel::RetrieveNext() {
+  channel_->RetrieveNextPosts();
 }
 
 void ChannelPanel::ShowPostInOrder(Post* post) {

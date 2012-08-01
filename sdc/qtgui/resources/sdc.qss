@@ -5,7 +5,7 @@
  */
 
 QMainWindow {
-/*background: white*/
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(239, 236, 223, 255), stop:1 rgba(222, 220, 208, 255));
 }
 
 /*
@@ -29,8 +29,8 @@ image: none;
 }
 
 QFrame[contentPanel="true"] > QToolButton#actionButton {
-width: 0px;
 background: grey;
+width: 8px;
 }
 
 QFrame[contentPanel="true"] > QLabel#titleLabel {
@@ -74,17 +74,22 @@ background: rgb(226, 140, 53);
 
 QTreeWidget#ContactsTreeWidget {
 margin: 3px;
-border-radius: 1px;
+border-radius: 2px;
+background-color: rgb(251, 248, 235);
+}
+
+QTreeWidget#ContactsTreeWidget::branch {
+image: none;
 }
 
 QTreeWidget#ContactsTreeWidget::item:!has-children {
-margin-left: -10px;
+margin: 2px 2px 2px -10px;
 }
 
 QTreeWidget#ContactsTreeWidget::branch:closed:has-children {
-background: blue;
+background: black;
 }
 
 QTreeWidget#ContactsTreeWidget::branch:open:has-children {
-background: white;
+background: rgb(251, 248, 235);
 }

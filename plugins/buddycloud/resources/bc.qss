@@ -1,5 +1,5 @@
 QFrame#ChannelPanel {
-border-color: rgb(239, 236, 223);
+border-color: rgb(131, 172, 53);
 }
 
 QFrame#PostFrame, QFrame#CommentFrame, QFrame#PostActivity, QFrame#CommentActivity {
@@ -7,9 +7,8 @@ border-radius: 3px;
 }
 
 QFrame#PostFrame, QFrame#PostActivity {
-background-color: rgb(239, 236, 223);
+background-color: rgb(185, 209, 135);
 }
-
 
 QFrame#CommentFrame, QFrame#CommentActivity {
 background-color: rgb(196, 206, 209);
@@ -31,3 +30,11 @@ width: 0px;
 background: white;
 }
 
+QToolButton#NewPostButton {
+background: rgb(239, 236, 225);
+}
+
+QToolButton#NextButton, QToolButton#postToolButton {
+background: rgb(19, 43, 54);
+color: white;
+}

@@ -13,6 +13,7 @@ PostFrame::PostFrame(AbstractPresenter* presenter, Post* post)
       post_(post) {
 	ui.setupUi(this);
   ui.commentLineEdit->hide();
+  ui.deleteButton->hide();
 
   // set post data
   ui.authorLabel->setText(QString::fromStdString(post_->GetAuthor()));
@@ -62,6 +63,14 @@ void PostFrame::DeletePost() {
 void PostFrame::mouseReleaseEvent(QMouseEvent *) {
   ui.commentLineEdit->show();
   setFocus();
+}
+
+void PostFrame::enterEvent(QEvent *) {
+  ui.deleteButton->show();
+}
+
+void PostFrame::leaveEvent(QEvent *) {
+  ui.deleteButton->hide();
 }
 
 void PostFrame::PostComment() {

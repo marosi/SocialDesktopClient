@@ -55,10 +55,12 @@ class MainWindow::GroupedBy {
       tree_->addTopLevelItem(item);
     }
     map_.insert(key, widget);
-    QTreeWidgetItem* item = new QTreeWidgetItem(1001);
+    QTreeWidgetItem* item = new QTreeWidgetItem;
     items_[key]->addChild(item);
     items_[key]->setExpanded(true);
     tree_->setItemWidget(item, 0, widget);
+    // sort childern, which causes them to recalculate stylesheet and hide indentation
+    items_[key]->sortChildren(0, Qt::AscendingOrder);
   }
 
   void RemoveGroup(const T key) {

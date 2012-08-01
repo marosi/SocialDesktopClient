@@ -11,7 +11,6 @@ HEADERS += \
     buddycloud_service.h \
     channel.h \
     channel_widget.h \
-    ui_new_post_widget.h \
     bc_presenter.h \
     bc_new_contact_widget.h \
     bc_new_account_widget.h \

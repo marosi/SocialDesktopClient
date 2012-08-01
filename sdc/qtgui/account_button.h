@@ -4,6 +4,7 @@
 #include "prime_button.h"
 
 class QIcon;
+class QAction;
 
 namespace sdc {
 
@@ -18,6 +19,8 @@ class AccountButton : public PrimeButton {
   virtual ~AccountButton();
 
   void SetAccountIcon(const QIcon &icon);
+
+  QAction* title_action() { return title_; }
 
  protected slots:
   void GoOnline();

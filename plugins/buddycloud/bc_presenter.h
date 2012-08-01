@@ -38,6 +38,7 @@ class BcPresenter : public sdc::ServicePresenter, public AbstractPresenter {
 
  public slots:
   void ShowChannel(const JID &jid);
+  void ShowOwnChannel();
 
  private:
   void UpdateAvatar(const JID &jid);

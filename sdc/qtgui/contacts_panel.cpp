@@ -9,6 +9,7 @@ ContactsPanel::ContactsPanel() {
   setObjectName("ContactsPanel");
   add_button_ = new QToolButton(this);
   add_button_->setObjectName("AddButton");
+  add_button_->setToolTip("New Contact");
   AddTitleBarButton(add_button_);
   connect(add_button_, SIGNAL(clicked()), this, SLOT(ShowNewContactDialog()));
 }

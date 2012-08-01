@@ -32,6 +32,7 @@ class ChannelPanel : public sdc::ContentPanel, public AbstractPresenter {
  public slots:
   void SendPost();
   void OnScrollBarValueChanged(int value);
+  void RetrieveNext();
 
  private:
   void ShowPostInOrder(Post* post);

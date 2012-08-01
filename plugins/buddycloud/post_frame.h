@@ -24,6 +24,8 @@ class PostFrame : public QFrame, public AbstractPresenter {
 
  protected:
   void mouseReleaseEvent(QMouseEvent *);
+  void enterEvent(QEvent *);
+  void leaveEvent(QEvent *);
 
  private slots:
   void PostComment();

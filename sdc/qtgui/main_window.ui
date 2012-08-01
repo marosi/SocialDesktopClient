@@ -19,14 +19,6 @@
   <property name="windowTitle">
    <string>Social Desktop Client</string>
   </property>
-  <property name="styleSheet">
-   <string notr="true">          QWidget#ContactWidgetClass {
-          height: 100px;
-          background: white;
-          margin-left: -10px;
-color: blue;
-}</string>
-  </property>
   <property name="toolButtonStyle">
    <enum>Qt::ToolButtonIconOnly</enum>
   </property>
@@ -152,6 +144,9 @@ color: blue;
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <property name="sizeConstraint">
         <enum>QLayout::SetDefaultConstraint</enum>
+       </property>
+       <property name="margin">
+        <number>0</number>
        </property>
       </layout>
      </widget>

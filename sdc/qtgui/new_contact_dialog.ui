@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>NewContactDialog</string>
+   <string>New Contact</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
