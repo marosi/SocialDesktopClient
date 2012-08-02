@@ -39,6 +39,7 @@ class BcPresenter : public sdc::ServicePresenter, public AbstractPresenter {
  public slots:
   void ShowChannel(const JID &jid);
   void ShowOwnChannel();
+  void OnShowChannelLineEditEnter();
 
  private:
   void UpdateAvatar(const JID &jid);
@@ -48,6 +49,7 @@ class BcPresenter : public sdc::ServicePresenter, public AbstractPresenter {
   QMap<JID, ChannelPanel*> channels_;
   QList<BcContactWidget*> contacts_;
   QMap<JID, Avatar*> avatars_;
+  QLineEdit* subscribe_to_;
 };
 
 #endif /* BC_PRESENTER_H_ */

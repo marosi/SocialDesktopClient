@@ -51,6 +51,8 @@ class BcModel : public sdc::QtServiceModel {
     //GetVCardRequest::ref gvcr = GetVCardRequest::create(to, client_->getIQRouter());
     void ToggleChannelPrivacy();
     void Unsubscribe();
+    // TODO: subscribe to channel logic
+    void SubscribeChannel(const Swift::JID &jid);
 
     /*
      * Content interface

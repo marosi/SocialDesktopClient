@@ -488,6 +488,13 @@ void BcModel::Unsubscribe() {
   uns->send();
 }
 
+void BcModel::SubscribeChannel(const Swift::JID &jid) {
+  PubsubSubscribeRequest::ref payload(new PubsubSubscribeRequest);
+  payload->setSubscribersJID(jid_);
+  payload->setNode(jid);
+  //SetPubsubSubscribeRequest::ref sub = SetPubsubSubscribeRequest::create(payload, ...);
+}
+
 /*
  * Parsers and serializers
  */

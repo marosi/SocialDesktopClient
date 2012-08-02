@@ -18,8 +18,10 @@
 #include "sdc/qtgui/activities_panel.h"
 #include <QFile>
 #include <QIcon>
+#include <QLineEdit>
 #include <QMenu>
 #include <QPixmap>
+#include <QWidgetAction>
 
 #include "sdc/core/log.h"
 
@@ -41,6 +43,16 @@ void BcPresenter::Init() {
 
   connect(account_button()->title_action(), SIGNAL(triggered()),
           this, SLOT(ShowOwnChannel()));
+
+  // set subscribe to channel action
+  QMenu* subscribe = account_button()->button()->menu()->addMenu("Show Channel");
+  QWidgetAction* edit = new QWidgetAction(account_button()->button()->menu());
+  subscribe_to_ = new QLineEdit;
+  subscribe_to_->setMinimumWidth(200);
+  edit->setDefaultWidget(subscribe_to_);
+  subscribe->addAction(edit);
+  connect(subscribe_to_, SIGNAL(returnPressed()), this, SLOT(OnShowChannelLineEditEnter()));
+
 
   // set stylesheet
   QFile file("plugins/buddycloud/resources/bc.qss");
@@ -108,6 +120,10 @@ void BcPresenter::ShowChannel(const JID &jid) {
 
 void BcPresenter::ShowOwnChannel() {
   channel_->show();
+}
+
+void BcPresenter::OnShowChannelLineEditEnter() {
+ ShowChannel(subscribe_to_->text().toStdString());
 }
 
 void BcPresenter::UpdateAvatar(const JID &jid) {
