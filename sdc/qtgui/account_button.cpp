@@ -19,10 +19,10 @@ AccountButton::AccountButton(QtServiceModel* model)
   menu_->addSeparator();
 
   // online/offline actions
-  connect(menu_->addAction("Online"), SIGNAL(triggered()),
-      this, SLOT(GoOnline()));
-  connect(menu_->addAction("Offline"), SIGNAL(triggered()),
-      this, SLOT(GoOffline()));
+//  connect(menu_->addAction("Online"), SIGNAL(triggered()),
+//      this, SLOT(GoOnline()));
+//  connect(menu_->addAction("Offline"), SIGNAL(triggered()),
+//      this, SLOT(GoOffline()));
 
   // ...and install in button
   button()->setMenu(menu_);
