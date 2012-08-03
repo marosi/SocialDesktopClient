@@ -52,6 +52,12 @@ void Channel::Sync() {
   onChannelsServiceAvailable.connect(bind(&Channel::DiscoverChannel, this));
   // ... if there is, retrieve first page of posts.
   onChannelAvailable.connect(bind(&Channel::RetrieveNextPosts, this));
+  // Send presence to channel server in case it isn't in roster.
+  onChannelAvailable.connect([&] () {
+    Presence::ref presence(new Presence);
+    presence->setTo(service_.jid);
+    model_->client_->sendPresence(presence);
+  });
   DiscoverService();
 }
 

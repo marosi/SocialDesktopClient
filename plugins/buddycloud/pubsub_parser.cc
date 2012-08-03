@@ -48,15 +48,15 @@ void ItemParser<T>::handleStartElement(const std::string& element, const std::st
 template<class T>
 void ItemParser<T>::handleEndElement(const std::string& element, const std::string& ns) {
   --level_;
-  if (level_ == TopLevel && element == "item" && is_item_) {
-    // push back handled payload in item element
-    assert(curr_parser_);
-    getPayloadInternal()->appendPayload(boost::dynamic_pointer_cast<T>(curr_parser_->getPayload())); // FIX: not efficient
+  if (level_ == TopLevel) {
+    if (is_item_) { // push back handled payload in item element
+      assert(curr_parser_);
+      getPayloadInternal()->appendPayload(boost::dynamic_pointer_cast<T>(curr_parser_->getPayload())); // FIX: not efficient
+    }
     // reset variables
     delete curr_parser_;
     curr_parser_ = 0;
-  } else {
-    assert(curr_parser_);
+  } else if (curr_parser_) {
     curr_parser_->handleEndElement(element, ns);
   }
 }
@@ -323,7 +323,7 @@ void EventPayloadParser::handleStartElement(const std::string&  element, const s
 
 void EventPayloadParser::handleEndElement(const std::string&  element, const std::string&  ns) {
   --level_;
-  if (parser_) {
+  if (parser_) { // FIX: top level element should not be handled by internal parser
     parser_->handleEndElement(element, ns);
   }
   if (level_ == PayloadLevel) {
