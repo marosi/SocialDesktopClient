@@ -53,7 +53,7 @@ class Post : public Content {
   void Delete();
   void PostComment(const std::string &content);
 
-  const std::vector<Comment*> comments() const {
+  std::vector<Comment*> comments() const {
     return comments_;
   }
 

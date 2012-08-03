@@ -22,8 +22,9 @@
 #include <QToolButton>
 #include <QGroupBox>
 #include <QTreeWidget>
-#include "boost/function.hpp"
 #include "boost/cast.hpp"
+#include "boost/function.hpp"
+#include "boost/foreach.hpp"
 
 namespace sdc {
 
@@ -146,7 +147,7 @@ void MainWindow::AddContact(ServicePresenter* parent, ContactWidget* contact) {
 
 void MainWindow::RemoveAllContacts(ServicePresenter* parent) {
   grouped_by_account_->RemoveGroup(parent);
-  for (ContactWidget* widget : contacts_.values(parent))
+  BOOST_FOREACH (ContactWidget* widget , contacts_.values(parent))
     delete widget;
   contacts_.remove(parent);
 }
@@ -157,7 +158,7 @@ void MainWindow::AddContentPanel(ServicePresenter* parent, ContentPanel* panel) 
 }
 
 void MainWindow::RemoveAllContentPanels(ServicePresenter* parent) {
-  for (ContentPanel* panel : contents_.values(parent))
+  BOOST_FOREACH (ContentPanel* panel , contents_.values(parent))
     delete panel;
   contents_.remove(parent);
 }

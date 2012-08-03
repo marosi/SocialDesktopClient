@@ -11,15 +11,12 @@
 #include "service_model.h"
 #include "ui.h"
 #include "qt_gui.h"
-// Boost
-#include "boost/shared_ptr.hpp"
-#include "boost/bind.hpp"
-#include "boost/filesystem.hpp"
-#include <algorithm>
-
 #include "qt_service.h"
+#include "boost/bind.hpp"
 #include "boost/cast.hpp"
-
+#include "boost/filesystem.hpp"
+#include "boost/foreach.hpp"
+#include <algorithm>
 #include <exception>
 
 using namespace boost;
@@ -102,7 +99,7 @@ void Core::Start() {
   /*
    * Map service object with loaded accounts
    */
-  for (Account* account : data()->accounts()) {
+  BOOST_FOREACH (Account* account , data()->accounts()) {
     if (services_.count(account->GetServiceSignature()) > 0) {
       Service* service = services_[account->GetServiceSignature()];
       account->SetService(service);
@@ -153,13 +150,13 @@ void Core::Exec() {
   }
   onGuiPrepared();
   // activate enabled accounts
-  for (Account* account : data()->accounts()) {
+  BOOST_FOREACH (Account* account , data()->accounts()) {
     if (account->IsEnabled()) {
       this->ActivateAccount(account);
     }
   }
   // TODO: connects services that were left online
-//  for (ServiceModel* model : service_models_) {
+//  BOOST_FOREACH (ServiceModel* model , service_models_) {
 //    if (model->account()->GetStatus()) // status == 0 is offline status
 //      model->Connect();
 //  }

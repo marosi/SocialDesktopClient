@@ -9,6 +9,7 @@
 #include <QVariant>
 #include <QMessageBox>
 #include "boost/cast.hpp"
+#include "boost/foreach.hpp"
 
 namespace sdc {
 
@@ -25,7 +26,7 @@ NewAccountDialog::NewAccountDialog(QWidget *parent)
 	ui.servicesComboBox->insertSeparator(1);
 	// load available services
 	int i = 2;
-  for (Service* s : Core::Instance()->services()) {
+  BOOST_FOREACH (Service* s , Core::Instance()->services()) {
     QString signature = QString::fromStdString(s->signature());
     QVariant data(signature);
     ui.servicesComboBox->insertItem(i, QString::fromStdString(s->name()), data);

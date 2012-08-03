@@ -16,6 +16,7 @@
 #include "pubsub_serializer.h"
 #include "sdc/core/account.h"
 #include "Swiften/Swiften.h"
+#include "boost/foreach.hpp"
 #include "boost/shared_ptr.hpp"
 #include <fstream>
 
@@ -152,16 +153,16 @@ BcModel::~BcModel() {
   LOG(TRACE) << "Buddycloud service model is destroying";
   if (own_channel_)
     delete own_channel_;
-  for (Channel* ch : channels_) {
+  BOOST_FOREACH (Channel* ch , channels_) {
     delete ch;
   }
-  for (BcContact* c : contacts_) {
+  BOOST_FOREACH (BcContact* c , contacts_) {
     delete c;
   }
-  for (PayloadParserFactory* pf : parsers_) {
+  BOOST_FOREACH (PayloadParserFactory* pf , parsers_) {
     delete pf;
   }
-  for (PayloadSerializer* ps : serializers_) {
+  BOOST_FOREACH (PayloadSerializer* ps , serializers_) {
     delete ps;
   }
   delete tracer_;
@@ -275,7 +276,7 @@ void BcModel::handleConnected() {
   // request contact vCards and create channel for each contact
   client_->getRoster()->onInitialRosterPopulated.connect([&] () {
     LOG(TRACE) << "Requesting vCards for contacts";
-    for (Contact* c : contacts_) {
+    BOOST_FOREACH (Contact* c , contacts_) {
       client_->getVCardManager()->requestVCard(c->GetUid());
       CreateChannel(c->GetUid());
     }
@@ -341,10 +342,10 @@ void BcModel::handleMessageReceived(Message::ref message) {
   // is message event payload
   if (EventPayload::ref event = message->getPayload<EventPayload>()) {
     LOG(DEBUG2) << "Event from node: " << event->getNode();
-    for (Channel* channel : channels_) {
+    BOOST_FOREACH (Channel* channel , channels_) {
       LOG(DEBUG3) << "Iterating through channel: " << channel->posts_node_;
       if (channel->posts_node_ == event->getNode()) {
-        for (Atom::ref atom : event->getItems()->get()) {
+        BOOST_FOREACH (Atom::ref atom , event->getItems()->get()) {
           if (atom->getObjectType() == Atom::Comment) {
             LOG(DEBUG4) << "In reply to: " << atom->getInReplyTo();
             Post* post = channel->GetPost(atom->getInReplyTo());

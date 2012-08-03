@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QAbstractTextDocumentLayout>
 #include "boost/date_time/posix_time/time_formatters.hpp"
+#include "boost/foreach.hpp"
 
 PostFrame::PostFrame(AbstractPresenter* presenter, Post* post)
     : AbstractPresenter(presenter),
@@ -39,13 +40,13 @@ PostFrame::PostFrame(AbstractPresenter* presenter, Post* post)
   });
 
   // show comments
-  for (Comment* comment : post_->comments()) {
+  BOOST_FOREACH (Comment* comment , post_->comments()) {
     ShowCommentInOrder(comment);
   }
 }
 
 PostFrame::~PostFrame() {
-  for (CommentFrame* widget : comments_)
+  BOOST_FOREACH (CommentFrame* widget , comments_)
     delete widget;
 }
 

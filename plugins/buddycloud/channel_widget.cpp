@@ -11,6 +11,7 @@
 #include "sdc/qtgui/bind.h"
 #include <QScrollBar>
 #include <QtAlgorithms>
+#include "boost/foreach.hpp"
 #include <algorithm>
 
 ChannelPanel::ChannelPanel(AbstractPresenter* presenter, Channel* channel)
@@ -49,7 +50,7 @@ ChannelPanel::ChannelPanel(AbstractPresenter* presenter, Channel* channel)
       this, SLOT(OnScrollBarValueChanged(int)));
   // bind model events
   sdc::bind(channel_->onNewPostsRetrieved, [&] (const std::vector<Post*> posts) {
-    for (Post* post : posts) {
+    BOOST_FOREACH (Post* post , posts) {
       ShowPostInOrder(post);
     }
   });
@@ -77,7 +78,7 @@ ChannelPanel::ChannelPanel(AbstractPresenter* presenter, Channel* channel)
 ChannelPanel::~ChannelPanel() {
   delete new_post_;
   delete new_post_button_;
-  for (PostFrame* widget : posts_.values())
+  BOOST_FOREACH (PostFrame* widget , posts_.values())
     delete widget;
 }
 

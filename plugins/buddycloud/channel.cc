@@ -12,6 +12,7 @@
 #include "pubsub_requests.h"
 #include "sdc/core/log.h"
 #include "Swiften/Swiften.h"
+#include "boost/foreach.hpp"
 #include <algorithm>
 
 using namespace Swift;
@@ -42,7 +43,7 @@ Channel::Channel(BcModel* model, const Swift::JID &jid)
 }
 
 Channel::~Channel() {
-  for (Post* p : posts_)
+  BOOST_FOREACH (Post* p , posts_)
     delete p;
 }
 
@@ -63,14 +64,14 @@ void Channel::RetrieveNextPosts() {
     }
     // obtain channel posts
     vector<Post*> new_posts;
-    for (const Atom::ref &atom : items->getItems()->get()) {
+    BOOST_FOREACH (const Atom::ref &atom , items->getItems()->get()) {
       if (atom->getInReplyTo() == "") {
         Post* post = AddPost(atom, false);
         new_posts.push_back(post);
       }
     }
     // obtain channel comments
-    for (const Atom::ref &atom : items->getItems()->get()) {
+    BOOST_FOREACH (const Atom::ref &atom , items->getItems()->get()) {
       if (atom->getInReplyTo() != "") {
         Post* post = GetPost(atom->getInReplyTo());
         if (post) {
@@ -162,14 +163,14 @@ void Channel::DiscoverChannel() {
           }
           return;
         }
-        for (Form::ref form : payload->getExtensions()) {
+        BOOST_FOREACH (Form::ref form , payload->getExtensions()) {
           /*string field("pubsub#title");
           LOG(DEBUG) << "Node info form";
           LOG(DEBUG) << "Description: " << form->getField(field)->getDescription();
           LOG(DEBUG) << "Label: " << form->getField(field)->getLabel();
           LOG(DEBUG) << "Name: " << form->getField(field)->getName();
           LOG(DEBUG) << "RawValues size: " << form->getField(field)->getRawValues().size();
-          for (const string &s : form->getField(field)->getRawValues()) {
+          BOOST_FOREACH (const string &s , form->getField(field)->getRawValues()) {
            LOG(DEBUG2) << "RawValue: " << s;
           }*/
         }
@@ -215,7 +216,7 @@ void Channel::handleDomainItemInfo(DiscoInfo::ref payload, ErrorPayload::ref err
   if (error) {
     LOG(ERROR) << error->getText();
   } else {
-    for (const DiscoInfo::Identity &identity : payload->getIdentities()) {
+    BOOST_FOREACH (const DiscoInfo::Identity &identity , payload->getIdentities()) {
       // Is channel service?
       if (identity.getCategory() == "pubsub" && identity.getType() == "channels") {
         service_.is_available = true;

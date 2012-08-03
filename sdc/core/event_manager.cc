@@ -7,6 +7,7 @@
 
 #include "event_manager.h"
 #include "log.h"
+#include "boost/foreach.hpp"
 
 namespace sdc {
 
@@ -33,7 +34,7 @@ void EventManager::Run() {
     }
     // Log number of taken events, for
     LOG(DEBUG3) << "Events taken: " << events_to_process.size();
-    for (const Event& event : events_to_process)
+    BOOST_FOREACH (const Event& event , events_to_process)
     {
       ProcessEvent(event);
     }
