@@ -92,8 +92,8 @@ LIBS += \
     -lboost_system \
     -lboost_serialization \
     -lboost_filesystem \
-    -lboost_thread
-    #-ldl \
+    -lboost_thread \
+    -ldl
     #3rdparty/boost_1_48_0/stage/lib/libboost_thread.so
 QMAKE_LFLAGS += -export-dynamic #-Wl,-rpath,./3rdparty/boost_1_48_0/stage/lib
 QMAKE_CXXFLAGS += -std=c++0x
