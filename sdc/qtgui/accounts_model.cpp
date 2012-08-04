@@ -11,7 +11,7 @@ namespace sdc {
 
 AccountsModel::AccountsModel(Core* core) : core_(core) {
   sdc::bind(core_->data()->onAccountsChanged, [&] () {
-    reset();
+    this->reset();
   });
 }
 

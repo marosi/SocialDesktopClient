@@ -55,10 +55,10 @@ ChannelPanel::ChannelPanel(AbstractPresenter* presenter, Channel* channel)
     }
   });
   sdc::bind(channel_->onChannelTitleChange, [&] (const std::string title) {
-    title_label()->setText(QString::fromStdString(title));
+    this->title_label()->setText(QString::fromStdString(title));
   });
   sdc::bind(channel_->onChannelDescriptionChange, [&] (const std::string description) {
-    setToolTip(QString::fromStdString(description));
+    this->setToolTip(QString::fromStdString(description));
   });
   sdc::bind(channel_->onPostAdded, [&] (Post* post) {
     ShowPostInOrder(post);

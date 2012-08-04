@@ -65,7 +65,7 @@ void BcPresenter::Init() {
     if (!channel_) {
       channel_ = new ChannelPanel(this, model_->GetOwnChannel());
       channels_[model_->GetOwnJID()] = channel_;
-      main_window()->AddContentPanel(this, channel_);
+      this->main_window()->AddContentPanel(this, channel_);
     }
     channel_->show();
   });
@@ -82,17 +82,17 @@ void BcPresenter::Init() {
     BcContact* contact = model_->GetContact(jid);
     BcContactWidget* widget = new BcContactWidget(this, contact);
     contacts_.append(widget);
-    main_window()->AddContact(this, widget);
+    this->main_window()->AddContact(this, widget);
   });
 
   sdc::bind(model_->onNewPost, [&] (const Post* post) {
     PostActivity* act = new PostActivity(this, post);
-    main_window()->activities()->AddActivity(act);
+    this->main_window()->activities()->AddActivity(act);
   });
 
   sdc::bind(model_->onNewComment, [&] (const Comment* comment) {
     CommentActivity* act = new CommentActivity(this, comment);
-    main_window()->activities()->AddActivity(act);
+    this->main_window()->activities()->AddActivity(act);
   });
 
   model_->Connect();

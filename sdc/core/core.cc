@@ -83,7 +83,8 @@ void Core::Start() {
    * Load Services
    */
   services_ = plugin_manager_->CreateAllInstances<Service>(SERVICE); // TODO: Change method of getting instances from plugin manager
-  for(std::pair<PluginSignature, Service*> pair : services_) {
+  typedef std::pair<PluginSignature, Service*> PairType;
+  BOOST_FOREACH (PairType pair , services_) {
     Service* s = pair.second;
     // set service unique signature
     s->signature_ = pair.first;
