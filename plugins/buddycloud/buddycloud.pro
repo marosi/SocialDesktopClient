@@ -59,7 +59,7 @@ FORMS += \
     bc_new_account_widget.ui \
     post_frame.ui \
     comment_frame.ui
-RESOURCES += \  
+RESOURCES += \
     resources/bc.qrc
 
 include(swiften.pro)
@@ -68,7 +68,7 @@ INCLUDEPATH += \
   3rdparty/swift \
   ../.. \ # path to SDC base dir
   ../../sdc/core \
-  ../../sdc/qtgui
+  ../../sdc/qtgui \
 
 QMAKE_CXXFLAGS += \
     -fmessage-length=0 -fPIC \

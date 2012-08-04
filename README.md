@@ -16,9 +16,21 @@ To get an image, this is how it looks like so far ...
 
 Here are the steps to build and run <b>SocialDesktopClient</b> and <b>buddycloud plugin</b>. Tested on Ubuntu 11.10 (oneiric).
 
-1. Install dev tools 
+### Requirements
+
+In this early stage SocialDesktopClient requires
+
+* <b>GCC 4.5</b> or later
+* <b>Boost 1.46.0</b> or later
+
+### Build steps
+
+1. Install following dev packages
 
         apt-get install build-essential libboost-all-dev qt4-dev-tools openssl
+        
+   If above versions of GCC and Boost are not met you should install them manually in the system.
+   TODO: Bundle Boost within client.
     
 2. Clone repo.
 

@@ -82,15 +82,20 @@ FORMS += \
 RESOURCES += \  
     sdc/qtgui/resources/sdc.qrc
 INCLUDEPATH += \
+    #3rdparty/boost_1_48_0 \
     sdc \
     sdc/core \
     sdc/qtgui
 LIBS += \
+    #-L3rdparty/boost_1_48_0/stage/lib \
+    \
     -lboost_system \
-    -lboost_thread \
     -lboost_serialization \
-    -lboost_filesystem
-QMAKE_LFLAGS += -export-dynamic
+    -lboost_filesystem \
+    -lboost_thread
+    #-ldl \
+    #3rdparty/boost_1_48_0/stage/lib/libboost_thread.so
+QMAKE_LFLAGS += -export-dynamic #-Wl,-rpath,./3rdparty/boost_1_48_0/stage/lib
 QMAKE_CXXFLAGS += -std=c++0x
 
 DEFINES = BOOST_FILESYSTEM_VERSION=2

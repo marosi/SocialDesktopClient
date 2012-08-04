@@ -81,7 +81,7 @@ class Core : boost::noncopyable {
   static Core* instance_;
 
 	void Init();
-	void Exec();
+  void Exec();
 	void ExecUi();
   /*
    * Accounts
