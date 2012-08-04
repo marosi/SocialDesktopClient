@@ -4,7 +4,8 @@ SocialDesktopClient (unstable)
 
 SocialDesktopClient is a free and open desktop client for social media.
 
-Development is currently focused on [buddycloud channel protocol](https://buddycloud.org/wiki/Main_Page).
+Development is currently focused on [buddycloud channel protocol](https://buddycloud.org/wiki/Main_Page).  
+Entire XMPP handling for protocol is done by [Swiften XMPP Library](http://swift.im/swiften).
 
 <b>IMPORTANT</b>: Client is not stable and buddycloud protocol implementation is not finished yet.
 
@@ -29,7 +30,8 @@ In this early stage SocialDesktopClient requires
 
         apt-get install build-essential libboost-all-dev qt4-dev-tools openssl
         
-   If above versions of GCC and Boost are not met you should install them manually in the system.
+   If above versions of GCC and Boost are not met after installation you can possibly follow steps
+   described in [Issue#1](https://github.com/maros-/SocialDesktopClient/issues/1https://github.com/maros-/SocialDesktopClient/issues/1).
    TODO: Bundle Boost within client.
     
 2. Clone repo.
