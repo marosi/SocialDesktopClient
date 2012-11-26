@@ -22,6 +22,7 @@
 class BcModel;
 class BcContactWidget;
 class ChannelPanel;
+class Error;
 
 class BcPresenter : public sdc::ServicePresenter, public AbstractPresenter {
 

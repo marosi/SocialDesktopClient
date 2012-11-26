@@ -13,6 +13,7 @@
 #include "comment_activity.h"
 #include "post.h"
 #include "post_activity.h"
+#include "sdc/core/core.h"
 #include "sdc/core/log.h"
 #include "sdc/qtgui/activity.h"
 #include "sdc/qtgui/activities_panel.h"
@@ -20,6 +21,7 @@
 #include <QIcon>
 #include <QLineEdit>
 #include <QMenu>
+#include <QMessageBox>
 #include <QPixmap>
 #include <QWidgetAction>
 
@@ -67,7 +69,6 @@ void BcPresenter::Init() {
       channels_[model_->GetOwnJID()] = channel_;
       this->main_window()->AddContentPanel(this, channel_);
     }
-    channel_->show();
   });
 
   sdc::bind(model_->onOwnAvatarChanged, [&] () {
@@ -95,6 +96,18 @@ void BcPresenter::Init() {
     this->main_window()->activities()->AddActivity(act);
   });
 
+  sdc::bind(model_->onError, [&] (BcModel::Error error) {
+    switch (error) {
+    case BcModel::ServiceUnavailable:
+      QMessageBox msgbox;
+      msgbox.setText("Channel service is unavailable. Account will be deactivated.");
+      msgbox.setIcon(QMessageBox::Critical);
+      msgbox.exec();
+      sdc::Core::Instance()->data()->SetEnabledAccount(model()->account()->GetDataIndex(), false);
+      break;
+    }
+  });
+
   model_->Connect();
 }
 
@@ -114,7 +127,6 @@ void BcPresenter::ShowChannel(const JID &jid) {
     ChannelPanel* cw = new ChannelPanel(this, model_->GetChannel(jid.toString()));
     channels_[jid] = cw;
     main_window()->AddContentPanel(this, cw);
-    cw->show();
   }
 }
 
@@ -123,7 +135,7 @@ void BcPresenter::ShowOwnChannel() {
 }
 
 void BcPresenter::OnShowChannelLineEditEnter() {
- ShowChannel(subscribe_to_->text().toStdString());
+  ShowChannel(subscribe_to_->text().toStdString());
 }
 
 void BcPresenter::UpdateAvatar(const JID &jid) {

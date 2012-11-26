@@ -83,10 +83,6 @@ BcModel::BcModel(sdc::Account* account)
   loop_ = new SimpleEventLoop;
   network_ = new BoostNetworkFactories(loop_);
   storages_ = new FilesystemStorages(service()->dir(), account);
-  //client_ = new Client("sdc_test@jabbim.com", "sdc_test", network_);
-  //client_ = new Client("maros@buddycloud.org", "udsampia", network_);
-  //client_ = new Client("pista@localhost", "pista", network_);
-  //client_ = new Client("test_subject@buddycloud.org", "test", network_);
   client_ = new Client(jid_, account->GetPassword(), network_, storages_);
 
   client_->setAlwaysTrustCertificates();
@@ -316,6 +312,8 @@ void BcModel::handleConnected() {
           }
           break;
         case Channel::ChannelsServiceUnavailable:
+          onError(ServiceUnavailable);
+          LOG(ERROR) << "Channels service unavailable.";
           break;
         default:
           assert(false);

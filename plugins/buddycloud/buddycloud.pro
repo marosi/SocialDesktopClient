@@ -68,13 +68,14 @@ INCLUDEPATH += \
   3rdparty/swift \
   ../.. \ # path to SDC base dir
   ../../sdc/core \
-  ../../sdc/qtgui \
+  ../../sdc/qtgui
 
 QMAKE_CXXFLAGS += \
     -fmessage-length=0 -fPIC \
     -std=c++0x
 
 DEFINES += \
+  BOOST_FILESYSTEM_VERSION=2 \
   LOG_PRODUCER=Buddycloud \
   BOOST_TT_HAS_OPERATOR_HPP_INCLUDED # because of parse error in BOOST_JOIN macro in moc files
 

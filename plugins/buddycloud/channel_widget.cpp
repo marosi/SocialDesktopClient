@@ -17,6 +17,7 @@
 ChannelPanel::ChannelPanel(AbstractPresenter* presenter, Channel* channel)
     : AbstractPresenter(presenter),
       channel_(channel) {
+  this->hide();
   setObjectName("ChannelPanel");
   setMinimumWidth(300);
 
@@ -70,6 +71,9 @@ ChannelPanel::ChannelPanel(AbstractPresenter* presenter, Channel* channel)
     posts_.remove(*it);
     posts_order_.erase(it);
     delete pw;
+  });
+  sdc::bind(channel_->onChannelAvailable, [&] () {
+    this->show();
   });
   // sync channel
   channel_->Sync();

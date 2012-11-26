@@ -7,6 +7,7 @@
 
 #include "channel.h"
 #include "bc_model.h"
+#include "error.h"
 #include "post.h"
 #include "payloads/pubsub.h"
 #include "pubsub_requests.h"
@@ -209,11 +210,15 @@ void Channel::DiscoverService() {
       LOG(ERROR) << error->getText();
       return;
     }
-    LOG(TRACE) << "Channel " << jid_ << " : handling domain disco items ... ";
-    vector<DiscoItems::Item>::const_iterator it = payload->getItems().begin();
-    GetDiscoInfoRequest::ref info = GetDiscoInfoRequest::create(it->getJID(), router_);
-    info->onResponse.connect(bind(&Channel::handleDomainItemInfo, this, _1, _2, payload, it));
-    info->send();
+    if (payload->getItems().size() <= 0) {
+      onError(ChannelsServiceUnavailable);
+    } else {
+      LOG(TRACE) << "Channel " << jid_ << " : handling domain disco items ... ";
+      vector<DiscoItems::Item>::const_iterator it = payload->getItems().begin();
+      GetDiscoInfoRequest::ref info = GetDiscoInfoRequest::create(it->getJID(), router_);
+      info->onResponse.connect(bind(&Channel::handleDomainItemInfo, this, _1, _2, payload, it));
+      info->send();
+    }
   });
   items->send();
 }
