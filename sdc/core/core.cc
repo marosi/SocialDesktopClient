@@ -24,6 +24,8 @@ using namespace std;
 
 namespace sdc {
 
+std::string Core::home_dir("");
+
 template std::map<PluginSignature, Service*> PluginManager::CreateAllInstances<Service>(const PluginType);
 
 /**

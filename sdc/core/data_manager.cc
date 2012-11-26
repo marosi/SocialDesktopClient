@@ -7,6 +7,7 @@
 
 #include "data_manager.h"
 #include "account.h"
+#include "core.h"
 #include "log.h"
 #include "boost/archive/xml_iarchive.hpp"
 #include "boost/archive/xml_oarchive.hpp"
@@ -18,7 +19,7 @@ const std::string DataManager::kConfFile = "sdc.xml";
 
 void DataManager::Init() {
   // Load configuration
-  std::ifstream file(kConfFile.c_str());
+  std::ifstream file(kConfFile);
   if (!file.is_open()) {
     LOG(WARNING) << "Configuration file: sdc.xml is not present.";
     //core()->Exit(); // TODO: Exit does nothing so far, this error should be displayed to user
