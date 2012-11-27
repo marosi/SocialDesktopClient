@@ -1,0 +1,24 @@
+# compiler generated stuff
+/debug/
+*.o
+
+# Qt generated stuff
+Makefile*
+ui_*.h
+moc_*
+*.pro.*
+qrc_*.cpp
+
+# documentation
+/documentation/
+
+# app stuff
+social_desktop_client
+sdc.xml*
+
+# plugins
+lib*.so
+lib*.so*
+
+# miscellaneous
+.old/
