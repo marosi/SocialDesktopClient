@@ -1,5 +1,11 @@
-#ifndef NEW_ACCOUNT_WIDGET_H
-#define NEW_ACCOUNT_WIDGET_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef BC_NEW_ACCOUNT_WIDGET_H_
+#define BC_NEW_ACCOUNT_WIDGET_H_
 
 #include "bc_account.h"
 #include "sdc/qtgui/new_account_widget.h"
@@ -44,4 +50,4 @@ class BcNewAccountWidget : public sdc::NewAccountWidget
     Ui::BcNewAccountWidgetClass ui;
 };
 
-#endif // NEW_ACCOUNT_WIDGET_H
+#endif // BC_NEW_ACCOUNT_WIDGET_H_

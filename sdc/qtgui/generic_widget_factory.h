@@ -1,17 +1,12 @@
-/**
- * @file generic_widget_factory.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Apr 22, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef GENERIC_WIDGET_FACTORY_H_
 #define GENERIC_WIDGET_FACTORY_H_
 
-#include "content.h"
 #include "widget_factory.h"
 
 namespace sdc {
@@ -29,6 +24,6 @@ namespace sdc {
 //  }
 //};
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif /* GENERIC_WIDGET_FACTORY_H_ */
+#endif // GENERIC_WIDGET_FACTORY_H_

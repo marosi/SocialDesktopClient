@@ -1,8 +1,7 @@
 /*
- * event_manager.cc
- *
- *			Author: Maros Kasinec
- *  Created on: Nov 3, 2011
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #include "event_manager.h"

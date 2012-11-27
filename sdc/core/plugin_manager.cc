@@ -1,9 +1,9 @@
-/**
- * plugin_manager.cc
- *
- *  Created on: Jul 5, 2011
- *      Author: Maros Kasinec
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
+
 #include "plugin_manager.h"
 #include "log.h"
 
@@ -150,4 +150,4 @@ std::vector<ClassDataRegistration> PluginManager::GetClassData(const PluginType 
   return filtered;
 }
 
-}
+} // namespace sdc

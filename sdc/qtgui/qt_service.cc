@@ -1,8 +1,7 @@
 /*
- * qt_service.cc
- *
- *			Author: Maros Kasinec
- *  Created on: Apr 20, 2012
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #include "qt_service.h"
@@ -14,4 +13,4 @@
 namespace sdc {
 
 
-} /* namespace sdc */
+} // namespace sdc

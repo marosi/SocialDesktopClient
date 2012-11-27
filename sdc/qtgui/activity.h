@@ -1,5 +1,11 @@
-#ifndef ACTIVITY_H
-#define ACTIVITY_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef ACTIVITY_H_
+#define ACTIVITY_H_
 
 #include <QFrame>
 #include <QLabel>
@@ -25,6 +31,6 @@ class Activity : public QFrame {
   Ui::Activity *ui;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif // ACTIVITY_H
+#endif // ACTIVITY_H_

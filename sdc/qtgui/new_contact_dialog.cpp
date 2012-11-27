@@ -1,3 +1,9 @@
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
 #include "core.h"
 #include "new_contact_dialog.h"
 #include "account.h"
@@ -64,4 +70,4 @@ void NewContactDialog::accept() {
   }
 }
 
-} /* namespace sdc */
+} // namespace sdc

@@ -1,8 +1,7 @@
 /*
- * pubsub_payload_serializer.cc
- *
- *			Author: Maros Kasinec
- *  Created on: Feb 8, 2012
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #include "pubsub_serializer.h"

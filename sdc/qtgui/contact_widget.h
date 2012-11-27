@@ -1,5 +1,11 @@
-#ifndef CONTACT_WIDGET_H
-#define CONTACT_WIDGET_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef CONTACT_WIDGET_H_
+#define CONTACT_WIDGET_H_
 
 #include <QtGui/QWidget>
 #include <QToolButton>
@@ -26,6 +32,6 @@ class ContactWidget : public QWidget {
   QToolButton* close_button_;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif // CONTACT_WIDGET_H
+#endif // CONTACT_WIDGET_H_

@@ -1,13 +1,11 @@
-/**
- * @file plugin_manager.h
- * @brief SDC plugin interface.
- *
- * @author Maros Kasinec
- *   @date Jul 10, 2011
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
-#ifndef CORE_PLUGINMANAGER_H_
-#define CORE_PLUGINMANAGER_H_
+#ifndef CORE_PLUGIN_MANAGER_H_
+#define CORE_PLUGIN_MANAGER_H_
 
 #ifdef WIN32
 #define LIB_HANDLE_TYPE HINSTANCE
@@ -156,6 +154,6 @@ T* PluginProvider<T>::CreateInstance(const PluginSignature & class_signature) {
   return constructor();
 }
 
-}
+} // namespace sdc
 
-#endif /* CORE_PLUGINMANAGER_H_ */
+#endif // CORE_PLUGIN_MANAGER_H_

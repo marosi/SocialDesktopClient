@@ -1,11 +1,7 @@
-/**
- * @file qt_service.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Apr 14, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef QT_SERVICE_H_
@@ -35,6 +31,6 @@ class QtService : public Service {
   virtual ServicePresenter* CreateServicePresenter()=0;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif /* QT_SERVICE_H_ */
+#endif // QT_SERVICE_H_

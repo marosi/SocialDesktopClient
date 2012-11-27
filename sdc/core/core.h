@@ -1,9 +1,7 @@
-/**
- * @file social_desktop_client.h
- * @brief The heart of SocialDesktopClient application.
- *
- * @author Maros Kasinec
- *   @date Jul 8, 2011
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef CORE_SOCIALDESKTOPCLIENT_H_
@@ -118,6 +116,6 @@ class Core : boost::noncopyable {
   std::map<PluginSignature, Service*> services_; /// Pluged-in services and their configuration options
 };
 
-}
+} // namespace sdc
 
-#endif /* CORE_SOCIALDESKTOPCLIENT_H_ */
+#endif // CORE_SOCIALDESKTOPCLIENT_H_

@@ -1,11 +1,7 @@
-/**
- * @file buddycloud_account.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Apr 17, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef BC_ACCOUNT_H_

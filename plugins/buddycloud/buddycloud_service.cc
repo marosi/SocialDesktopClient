@@ -1,8 +1,7 @@
 /*
- * buddycloud_service.cc
- *
- *			Author: Maros Kasinec
- *  Created on: Feb 7, 2012
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #include "buddycloud_service.h"

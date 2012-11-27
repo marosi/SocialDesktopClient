@@ -1,3 +1,9 @@
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
 #include "account_button.h"
 #include "qt_service_model.h"
 #include "account.h"
@@ -43,4 +49,4 @@ void AccountButton::GoOffline() {
   model_->Disconnect();
 }
 
-} /* namespace sdc */
+} // namespace sdc

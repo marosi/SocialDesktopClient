@@ -1,5 +1,11 @@
-#ifndef PRIME_BUTTON_H
-#define PRIME_BUTTON_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef PRIME_BUTTON_H_
+#define PRIME_BUTTON_H_
 
 #include <QWidget>
 #include <QToolButton>
@@ -24,6 +30,6 @@ class PrimeButton : public QWidget {
   Ui::PrimeButton *ui;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif // PRIME_BUTTON_H
+#endif // PRIME_BUTTON_H_

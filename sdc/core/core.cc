@@ -1,8 +1,7 @@
 /*
- * SocialDesktopClient.cc
- *
- *  Created on: Jul 8, 2011
- *      Author: Maros Kasinec
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #include "core.h"
@@ -236,4 +235,4 @@ void Core::MakeServiceThread(ServiceModel* model) {
   }
 }
 
-} /* namespace sdc */
+} // namespace sdc

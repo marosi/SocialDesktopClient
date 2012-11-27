@@ -1,5 +1,11 @@
-#ifndef FILESYSTEM_STORAGES_H
-#define FILESYSTEM_STORAGES_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef FILESYSTEM_STORAGES_H_
+#define FILESYSTEM_STORAGES_H_
 
 #include "Swiften/Client/Storages.h"
 #include "Swiften/Client/MemoryStorages.h"

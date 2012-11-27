@@ -1,13 +1,11 @@
-/**
- * @file data_manager.h
- * @brief SDC configuration interface. User specific configuration data.
- *
- * @author Maros Kasinec
- *   @date Aug 6, 2011
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
-#ifndef CORE_CONFIGMANAGER_H_
-#define CORE_CONFIGMANAGER_H_
+#ifndef CORE_DATA_MANAGER_H_
+#define CORE_DATA_MANAGER_H_
 
 #include "account.h"
 #include "abstract_manager.h"
@@ -113,6 +111,6 @@ class DataManager : public AbstractManager, public Properties {
   }
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif /* CORE_CONFIGMANAGER_H_ */
+#endif // CORE_DATA_MANAGER_H_

@@ -1,15 +1,11 @@
-/**
- * @file buddycloud_bot.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Nov 28, 2011
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
-#ifndef BUDDYCLOUD_BOT_H_
-#define BUDDYCLOUD_BOT_H_
+#ifndef BC_MODEL_H_
+#define BC_MODEL_H_
 
 #include "sdc/qtgui/qt_service.h"
 #include "sdc/qtgui/qt_service_model.h"
@@ -165,4 +161,4 @@ class BcModel : public sdc::QtServiceModel {
     std::vector<Swift::PayloadSerializer*> serializers_;
 };
 
-#endif /* BUDDYCLOUD_BOT_H_ */
+#endif // BC_MODEL_H_

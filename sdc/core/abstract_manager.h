@@ -1,11 +1,7 @@
-/**
- * @file abstract_manager.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Oct 31, 2011
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef CORE_ABSTRACTMANAGER_H_
@@ -18,6 +14,9 @@ namespace sdc {
 
 class Core;
 
+/**
+ * An ancestor for all managers.
+ */
 class AbstractManager : public boost::noncopyable, public CoreAnchor {
  public:
   AbstractManager(Core* core) : CoreAnchor(core) {}
@@ -25,6 +24,6 @@ class AbstractManager : public boost::noncopyable, public CoreAnchor {
   virtual void OnExit() {}
 };
 
-}
+} // namespace sdc
 
-#endif /* CORE_ABSTRACTMANAGER_H_ */
+#endif // CORE_ABSTRACTMANAGER_H_

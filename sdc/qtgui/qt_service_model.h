@@ -1,11 +1,7 @@
-/**
- * @file qt_service_model.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Apr 14, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef QT_SERVICE_MODEL_H_
@@ -38,6 +34,6 @@ class QtServiceModel : public QObject, public ServiceModel {
   QtGui* gui_;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif /* QT_SERVICE_MODEL_H_ */
+#endif // QT_SERVICE_MODEL_H_

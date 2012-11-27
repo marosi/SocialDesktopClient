@@ -1,15 +1,11 @@
-/**
- * @file core_anchor.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Mar 31, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
-#ifndef CORE_ANCHOR_H_
-#define CORE_ANCHOR_H_
+#ifndef CORE_CORE_ANCHOR_H_
+#define CORE_CORE_ANCHOR_H_
 
 #include <assert.h>
 
@@ -42,6 +38,6 @@ class CoreAnchor {
   Core* core_;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif /* CORE_ANCHOR_H_ */
+#endif // CORE_CORE_ANCHOR_H_

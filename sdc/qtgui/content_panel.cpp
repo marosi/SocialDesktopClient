@@ -1,3 +1,9 @@
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
 #include "content_panel.h"
 #include "main_window.h"
 #include <QMenu>
@@ -38,4 +44,4 @@ void ContentPanel::closeEvent(QCloseEvent *) {
   emit closed();
 }
 
-} /* namespace sdc */
+} // namespace sdc

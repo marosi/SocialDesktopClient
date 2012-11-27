@@ -1,15 +1,11 @@
-/**
- * @file pubsub.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Dec 30, 2011
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
-#ifndef PUBSUB_PAYLOAD_H_
-#define PUBSUB_PAYLOAD_H_
+#ifndef PUBSUB_H_
+#define PUBSUB_H_
 
 #include "pubsub_node.h"
 #include "atom.h"
@@ -184,4 +180,4 @@ class EventPayload : public PubsubItemsRequest {
   typedef boost::shared_ptr<EventPayload> ref;
 };
 
-#endif /* PUBSUB_PAYLOAD_H_ */
+#endif // PUBSUB_H_

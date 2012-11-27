@@ -1,11 +1,7 @@
-/**
- * @file channel_widget.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Apr 23, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef CHANNEL_WIDGET_H_
@@ -47,4 +43,4 @@ class ChannelPanel : public sdc::ContentPanel, public AbstractPresenter {
   int old_scroll_bar_value_;
 };
 
-#endif /* CHANNEL_WIDGET_H_ */
+#endif // CHANNEL_WIDGET_H_

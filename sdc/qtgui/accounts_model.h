@@ -1,5 +1,11 @@
-#ifndef ACCOUNTS_MODEL_H
-#define ACCOUNTS_MODEL_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef ACCOUNTS_MODEL_H_
+#define ACCOUNTS_MODEL_H_
 
 #include <QAbstractTableModel>
 
@@ -21,7 +27,7 @@ class AccountsModel : public QAbstractTableModel {
   Core* core_;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif // ACCOUNTS_MODEL_H
+#endif // ACCOUNTS_MODEL_H_
 

@@ -1,11 +1,7 @@
-/**
- * @file channel.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Jul 7, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef CHANNEL_H_
@@ -156,4 +152,4 @@ class Channel : public AbstractModel {
   std::string posts_count_;
 };
 
-#endif /* CHANNEL_H_ */
+#endif // CHANNEL_H_

@@ -1,5 +1,11 @@
-#ifndef COMMENT_WIDGET_H
-#define COMMENT_WIDGET_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef COMMENT_WIDGET_H_
+#define COMMENT_WIDGET_H_
 
 #include "abstract_presenter.h"
 #include <QFrame>
@@ -23,4 +29,4 @@ class CommentFrame : public QFrame, public AbstractPresenter {
     Comment* comment_;
 };
 
-#endif // COMMENT_WIDGET_H
+#endif // COMMENT_WIDGET_H_

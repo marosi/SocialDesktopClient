@@ -1,11 +1,7 @@
-/**
- * @file service.h
- * @brief TODO:comment
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Oct 28, 2011
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef CORE_SERVICE_H_
@@ -66,6 +62,6 @@ class Service {
   std::string dir_path_;
 };
 
-}
+} // namespace sdc
 
-#endif /* CORE_SERVICE_H_ */
+#endif // CORE_SERVICE_H_

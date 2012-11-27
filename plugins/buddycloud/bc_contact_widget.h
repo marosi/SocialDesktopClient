@@ -1,11 +1,7 @@
-/**
- * @file bc_contact_widget.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Apr 24, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef BC_CONTACT_WIDGET_H_
@@ -36,4 +32,4 @@ class BcContactWidget : public sdc::ContactWidget, public AbstractPresenter {
   ChannelPanel* channel_;
 };
 
-#endif /* BC_CONTACT_WIDGET_H_ */
+#endif // BC_CONTACT_WIDGET_H_

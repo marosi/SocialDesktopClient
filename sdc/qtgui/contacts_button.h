@@ -1,5 +1,11 @@
-#ifndef CONTACTS_BUTTON_H
-#define CONTACTS_BUTTON_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef CONTACTS_BUTTON_H_
+#define CONTACTS_BUTTON_H_
 
 #include "prime_button.h"
 
@@ -23,6 +29,6 @@ class ContactsButton : public PrimeButton {
   ContactsPanel* contacts_;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif // CONTACTS_BUTTON_H
+#endif // CONTACTS_BUTTON_H_

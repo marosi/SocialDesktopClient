@@ -1,12 +1,18 @@
-#ifndef AVATAR_H
-#define AVATAR_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef AVATAR_H_
+#define AVATAR_H_
 
 #include <QObject>
 #include <QPixmap>
 
 class Avatar : public QObject {
 
-  Q_OBJECT
+    Q_OBJECT
 
  public:
   Avatar(const std::string &file) {
@@ -32,4 +38,4 @@ class Avatar : public QObject {
   QPixmap avatar_;
 };
 
-#endif // AVATAR_H
+#endif // AVATAR_H_

@@ -1,12 +1,11 @@
 /*
- * service.cc
- *
- *			Author: Maros Kasinec
- *  Created on: Oct 28, 2011
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #include "service.h"
 
 namespace sdc {
 
-} /* namespace sdc */
+} // namespace sdc

@@ -1,11 +1,7 @@
-/**
- * @file service_presenter.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Jul 5, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef SERVICE_PRESENTER_H_
@@ -57,6 +53,6 @@ class ServicePresenter : public QObject {
   AccountButton* account_button_;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif /* SERVICE_PRESENTER_H_ */
+#endif // SERVICE_PRESENTER_H_

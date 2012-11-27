@@ -1,5 +1,11 @@
-#ifndef CORE_PROPERTIES_H
-#define CORE_PROPERTIES_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef CORE_PROPERTIES_H_
+#define CORE_PROPERTIES_H_
 
 #include "boost/serialization/nvp.hpp"
 #include "boost/serialization/map.hpp"
@@ -31,6 +37,6 @@ class Properties {
   }
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif // CORE_PROPERTIES_H
+#endif // CORE_PROPERTIES_H_

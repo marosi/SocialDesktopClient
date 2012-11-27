@@ -1,5 +1,11 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef MAIN_WINDOW_H_
+#define MAIN_WINDOW_H_
 
 #include "ui_main_window.h"
 #include <QtGui/QMainWindow>
@@ -56,6 +62,6 @@ class MainWindow : public QMainWindow {
   ContactsPanel* contacts_panel_;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif // MAINWINDOW_H
+#endif // MAIN_WINDOW_H_

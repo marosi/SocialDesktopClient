@@ -1,11 +1,7 @@
-/**
- * @file bc_presenter.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Jul 5, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef BC_PRESENTER_H_
@@ -53,4 +49,4 @@ class BcPresenter : public sdc::ServicePresenter, public AbstractPresenter {
   QLineEdit* subscribe_to_;
 };
 
-#endif /* BC_PRESENTER_H_ */
+#endif // BC_PRESENTER_H_

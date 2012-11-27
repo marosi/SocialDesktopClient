@@ -1,5 +1,11 @@
-#ifndef ACCOUNT_BUTTON_H
-#define ACCOUNT_BUTTON_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef ACCOUNT_BUTTON_H_
+#define ACCOUNT_BUTTON_H_
 
 #include "prime_button.h"
 
@@ -32,6 +38,6 @@ class AccountButton : public PrimeButton {
   QAction* title_;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif // ACCOUNT_BUTTON_H
+#endif // ACCOUNT_BUTTON_H_

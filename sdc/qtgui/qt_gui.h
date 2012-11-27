@@ -7,6 +7,11 @@
  * @author Maros Kasinec
  *   @date Mar 31, 2012
  */
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
 
 #ifndef QT_GUI_H_
 #define QT_GUI_H_
@@ -76,6 +81,6 @@ class QtGui : public QObject, public UI {
   std::map<ServicePresenter*, QtService*> presenter_to_service_;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif /* QT_GUI_H_ */
+#endif // QT_GUI_H_

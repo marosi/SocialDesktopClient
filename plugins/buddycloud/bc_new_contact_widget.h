@@ -1,5 +1,11 @@
-#ifndef BC_NEW_CONTACT_WIDGET_H
-#define BC_NEW_CONTACT_WIDGET_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef BC_NEW_CONTACT_WIDGET_H_
+#define BC_NEW_CONTACT_WIDGET_H_
 
 #include "bc_contact.h"
 #include "bc_model.h"
@@ -31,4 +37,4 @@ class BcNewContactWidget : public sdc::NewContactWidget {
   Ui::BcNewContactWidgetClass ui;
 };
 
-#endif // BC_NEW_CONTACT_WIDGET_H
+#endif // BC_NEW_CONTACT_WIDGET_H_

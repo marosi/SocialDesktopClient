@@ -1,5 +1,11 @@
-#ifndef XMPP_COMMANDS_H
-#define XMPP_COMMANDS_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef XMPP_COMMANDS_H_
+#define XMPP_COMMANDS_H_
 
 #include <QtGui/QWidget>
 #include "ui_xmpp_commands.h"
@@ -18,4 +24,4 @@ private:
     Ui::XmppCommandsClass ui;
 };
 
-#endif // XMPP_COMMANDS_H
+#endif // XMPP_COMMANDS_H_

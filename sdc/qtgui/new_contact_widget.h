@@ -1,11 +1,7 @@
-/**
- * @file new_contact_widget.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Apr 24, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef NEW_CONTACT_WIDGET_H_
@@ -32,6 +28,6 @@ class NewContactWidget : public QWidget {
   QString error_;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif /* NEW_CONTACT_WIDGET_H_ */
+#endif // NEW_CONTACT_WIDGET_H_

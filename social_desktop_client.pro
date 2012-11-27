@@ -40,7 +40,8 @@ HEADERS += \
     sdc/qtgui/activities_button.h \
     sdc/qtgui/contacts_panel.h \
     sdc/qtgui/activities_panel.h \
-    sdc/qtgui/main_button.h
+    sdc/qtgui/main_button.h \
+    sdc/core/i_notable.h
 SOURCES += \
     sdc/core/service_model.cc \
     sdc/core/ui.cc \
@@ -82,20 +83,19 @@ FORMS += \
 RESOURCES += \  
     sdc/qtgui/resources/sdc.qrc
 INCLUDEPATH += \
-    #3rdparty/boost_1_48_0 \
+    3rdparty/boost \
     sdc \
     sdc/core \
     sdc/qtgui
 LIBS += \
-    #-L3rdparty/boost_1_48_0/stage/lib \
+    3rdparty/boost/stage/lib/libboost_system.a \
+    3rdparty/boost/stage/lib/libboost_serialization.a \
+    3rdparty/boost/stage/lib/libboost_filesystem.a \
+    3rdparty/boost/stage/lib/libboost_thread.a \
+    3rdparty/boost/stage/lib/libboost_program_options.a \
     \
-    -lboost_system \
-    -lboost_serialization \
-    -lboost_filesystem \
-    -lboost_thread \
     -ldl
-    #3rdparty/boost_1_48_0/stage/lib/libboost_thread.so
-QMAKE_LFLAGS += -export-dynamic #-Wl,-rpath,./3rdparty/boost_1_48_0/stage/lib
+QMAKE_LFLAGS += -export-dynamic #-Wl,-rpath,./3rdparty/boost/stage/lib
 QMAKE_CXXFLAGS += -std=c++0x
 
 DEFINES = BOOST_FILESYSTEM_VERSION=2

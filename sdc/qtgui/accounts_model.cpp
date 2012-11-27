@@ -1,3 +1,9 @@
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
 #include "accounts_model.h"
 #include "bind.h"
 #include "core.h"
@@ -103,4 +109,4 @@ Qt::ItemFlags AccountsModel::flags(const QModelIndex &index) const {
   }
 }
 
-} /* namespace sdc */
+} // namespace sdc

@@ -1,11 +1,7 @@
-/**
- * @file pubsub_payload_serializer.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Dec 30, 2011
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef PUBSUB_PAYLOAD_SERIALIZER_H_
@@ -62,4 +58,4 @@ class RsmSerializer : public Swift::GenericPayloadSerializer<Rsm> {
   virtual std::string serializePayload(boost::shared_ptr<Rsm> payload) const;
 };
 
-#endif /* PUBSUB_PAYLOAD_SERIALIZER_H_ */
+#endif // PUBSUB_PAYLOAD_SERIALIZER_H_

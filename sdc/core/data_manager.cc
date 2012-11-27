@@ -1,8 +1,7 @@
 /*
- * data_manager.cc
- *
- *			Author: Maros Kasinec
- *  Created on: Aug 6, 2011
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #include "data_manager.h"
@@ -45,4 +44,4 @@ void DataManager::OnExit() {
   file.close();
 }
 
-}
+} // namespace sdc

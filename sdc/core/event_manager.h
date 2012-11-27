@@ -1,15 +1,11 @@
-/**
- * @file event_manager.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Nov 3, 2011
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
-#ifndef EVENT_MANAGER_H_
-#define EVENT_MANAGER_H_
+#ifndef CORE_EVENT_MANAGER_H_
+#define CORE_EVENT_MANAGER_H_
 
 #include "common.h"
 #include "abstract_manager.h"
@@ -51,6 +47,6 @@ struct EventManager::Event {
   boost::function<void ()> callback;
 };
 
-} //namespace sdc
+}  // namespace sdc
 
-#endif /* EVENT_MANAGER_H_ */
+#endif // CORE_EVENT_MANAGER_H_

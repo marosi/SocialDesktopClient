@@ -1,5 +1,11 @@
-#ifndef AVATAR_FILESYSTEM_STORAGE_H
-#define AVATAR_FILESYSTEM_STORAGE_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef AVATAR_FILESYSTEM_STORAGE_H_
+#define AVATAR_FILESYSTEM_STORAGE_H_
 
 #include "Swiften/Avatars/AvatarStorage.h"
 
@@ -31,4 +37,4 @@ class AvatarFilesystemStorage : public Swift::AvatarStorage {
   sdc::Account* account_;
 };
 
-#endif // AVATAR_FILESYSTEM_STORAGE_H
+#endif // AVATAR_FILESYSTEM_STORAGE_H_

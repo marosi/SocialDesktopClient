@@ -1,11 +1,7 @@
-/**
- * @file service_model.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Feb 7, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef CORE_SERVICE_MODEL_H_
@@ -41,6 +37,6 @@ class ServiceModel : public CoreAnchor {
   Service* service_; // set in Core class
 };
 
-}  /* namespace sdc */
+} // namespace sdc
 
-#endif /* CORE_SERVICE_MODEL_H_ */
+#endif // CORE_SERVICE_MODEL_H_

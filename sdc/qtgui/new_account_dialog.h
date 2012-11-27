@@ -1,5 +1,11 @@
-#ifndef NEW_ACCOUNT_WIDGET_H
-#define NEW_ACCOUNT_WIDGET_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef NEW_ACCOUNT_DIALOG_H_
+#define NEW_ACCOUNT_DIALOG_H_
 
 #include <QtGui/QDialog>
 #include "ui_new_account_dialog.h"
@@ -41,6 +47,6 @@ class NewAccountDialog : public QDialog
   Account* account_;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif // NEW_ACCOUNT_WIDGET_H
+#endif // NEW_ACCOUNT_DIALOG_H_

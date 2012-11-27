@@ -1,5 +1,11 @@
-#ifndef PUBSUB_PARSER_FACTORIES_H
-#define PUBSUB_PARSER_FACTORIES_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef PUBSUB_PARSER_FACTORIES_H_
+#define PUBSUB_PARSER_FACTORIES_H_
 
 #include "Swiften/Parser/PayloadParserFactory.h"
 #include "Swiften/Parser/GenericPayloadParserFactory.h"
@@ -28,4 +34,4 @@ class AtomParserFactory : public Swift::GenericPayloadParserFactory<AtomParser> 
   AtomParserFactory() : Swift::GenericPayloadParserFactory<AtomParser>("entry", "http://www.w3.org/2005/Atom") {}
 };
 
-#endif // PUBSUB_PARSER_FACTORIES_H
+#endif // PUBSUB_PARSER_FACTORIES_H_

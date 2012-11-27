@@ -1,11 +1,7 @@
-/**
- * @file items.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Jul 2, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef ITEMS_H_
@@ -32,4 +28,4 @@ class Items : public Swift::Payload {
   std::vector<boost::shared_ptr<P> > items_;
 };
 
-#endif /* ITEMS_H_ */
+#endif // ITEMS_H_

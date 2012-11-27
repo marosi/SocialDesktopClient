@@ -1,11 +1,7 @@
-/**
- * @file new_account_widget.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Apr 14, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef NEW_ACCOUNT_WIDGET_H_
@@ -37,6 +33,6 @@ class NewAccountWidget : public QWidget {
   QString error_message_;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif /* NEW_ACCOUNT_WIDGET_H_ */
+#endif // NEW_ACCOUNT_WIDGET_H_

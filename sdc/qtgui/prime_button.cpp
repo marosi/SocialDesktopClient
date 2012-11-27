@@ -1,3 +1,9 @@
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
 #include "prime_button.h"
 #include "ui_prime_button.h"
 
@@ -17,4 +23,4 @@ QToolButton* PrimeButton::button() {
   return ui->toolButton;
 }
 
-} /* namespace sdc */
+} // namespace sdc

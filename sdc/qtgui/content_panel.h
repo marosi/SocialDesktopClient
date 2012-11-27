@@ -1,5 +1,11 @@
-#ifndef CONTENT_PANEL_H
-#define CONTENT_PANEL_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef CONTENT_PANEL_H_
+#define CONTENT_PANEL_H_
 
 #include "ui_content_panel.h"
 #include <QFrame>
@@ -53,6 +59,6 @@ class ContentPanel : public QFrame {
   MainWindow* main_window_;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif // CONTENT_PANEL_H
+#endif // CONTENT_PANEL_H_

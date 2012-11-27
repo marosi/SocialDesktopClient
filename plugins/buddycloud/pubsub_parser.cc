@@ -1,3 +1,9 @@
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
 #include "pubsub_parser.h"
 #include "payloads/pubsub.h"
 #include "pubsub_parser_factories.h"

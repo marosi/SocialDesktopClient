@@ -1,11 +1,13 @@
 /**
- * @file main.cpp
- * @brief OSW plugin main site of plugin implementation.
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  *
- * It contains neccessary functions for the plugin to be registered in SDC Core.
+ *  @file main.cpp
  *
- *  Created on: Jul 13, 2011
- *      Author: Maros Kasinec
+ *  OSW plugin main site of plugin implementation.
+ *  It contains neccessary functions for the plugin to be registered in SDC Core.
+ *
  */
 
 #include "buddycloud_service.h"

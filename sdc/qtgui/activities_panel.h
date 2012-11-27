@@ -1,5 +1,11 @@
-#ifndef ACTIVITIES_PANEL_H
-#define ACTIVITIES_PANEL_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef ACTIVITIES_PANEL_H_
+#define ACTIVITIES_PANEL_H_
 
 #include "content_panel.h"
 #include <QList>
@@ -18,6 +24,6 @@ class ActivitiesPanel : public ContentPanel {
   QList<Activity*> activities_;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif // ACTIVITY_PANEL_H
+#endif // ACTIVITY_PANEL_H_

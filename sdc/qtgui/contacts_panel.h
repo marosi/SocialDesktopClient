@@ -1,5 +1,11 @@
-#ifndef CONTACTS_PANEL_H
-#define CONTACTS_PANEL_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef CONTACTS_PANEL_H_
+#define CONTACTS_PANEL_H_
 
 #include "content_panel.h"
 
@@ -21,6 +27,6 @@ class ContactsPanel : public ContentPanel {
   QToolButton* add_button_;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif // CONTACTS_PANEL_H
+#endif // CONTACTS_PANEL_H_

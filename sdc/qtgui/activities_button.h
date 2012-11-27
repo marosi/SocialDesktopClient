@@ -1,5 +1,11 @@
-#ifndef ACTIVITIES_BUTTON_H
-#define ACTIVITIES_BUTTON_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef ACTIVITIES_BUTTON_H_
+#define ACTIVITIES_BUTTON_H_
 
 #include "prime_button.h"
 
@@ -23,6 +29,6 @@ class ActivitiesButton : public PrimeButton {
   ActivitiesPanel* activities_;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif // ACTIVITIES_BUTTON_H
+#endif // ACTIVITIES_BUTTON_H_

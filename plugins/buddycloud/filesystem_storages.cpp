@@ -1,3 +1,9 @@
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
 #include "filesystem_storages.h"
 #include "avatar_filesystem_storage.h"
 #include "Swiften/VCards/VCardMemoryStorage.h"

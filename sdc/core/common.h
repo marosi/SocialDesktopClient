@@ -1,11 +1,7 @@
-/**
- * @file common.h
- * @brief This is master header file providing SocialDesktopClient API.
- *	
- * Use this header file in plugin development.
- *
- * @author Maros Kasinec
- *   @date Aug 6, 2011
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef CORE_COMMON_H_
@@ -21,6 +17,6 @@ namespace sdc {
 typedef std::string PluginSignature;
 typedef std::string LibSignature;
 
-}
+} // namespace sdc
 
-#endif /* CORE_COMMON_H_ */
+#endif // CORE_COMMON_H_

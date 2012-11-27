@@ -1,5 +1,11 @@
-#ifndef SETTINGS_DIALOG_H
-#define SETTINGS_DIALOG_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef SETTINGS_DIALOG_H_
+#define SETTINGS_DIALOG_H_
 
 #include <QtGui/QDialog>
 #include "ui_settings_dialog.h"
@@ -42,6 +48,6 @@ class SettingsDialog : public QDialog
   std::vector<Service*> services_;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif // SETTINGS_DIALOG_H
+#endif // SETTINGS_DIALOG_H_

@@ -1,5 +1,11 @@
-#ifndef POST_WIDGET_H
-#define POST_WIDGET_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef POST_WIDGET_H_
+#define POST_WIDGET_H_
 
 #include "abstract_presenter.h"
 #include "ui_post_frame.h"
@@ -38,4 +44,4 @@ class PostFrame : public QFrame, public AbstractPresenter {
   QMap<Comment*, CommentFrame*> comments_;
 };
 
-#endif // POST_WIDGET_H
+#endif // POST_WIDGET_H_

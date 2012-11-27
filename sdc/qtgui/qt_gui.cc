@@ -9,6 +9,12 @@
 #include "account_button.h"
 #include "bind.h"
 #include "core.h"
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
 #include "main_window.h"
 #include "service_model.h"
 #include "service_presenter.h"
@@ -105,4 +111,4 @@ void QtGui::DeativateAccount(const std::string account_id) {
   delete presenter;
 }
 
-} /* namespace sdc */
+} // namespace sdc

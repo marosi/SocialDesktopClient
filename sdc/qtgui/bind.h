@@ -1,11 +1,7 @@
-/**
- * @file bind.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Jul 6, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef BIND_H_
@@ -18,8 +14,6 @@
 #include "boost/make_shared.hpp"
 #include "boost/signals2/signal.hpp"
 #include <type_traits>
-
-#include "log.h"
 
 namespace sdc {
 
@@ -123,6 +117,6 @@ void bind(boost::signals2::signal<T> &signal, typename std::common_type<boost::f
   binding->connect(signal, binding);
 }
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif /* BIND_H_ */
+#endif // BIND_H_

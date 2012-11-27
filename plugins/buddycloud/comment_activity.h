@@ -1,5 +1,11 @@
-#ifndef COMMENT_ACTIVITY_H
-#define COMMENT_ACTIVITY_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef COMMENT_ACTIVITY_H_
+#define COMMENT_ACTIVITY_H_
 
 #include "sdc/qtgui/activity.h"
 
@@ -18,4 +24,4 @@ class CommentActivity : public sdc::Activity {
   const Comment* comment_;
 };
 
-#endif // COMMENT_ACTIVITY_H
+#endif // COMMENT_ACTIVITY_H_

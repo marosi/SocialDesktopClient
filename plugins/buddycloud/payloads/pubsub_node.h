@@ -1,11 +1,7 @@
-/**
- * @file pubsub_node.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Jul 2, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef PUBSUB_NODE_H_
@@ -29,4 +25,4 @@ class PubsubNode : public Swift::Payload {
   std::string node_;
 };
 
-#endif /* PUBSUB_NODE_H_ */
+#endif // PUBSUB_NODE_H_

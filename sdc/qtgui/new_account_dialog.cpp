@@ -1,8 +1,14 @@
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#include "new_account_dialog.h"
 #include "account.h"
 #include "core.h"
 #include "data_manager.h"
 #include "log.h"
-#include "new_account_dialog.h"
 #include "new_account_widget.h"
 #include "service.h"
 #include "qt_service.h"
@@ -40,8 +46,6 @@ NewAccountDialog::NewAccountDialog(QWidget *parent)
     ++i;
   }
   current_pane_ = *service_panes_.begin();
-
-
 
   show();
 }
@@ -84,4 +88,4 @@ void NewAccountDialog::ChangeServicePane(int index) {
   }
 }
 
-} /* namespace sdc */
+} // namespace sdc

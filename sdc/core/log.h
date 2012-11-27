@@ -1,11 +1,7 @@
-/**
- * @file log.h
- * @brief Application logging stuff.
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Oct 28, 2011
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef CORE_LOG_H_
@@ -70,6 +66,6 @@ class Log {
   std::string current_time();
 };
 
-}
+} // namespace sdc
 
-#endif /* CORE_LOG_H_ */
+#endif // CORE_LOG_H_

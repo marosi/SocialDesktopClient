@@ -1,11 +1,7 @@
-/**
- * @file post.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Apr 23, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef POST_H_
@@ -86,4 +82,4 @@ class Comment : public Content {
 };
 
 
-#endif /* POST_H_ */
+#endif // POST_H_

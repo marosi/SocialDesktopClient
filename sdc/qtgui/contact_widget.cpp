@@ -1,6 +1,13 @@
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
 #include "contact_widget.h"
 #include "bind.h"
 #include "contact.h"
+#include "log.h"
 #include "main_window.h"
 #include "boost/cast.hpp"
 #include "boost/bind.hpp"
@@ -32,4 +39,4 @@ ContactWidget::ContactWidget(Contact* contact) : contact_(contact) {
 
 ContactWidget::~ContactWidget() {}
 
-} /* namespace sdc */
+} // namespace sdc

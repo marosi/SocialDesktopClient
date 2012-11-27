@@ -1,15 +1,11 @@
-/**
- * @file gui.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Mar 31, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
-#ifndef GUI_H_
-#define GUI_H_
+#ifndef CORE_UI_H_
+#define CORE_UI_H_
 
 namespace sdc {
 
@@ -34,6 +30,6 @@ class UI {
   virtual int Exec()=0;
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif /* GUI_H_ */
+#endif // CORE_UI_H_

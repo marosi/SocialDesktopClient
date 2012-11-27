@@ -1,5 +1,11 @@
-#ifndef ABSTRACT_PRESENTER_H
-#define ABSTRACT_PRESENTER_H
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
+ */
+
+#ifndef ABSTRACT_PRESENTER_H_
+#define ABSTRACT_PRESENTER_H_
 
 class BcPresenter;
 
@@ -17,4 +23,4 @@ class AbstractPresenter {
   BcPresenter* presenter_;
 };
 
-#endif // ABSTRACT_PRESENTER_H
+#endif // ABSTRACT_PRESENTER_H_

@@ -1,11 +1,7 @@
-/**
- * @file contact.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Feb 12, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef CORE_CONTACT_H_
@@ -51,6 +47,6 @@ class Contact {
   int status_;
 };
 
-}  /* namespace sdc */
+} // namespace sdc
 
-#endif /* CORE_CONTACT_H_ */
+#endif // CORE_CONTACT_H_

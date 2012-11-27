@@ -1,8 +1,7 @@
 /*
- * qt_service_model.cc
- *
- *			Author: Maros Kasinec
- *  Created on: Apr 20, 2012
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #include "qt_service_model.h"
@@ -19,4 +18,4 @@ QtService* QtServiceModel::GetQtService() {
   return boost::polymorphic_downcast<QtService*>(this->service());
 }
 
-} /* namespace sdc */
+} // namespace sdc

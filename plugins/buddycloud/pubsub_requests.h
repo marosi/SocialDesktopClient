@@ -1,11 +1,7 @@
-/**
- * @file pubsub_requests.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Apr 19, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef PUBSUB_REQUESTS_H_
@@ -119,4 +115,4 @@ class SetPubsubConfigureNodeRequest : public Swift::GenericRequest<PubsubConfigu
 };
 
 
-#endif /* PUBSUB_REQUESTS_H_ */
+#endif // PUBSUB_REQUESTS_H_

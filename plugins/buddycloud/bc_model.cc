@@ -1,8 +1,7 @@
 /*
- * buddycloud_bot.cc
- *
- *			Author: Maros Kasinec
- *  Created on: Jan 28, 2012
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #include "bc_model.h"

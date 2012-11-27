@@ -1,11 +1,7 @@
-/**
- * @file account.h
- * @brief TODO:
- *	
- * TODO: Complete detailed description
- *
- * @author Maros Kasinec
- *   @date Apr 14, 2012
+/*
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #ifndef CORE_ACCOUNT_H_
@@ -16,13 +12,14 @@
 #include "boost/serialization/nvp.hpp"
 #include "boost/serialization/vector.hpp"
 
-
-#include "log.h"
 namespace sdc {
 
 class Service;
 class ServiceModel;
 
+/**
+ *
+ */
 class Account : public Properties {
  public:
   friend class boost::serialization::access;
@@ -138,6 +135,6 @@ class Account : public Properties {
   }
 };
 
-} /* namespace sdc */
+} // namespace sdc
 
-#endif /* CORE_ACCOUNT_H_ */
+#endif // CORE_ACCOUNT_H_
