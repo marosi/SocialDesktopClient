@@ -19,7 +19,7 @@ class BcNewContactWidget : public sdc::NewContactWidget {
     Q_OBJECT
 
  public:
-  BcNewContactWidget(QWidget *parent = 0) {
+  BcNewContactWidget(QWidget */*parent*/ = 0) {
     ui.setupUi(this);
   }
   ~BcNewContactWidget() {}

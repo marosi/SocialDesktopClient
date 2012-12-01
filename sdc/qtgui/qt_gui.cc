@@ -83,9 +83,13 @@ void QtGui::ActivateAccount(const std::string account_id) {
   AccountButton* button = new AccountButton(model);
   main_window_->AddAccountButton(button);
   buttons_[account_id] = button;
+  // create contacts button
+  QToolButton* contacts_btn = new QToolButton;
+  main_window_->AddContactsButton(presenter, contacts_btn);
   // initialize presenter members
   presenter->qtgui_ = this;
   presenter->account_button_ = button;
+  presenter->contacts_button_ = contacts_btn;
   presenter->main_window_ = main_window_;
   presenter->service_model_ = model;
   // add mapping for model/presenter/service

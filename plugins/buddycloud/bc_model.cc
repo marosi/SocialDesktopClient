@@ -319,6 +319,9 @@ void BcModel::handleConnected() {
           break;
       }
     });
+    own_channel_->onChannelAvailable.connect([&] () {
+      onChannelAvailable();
+    });
   }
   onConnected();
   client_->sendPresence(Presence::create("I'm here"));
@@ -342,7 +345,7 @@ void BcModel::handleMessageReceived(Message::ref message) {
     BOOST_FOREACH (Channel* channel , channels_) {
       LOG(DEBUG3) << "Iterating through channel: " << channel->posts_node_;
       if (channel->posts_node_ == event->getNode()) {
-        BOOST_FOREACH (Atom::ref atom , event->getItems()->get()) {
+        BOOST_FOREACH (Atom::ref atom , event->getItems()->getInternal<Atom>()) {
           if (atom->getObjectType() == Atom::Comment) {
             LOG(DEBUG4) << "In reply to: " << atom->getInReplyTo();
             Post* post = channel->GetPost(atom->getInReplyTo());

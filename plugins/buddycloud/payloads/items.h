@@ -9,23 +9,32 @@
 
 #include "Swiften/Elements/Payload.h"
 #include "boost/shared_ptr.hpp"
+#include "boost/foreach.hpp"
 #include <vector>
 
-template<class P>
 class Items : public Swift::Payload {
  public:
-  typedef boost::shared_ptr<Items<P> > ref;
+  typedef boost::shared_ptr<Items> ref;
 
-  void appendPayload(boost::shared_ptr<P> payload) {
+  void appendPayload(Swift::Payload::ref payload) {
     items_.push_back(payload);
   }
 
-  const std::vector<boost::shared_ptr<P> >& get() const {
+  const std::vector<Swift::Payload::ref >& get() const {
     return items_;
   }
 
+  template<class T>
+  const std::vector<boost::shared_ptr<T> > getInternal() const {
+    std::vector<boost::shared_ptr<T> > result;
+    BOOST_FOREACH (Swift::Payload::ref payload, items_) {
+      result.push_back(boost::dynamic_pointer_cast<T>(payload));
+    }
+    return result;
+  }
+
  private:
-  std::vector<boost::shared_ptr<P> > items_;
+  std::vector<Swift::Payload::ref > items_;
 };
 
 #endif // ITEMS_H_

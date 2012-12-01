@@ -17,7 +17,7 @@ class BcNewAccountWidget : public sdc::NewAccountWidget
     Q_OBJECT
 
  public:
-  BcNewAccountWidget(QWidget *parent = 0) {
+  BcNewAccountWidget(QWidget* /*parent*/ = 0) {
     ui.setupUi(this);
   }
   ~BcNewAccountWidget() {}

@@ -27,9 +27,19 @@
 
 namespace sdc {
 
+/**
+ * The GroupedBy class manages ContactWidget objects layout.
+ * It is able to organize ContactWidget according to the template class parameter.
+ */
 template<class T>
 class MainWindow::GroupedBy {
  public:
+  /**
+   * Constructor creates vertical layout for the group.
+   * ContactWidget objects are maintained by QTreeWidget.
+   *
+   * @param titler Functor for retrieving group title based on particular templated parameter.
+   */
   GroupedBy(boost::function<QString (const ContactWidget*, const T)> titler)  {
     titler_ = titler;
     layout_ = new QVBoxLayout;
@@ -46,6 +56,12 @@ class MainWindow::GroupedBy {
 
   QLayout* GetLayout() { return layout_; }
 
+  /**
+   * Inserts widget to be layed out.
+   *
+   * @param widget ContactWidget object to display.
+   * @param key Grouping object.
+   */
   void Insert(ContactWidget* widget, const T key){
     if (!map_.contains(key)) {
       QTreeWidgetItem* item = new QTreeWidgetItem;
@@ -63,6 +79,11 @@ class MainWindow::GroupedBy {
     items_[key]->sortChildren(0, Qt::AscendingOrder);
   }
 
+  /**
+   * Removes particular group.
+   *
+   * @param key Grouping object.
+   */
   void RemoveGroup(const T key) {
     if (map_.contains(key)) {
       QTreeWidgetItem* item = items_[key];
@@ -110,8 +131,8 @@ MainWindow::MainWindow(QtGui* qtgui)
 
   // set tree widget to whole scroll area of content panel not content pane,
   // because content pane has a spacer within that makes tree widget cover only a half of the height
-  delete contacts_panel_->content_scroll_area()->layout();
-  contacts_panel_->content_scroll_area()->setLayout(grouped_by_account_->GetLayout());
+  //delete contacts_panel_->content_scroll_area()->layout();
+  //contacts_panel_->content_scroll_area()->setLayout(grouped_by_account_->GetLayout());
 
   // activities
   activities_ = new ActivitiesPanel;
@@ -149,6 +170,16 @@ void MainWindow::RemoveAllContacts(ServicePresenter* parent) {
   BOOST_FOREACH (ContactWidget* widget , contacts_.values(parent))
     delete widget;
   contacts_.remove(parent);
+}
+
+void MainWindow::AddContactsButton(ServicePresenter* parent, QToolButton* btn) {
+  contacts_buttons_.insert(parent, btn);
+  contacts_panel_->AddTitleBarButton(btn);
+}
+
+void MainWindow::RemoveContactsButton(ServicePresenter* parent) {
+  delete contacts_buttons_.take(parent);
+  contacts_buttons_.remove(parent);
 }
 
 void MainWindow::AddContentPanel(ServicePresenter* parent, ContentPanel* panel) {

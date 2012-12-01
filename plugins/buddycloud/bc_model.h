@@ -78,6 +78,7 @@ class BcModel : public sdc::QtServiceModel {
     boost::signals2::signal<void ()> onDisconnected;
 
     boost::signals2::signal<void ()> onSelfChannelRegistered;
+    boost::signals2::signal<void ()> onChannelAvailable;
 
     boost::signals2::signal<void (const Swift::JID)> onContactAdded;
     boost::signals2::signal<void (const Swift::JID)> onContactRemoved;
@@ -88,6 +89,9 @@ class BcModel : public sdc::QtServiceModel {
     boost::signals2::signal<void (Swift::VCard::ref)> onOwnVCardUpdated; // TODO: signal never emitted
     boost::signals2::signal<void ()> onOwnAvatarChanged; // TODO: signal never emitted
     boost::signals2::signal<void (const Swift::JID)> onAvatarChanged;
+
+    boost::signals2::signal<void (std::vector<Swift::JID>) > onSubscriptionsRetrieved;
+    boost::signals2::signal<void (Swift::JID)> onSubscriptionsUpdate;
 
   private:
     /*

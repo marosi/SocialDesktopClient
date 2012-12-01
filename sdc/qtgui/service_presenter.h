@@ -9,9 +9,11 @@
 
 #include "account_button.h"
 #include "bind.h"
+#include "contacts_panel.h"
 #include "main_window.h"
 #include "qt_service_model.h"
 #include <QObject>
+#include <QToolButton>
 #include "boost/cast.hpp"
 
 namespace sdc {
@@ -24,6 +26,7 @@ class ServicePresenter : public QObject {
   friend class QtGui;
   friend class MainWindow;
 
+  ServicePresenter();
   virtual ~ServicePresenter() {}
   virtual void Init() {}
 
@@ -44,6 +47,10 @@ class ServicePresenter : public QObject {
     return account_button_;
   }
 
+  QToolButton* contacts_button() const {
+    return contacts_button_;
+  }
+
   void SetStylesheet(const QString &stylesheet);
 
  private:
@@ -51,6 +58,7 @@ class ServicePresenter : public QObject {
   MainWindow* main_window_;
   QtServiceModel* service_model_;
   AccountButton* account_button_;
+  QToolButton* contacts_button_;
 };
 
 } // namespace sdc

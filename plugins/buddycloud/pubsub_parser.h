@@ -27,15 +27,13 @@ class RsmParser;
 /**
  *
  */
-template<class T>
-class ItemParser : public Swift::GenericPayloadParser<Items<T> > {
+class ItemParser : public Swift::GenericPayloadParser<Items> {
  public:
   ItemParser();
   ~ItemParser();
 
   void addPaylodParserFactory(Swift::PayloadParserFactory* parser);
 
-  using Swift::GenericPayloadParser<Items<T> >::getPayloadInternal;
   virtual void handleStartElement(const std::string& element, const std::string& ns, const Swift::AttributeMap& attributes);
   virtual void handleEndElement(const std::string& element, const std::string& ns);
   virtual void handleCharacterData(const std::string& data);
@@ -111,7 +109,7 @@ class PubsubItemsRequestParser : public Swift::GenericPayloadParser<PubsubItemsR
   };
   int level_;
   bool is_parsing_items_;
-  ItemParser<Atom> item_parser_;
+  ItemParser item_parser_;
   RsmParser* rsm_parser_;
   bool is_parsing_rsm_;
 };

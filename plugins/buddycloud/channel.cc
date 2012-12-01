@@ -31,7 +31,7 @@ Channel::Channel(BcModel* model, const Swift::JID &jid)
   null_node_          = "/user/" + jid_.toString();
   posts_node_         =  null_node_ + "/posts";
   status_node_        =  null_node_ + "/status";
-  subscription_node_  =  null_node_ + "/subscription";
+  subscription_node_  =  null_node_ + "/subscriptions";
   geo_current_node_   =  null_node_ + "/geo/current";
   geo_previous_node_  =  null_node_ + "/geo/previous";
   geo_future_node_    =  null_node_ + "/geo/future";
@@ -70,14 +70,14 @@ void Channel::RetrieveNextPosts() {
     }
     // obtain channel posts
     vector<Post*> new_posts;
-    BOOST_FOREACH (const Atom::ref &atom , items->getItems()->get()) {
+    BOOST_FOREACH (const Atom::ref &atom , items->getItems()->getInternal<Atom>()) {
       if (atom->getInReplyTo() == "") {
         Post* post = AddPost(atom, false);
         new_posts.push_back(post);
       }
     }
     // obtain channel comments
-    BOOST_FOREACH (const Atom::ref &atom , items->getItems()->get()) {
+    BOOST_FOREACH (const Atom::ref &atom , items->getItems()->getInternal<Atom>()) {
       if (atom->getInReplyTo() != "") {
         Post* post = GetPost(atom->getInReplyTo());
         if (post) {
@@ -114,7 +114,7 @@ void Channel::PublishPost(const std::string &content) {
   publish->setNode(posts_node_);
   SetPubsubPublishRequest::ref rq = SetPubsubPublishRequest::create(publish, service_.jid, router_);
   // on response actions
-  rq->onResponse.connect([=] (PubsubPublishRequest::ref payload, ErrorPayload::ref error) {
+  rq->onResponse.connect([=] (PubsubPublishRequest::ref /*payload*/, ErrorPayload::ref error) {
     if (error) {
       LOG(ERROR) << error->getText();
       return;
@@ -136,7 +136,7 @@ void Channel::PublishComment(const std::string &commented_post_id, const std::st
   publish->setNode(posts_node_);
   SetPubsubPublishRequest::ref rq = SetPubsubPublishRequest::create(publish, service_.jid, router_);
   // on response actions
-  rq->onResponse.connect([=] (PubsubPublishRequest::ref payload, ErrorPayload::ref error) {
+  rq->onResponse.connect([=] (PubsubPublishRequest::ref /*payload*/, ErrorPayload::ref error) {
     if (error) {
       LOG(ERROR) << error->getText();
       return;
@@ -155,6 +155,21 @@ void Channel::DeletePost(Post* post) {
     RemovePost(post->GetID());
   });
   retract->send();
+}
+
+void Channel::RetrieveSubscriptions() {
+  GetDiscoItemsRequest::ref req = GetDiscoItemsRequest::create(service_.jid, subscription_node_, router_);
+  req->onResponse.connect([&] (boost::shared_ptr<DiscoItems> disco, ErrorPayload::ref error) {
+    subscriptions_.clear();
+    BOOST_FOREACH (DiscoItems::Item item, disco->getItems()) {
+      Subscription subit;
+      subit.jid = item.getName();
+      subit.channel_server = item.getJID();
+      subscriptions_[subit.jid] = subit;
+    }
+    onSubscriptionsRetrieved(subscriptions_);
+  });
+  req->send();
 }
 
 void Channel::DiscoverChannel() {

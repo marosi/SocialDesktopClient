@@ -11,15 +11,65 @@
 #include "Swiften/Queries/GenericRequest.h"
 
 /**
- * Pubsub <items> request
+ * Pubsub <items> request class
  */
 class GetPubsubItemsRequest : public Swift::GenericRequest<PubsubItemsRequest> {
  public:
   typedef boost::shared_ptr<GetPubsubItemsRequest> ref;
 
-  static ref create(const std::string &node, const std::string &reciever, Swift::IQRouter* router);
-  static ref create(const std::string &max, const std::string &node, const std::string &reciever, Swift::IQRouter* router);
-  static ref create(const std::string &after, const std::string &max, const std::string &node, const std::string &reciever, Swift::IQRouter* router);
+  /**
+   * Creates <iq type=get/> stanza with pubsub items request for the specified node.
+   *
+   * @param node <items/> 'node' attribute
+   * @param reciever <iq/> 'to' attribute
+   * @param router IQRouter
+   * @return boost::shared_ptr<GetPubsubItemsRequest>
+   */
+  static ref create(const std::string &node, const std::string &reciever, Swift::IQRouter* router) {
+    PubsubItemsRequest::ref payload(new PubsubItemsRequest);
+    payload->setNode(node);
+    return ref(new GetPubsubItemsRequest(Swift::IQ::Get, payload, reciever, router));
+  }
+
+  /**
+   * Creates <iq type=get/> stanza with pubsub items request for the specified node
+   * and limited by the 'max' number of items.
+   *
+   * @param max maximum number of returned items
+   * @param node <items/> 'node' attribute
+   * @param reciever <iq/> 'to' attribute
+   * @param router IQRouter
+   * @return boost::shared_ptr<GetPubsubItemsRequest>
+   */
+  static ref create(const std::string &max, const std::string &node, const std::string &reciever, Swift::IQRouter* router) {
+    Rsm::ref rsm(new Rsm);
+    rsm->setMax(max);
+    PubsubItemsRequest::ref payload(new PubsubItemsRequest);
+    payload->setNode(node);
+    payload->setRsm(rsm);
+    return ref(new GetPubsubItemsRequest(Swift::IQ::Get, payload, reciever, router));
+  }
+
+  /**
+   * Creates <iq type=get/> stanza with pubsub items request for the specified node,
+   * limited by the 'max' number of items and positioned after a specific item ID.
+   *
+   * @param after specific item ID in the sequence
+   * @param max maximum number of returned items
+   * @param node <items/> 'node' attribute
+   * @param reciever <iq/> 'to' attribute
+   * @param router IQRouter
+   * @return boost::shared_ptr<GetPubsubItemsRequest>
+   */
+  static ref create(const std::string &after, const std::string &max, const std::string &node, const std::string &reciever, Swift::IQRouter* router) {
+    Rsm::ref rsm(new Rsm);
+    rsm->setMax(max);
+    rsm->setAfter(after);
+    PubsubItemsRequest::ref payload(new PubsubItemsRequest);
+    payload->setNode(node);
+    payload->setRsm(rsm);
+    return ref(new GetPubsubItemsRequest(Swift::IQ::Get, payload, reciever, router));
+  }
 
   /*virtual void handleResponse(boost::shared_ptr<Swift::Payload> payload, Swift::ErrorPayload::ref error) {
     LOG(DEBUG) << "GetPubsubItemsRequest response object: " << typeid(*payload.get()).name();

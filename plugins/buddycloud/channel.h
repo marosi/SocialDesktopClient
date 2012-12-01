@@ -49,6 +49,47 @@ class Channel : public AbstractModel {
         : is_user_channel_registered(is_user_channel_registered) {}
   };
 
+  /**
+   * Channel node affiliation options.
+   * Corresponds with XEP-0060 affiliations, however does not complete them.
+   */
+  enum Affiliation {
+    Owner,
+    Moderator,
+    Publisher,
+    Member,
+    Outcast,
+    None  // PROTOCOL: not specified in channel protocol, however present in some subscriptions
+  };
+
+  /**
+   * Channel node subscription states.
+   * Corresponds with XEP-0060, however does not complete it.
+   */
+  enum SubscriptionState {
+    Subscribed,
+    Pending,
+    NoneState
+  };
+
+  /**
+   * Structure for the pubsub node user is subscribed to.
+   */
+  struct SubscribedNode {
+    std::string node;
+    SubscriptionState state;
+    Affiliation affiliation;
+  };
+
+  /**
+   * Structure for user's generic subscription.
+   */
+  struct Subscription {
+    Swift::JID jid;
+    Swift::JID channel_server;
+    std::vector<SubscribedNode> nodes;
+  };
+
   friend class BcModel;
   typedef boost::shared_ptr<Channel> ref;
 
@@ -84,6 +125,10 @@ class Channel : public AbstractModel {
   void PublishPost(const std::string &content);
   void PublishComment(const std::string &commented_post_id, const std::string &content);
   void DeletePost(Post* post); // TODO:
+  /**
+   * Retrieve channel subscriptions.
+   */
+  void RetrieveSubscriptions();
 
   const std::vector<Post*> posts() const {
     return posts_;
@@ -110,6 +155,8 @@ class Channel : public AbstractModel {
 
   boost::signals2::signal<void (const std::string)> onPostDeleted;
   boost::signals2::signal<void (Post*)> onPostAdded;
+
+  boost::signals2::signal<void (std::map<Swift::JID, Subscription>)> onSubscriptionsRetrieved;
 
  private:
   void DiscoverChannel();
@@ -150,6 +197,7 @@ class Channel : public AbstractModel {
   std::string first_post_id_;
   std::string last_post_id_;
   std::string posts_count_;
+  std::map<Swift::JID, Subscription> subscriptions_;
 };
 
 #endif // CHANNEL_H_

@@ -17,7 +17,7 @@
 #include <vector>
 
 class Geoloc : Swift::Payload {
-  // TODO: As far as this is a desktop client geoloc info are not that important
+  //TODO
 };
 
 class Rsm : public Swift::Payload {
@@ -77,11 +77,11 @@ class PubsubItemsRequest : public PubsubNode {
  public:
   typedef boost::shared_ptr<PubsubItemsRequest> ref;
 
-  void setItems(Items<Atom>::ref items) {
+  void setItems(Items::ref items) {
     items_ = items;
   }
 
-  Items<Atom>::ref getItems() {
+  Items::ref getItems() {
     return items_;
   }
 
@@ -94,7 +94,7 @@ class PubsubItemsRequest : public PubsubNode {
   }
 
  private:
-  Items<Atom>::ref items_;
+  Items::ref items_;
   Rsm::ref rsm_;
 
 };

@@ -10,7 +10,9 @@
 #include "ui_main_window.h"
 #include <QtGui/QMainWindow>
 #include <QList>
+#include <QMap>
 #include <QMultiMap>
+#include <QToolButton>
 
 namespace sdc {
 
@@ -27,6 +29,9 @@ class QtGui;
 class QtServiceModel;
 class ServicePresenter;
 
+/**
+ * A main application window class.
+ */
 class MainWindow : public QMainWindow {
 
     Q_OBJECT
@@ -34,16 +39,36 @@ class MainWindow : public QMainWindow {
  public:
   MainWindow(QtGui* qtgui);
   ~MainWindow();
+
+  /**
+   * Interface for handling account prime buttons within the main window control panel.
+   * @see PrimeButton
+   */
   void AddAccountButton(AccountButton* button);
   void RemoveAccountButton(AccountButton* button);
 
+  /**
+   * Interface for handling general contacts.
+   */
   void AddContact(ServicePresenter* parent, ContactWidget* contact);
   void RemoveAllContacts(ServicePresenter* parent);
 
+  /**
+   * Interface for adding/removing service buttons inside the header of contacts panel.
+   */
+  void AddContactsButton(ServicePresenter* parent, QToolButton* btn);
+  void RemoveContactsButton(ServicePresenter* parent);
+
+  /**
+   * Interface for handling content panels withing the main window content area.
+   */
   void AddContentPanel(ServicePresenter* parent, ContentPanel* panel);
   void RemoveAllContentPanels(ServicePresenter* parent);
 
+
   ActivitiesPanel* activities() { return activities_; }
+
+  ContactsPanel* contacts() { return contacts_panel_; }
 
  private:
   template<class T>
@@ -54,6 +79,7 @@ class MainWindow : public QMainWindow {
   QList<AccountButton*> buttons_;
   QMultiMap<ServicePresenter*, ContactWidget*> contacts_;
   QMultiMap<ServicePresenter*, ContentPanel*> contents_;
+  QMap<ServicePresenter*, QToolButton*> contacts_buttons_;
   GroupedBy<ServicePresenter*>* grouped_by_account_;
   MainButton* main_button_;
   ActivitiesButton* activities_button_;

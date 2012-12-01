@@ -13,11 +13,9 @@
  * ITEMS PARSER
  */
 
-template<class T>
-ItemParser<T>::ItemParser() : level_(TopLevel), curr_parser_(0), is_item_(false) {}
+ItemParser::ItemParser() : level_(TopLevel), curr_parser_(0), is_item_(false) {}
 
-template<class T>
-ItemParser<T>::~ItemParser() {
+ItemParser::~ItemParser() {
   std::vector<Swift::PayloadParserFactory*>::iterator it;
   for(it = factories_.begin(); it != factories_.end(); ++it) {
     delete *it;
@@ -25,14 +23,12 @@ ItemParser<T>::~ItemParser() {
   delete curr_parser_;
 }
 
-template<class T>
-void ItemParser<T>::addPaylodParserFactory(Swift::PayloadParserFactory* parser) {
+void ItemParser::addPaylodParserFactory(Swift::PayloadParserFactory* parser) {
   parsers_.addFactory(parser);
   factories_.push_back(parser);
 }
 
-template<class T>
-void ItemParser<T>::handleStartElement(const std::string& element, const std::string& ns, const Swift::AttributeMap& attributes) {
+void ItemParser::handleStartElement(const std::string& element, const std::string& ns, const Swift::AttributeMap& attributes) {
   if (level_ == TopLevel) { // "item" level
   } else {
     if (!curr_parser_) {
@@ -51,13 +47,12 @@ void ItemParser<T>::handleStartElement(const std::string& element, const std::st
   ++level_;
 }
 
-template<class T>
-void ItemParser<T>::handleEndElement(const std::string& element, const std::string& ns) {
+void ItemParser::handleEndElement(const std::string& element, const std::string& ns) {
   --level_;
   if (level_ == TopLevel) {
     if (is_item_) { // push back handled payload in item element
       assert(curr_parser_);
-      getPayloadInternal()->appendPayload(boost::dynamic_pointer_cast<T>(curr_parser_->getPayload())); // FIX: not efficient
+      getPayloadInternal()->appendPayload(curr_parser_->getPayload()); // FIX: not efficient
     }
     // reset variables
     delete curr_parser_;
@@ -67,8 +62,7 @@ void ItemParser<T>::handleEndElement(const std::string& element, const std::stri
   }
 }
 
-template<class T>
-void ItemParser<T>::handleCharacterData(const std::string& data) {
+void ItemParser::handleCharacterData(const std::string& data) {
   if (level_ > TopLevel) {
     assert(curr_parser_);
     curr_parser_->handleCharacterData(data);
