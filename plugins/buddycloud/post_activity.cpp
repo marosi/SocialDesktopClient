@@ -9,14 +9,14 @@
 #include "channel.h"
 #include "post.h"
 
-PostActivity::PostActivity(BcPresenter* parent, const Post* post)
-    : presenter_(parent), post_(post) {
+PostActivity::PostActivity(BcPresenter* parent, const Swift::JID &from, const Swift::JID &to)
+  : presenter_(parent), from_jid_(from), to_jid_(to) {
   setObjectName("PostActivity");
-  image_label()->setPixmap(presenter_->GetAvatar(post_->GetAuthorJID())->GetPixmap());
-  QString text = QString::fromStdString(post_->GetAuthor() + " posted on " + post_->channel()->JID().toString());
+  image_label()->setPixmap(presenter_->GetAvatar(from_jid_)->GetPixmap());
+  QString text = QString::fromStdString(from_jid_.toString() + " posted on " + to_jid_.toString());
   text_label()->setText(text);
 }
 
 void PostActivity::mouseDoubleClickEvent(QMouseEvent*) {
-  presenter_->ShowChannel(post_->channel()->JID());
+  presenter_->ShowChannel(to_jid_);
 }

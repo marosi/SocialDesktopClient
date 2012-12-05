@@ -30,7 +30,7 @@ class BcNewContactWidget : public sdc::NewContactWidget {
 
   void Process(sdc::ServiceModel* model) {
     BcModel* m = boost::polymorphic_downcast<BcModel*>(model);
-    m->AddNewContact(ui.lineEdit->text().toStdString());
+    m->SubscribeToChannel(ui.lineEdit->text().toStdString());
   }
 
  private:

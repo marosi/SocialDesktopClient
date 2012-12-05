@@ -29,7 +29,7 @@ class Content : public AbstractModel {
   const Swift::JID& GetAuthorJID() const { return author_jid_; }
   void SetContent(const std::string &content) { content_ = content; }
   std::string GetContent() const { return content_; }
-  void SetPublished(const boost::posix_time::ptime &published) { published_ = published; }
+  void SetPublished(const boost::posix_time::ptime published) { published_ = published; }
   boost::posix_time::ptime GetPublished() const { return published_; }
 
  private:

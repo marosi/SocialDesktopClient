@@ -117,6 +117,13 @@ class Channel : public AbstractModel {
     Subscribers
   };
 
+  static std::string GetPostsNode(const Swift::JID &jid);
+  static std::string GetStatusNode(const Swift::JID &jid);
+  static std::string GetSubscriptionsNode(const Swift::JID &jid);
+  static std::string GetGeoCurrentNode(const Swift::JID &jid);
+  static std::string GetGeoNextNode(const Swift::JID &jid);
+  static std::string GetGeoPreviousNode(const Swift::JID &jid);
+
   Channel(BcModel* bot, const Swift::JID &jid);
   ~Channel();
 
@@ -129,6 +136,8 @@ class Channel : public AbstractModel {
    * Retrieve channel subscriptions.
    */
   void RetrieveSubscriptions();
+
+  void AddSubscription(Subscription subscription);
 
   const std::vector<Post*> posts() const {
     return posts_;
@@ -157,6 +166,7 @@ class Channel : public AbstractModel {
   boost::signals2::signal<void (Post*)> onPostAdded;
 
   boost::signals2::signal<void (std::map<Swift::JID, Subscription>)> onSubscriptionsRetrieved;
+  boost::signals2::signal<void (Subscription)> onNewSubscription;
 
  private:
   void DiscoverChannel();
@@ -188,9 +198,6 @@ class Channel : public AbstractModel {
   std::string posts_description_;
   std::string status_node_;
   std::string subscription_node_;
-  std::string geo_current_node_;
-  std::string geo_previous_node_;
-  std::string geo_future_node_;
   std::vector<Post*> posts_;
   std::map<std::string, Post*> posts_map_;
   std::string pagination_;

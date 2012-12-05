@@ -7,6 +7,7 @@
 #include "bc_model.h"
 #include "bc_contact.h"
 #include "channel.h"
+#include "discover_service.h"
 #include "filesystem_storages.h"
 #include "payloads/pubsub.h"
 #include "post.h"
@@ -24,47 +25,6 @@ using namespace boost;
 using namespace sdc;
 using std::string;
 using std::vector;
-
-// TRYING TO REGISTER USER BY INBANDREGISTRATION RIGHT AFTER STREAM INITIALIZATION
-// CAN'T BE DONE WITH Swift::Client
-/*class BcClient : public Swift::Client {
- public:
-  BcClient(const JID& jid, const SafeString& password, NetworkFactories* networkFactories, Storages* storages = NULL)
-      : Swift::Client(jid, password, networkFactories, storages) {
-
-      getStanzaChannel()->onAvailableChanged.connect(bind(&BcClient::handleAvailable, this, _1));
-  }
-
- private:
-  void handleSessionInitialized() {
-    LOG(DEBUG) << "Session is initialized.";
-  }
-
-  void handleNeedCredentials() {
-    LOG(DEBUG) << "Session need credentials.";
-  }
-
-  void handleFinished(boost::shared_ptr<Swift::Error> error) {
-    if (error)
-    LOG(DEBUG) << "some error aaaaaaaaaaaaaaaaaaaaaaaaaa";
-    else
-    LOG(DEBUG) << "FINISHEEEEEEEEEEEEEEEEEEED";
-  }
-
-  void handleAvailable(bool is_available) {
-
-    // not working
-    //getSession()->onNeedCredentials.disconnect(boost::bind(&CoreClient::handleNeedCredentials, this));
-
-    LOG(DEBUG) << "STANZA CHANNEL IS " << is_available;
-    getSession()->onInitialized.connect(bind(&BcClient::handleSessionInitialized, this));
-    getSession()->onNeedCredentials.connect(bind(&BcClient::handleNeedCredentials, this));
-
-    getSession()->onFinished.connect(bind(&BcClient::handleFinished, this, _1));
-
-  }
-
-};*/
 
 /**
  * PUBLIC INTERFACE
@@ -89,28 +49,34 @@ BcModel::BcModel(sdc::Account* account)
   client_->onDisconnected.connect(bind(&BcModel::handleDisconnected, this, _1));
   client_->onMessageReceived.connect(bind(&BcModel::handleMessageReceived, this, _1));
   client_->onPresenceReceived.connect(bind(&BcModel::handlePresenceReceived, this, _1));
-  //client_->onDataRead.connect(bind(&BcModel::handleDataRecieved, this, _1));
-  //client_->getStanzaChannel()->onIQReceived.connect(bind(&BcModel::handleIQRecieved, this, _1));
+
   /*
    * Roster actions
    */
   client_->getRoster()->onJIDAdded.connect(bind(&BcModel::handleJidAdded, this, _1));
   client_->getRoster()->onJIDRemoved.connect(bind(&BcModel::handleJidRemove, this, _1));
   client_->getRoster()->onJIDUpdated.connect(bind(&BcModel::handleJidUpdated, this, _1, _2, _3));
+
+  subscriber_.onAvailable.connect([&] (DiscoverService::Info service, JID jid) {
+    SetPubsubSubscribeRequest::ref sub = SetPubsubSubscribeRequest::create(Channel::GetPostsNode(jid), service.jid, client_->getIQRouter());
+    sub->send();
+  });
+
   /*
    * VCard actions
    */
+  /*
   client_->getVCardManager()->onOwnVCardChanged.connect([&] (VCard::ref vcard) {
-
   });
   client_->getVCardManager()->onVCardChanged.connect([&] (const JID &jid, VCard::ref vcard) {
   });
+  */
   /*
    * Avatar management
    */
   client_->getAvatarManager()->onAvatarChanged.connect([&] (const JID &jid) {
     if (jid == jid_) {
-      LOG(DEBUG) << "@@@@@@@@@@@ CHANGING OWN AVATAR!";
+      LOG(DEBUG) << "Changin OWN avatar!";
     }
     onAvatarChanged(jid);
     LOG(DEBUG) << "Avatar of " << jid.toString() << " changed";
@@ -123,15 +89,13 @@ BcModel::BcModel(sdc::Account* account)
     if (contacts_map_.count(jid) > 0) {
       contacts_map_[jid]->SetStatus(GetStatus(presence));
     }
-    LOG(DEBUG) << "################";
     LOG(DEBUG) << "Presence changed by " << presence->getFrom().toString() << " to " << GetStatus(presence);
-    LOG(DEBUG) << "################";
   });
   /*
    * Subscriptions
    */
-  client_->getSubscriptionManager()->onPresenceSubscriptionRequest.connect([&] (const JID &jid, const string &str, Presence::ref presence) {
-    LOG(DEBUG) << "Subscription request from " << jid.toString() << " and message?: " << str;
+  client_->getSubscriptionManager()->onPresenceSubscriptionRequest.connect([&] (const JID &jid, const string &str, Presence::ref /*presence*/) {
+    LOG(DEBUG) << "Subscription request from " << jid.toString() << " and message: " << str;
   });
   client_->getSubscriptionManager()->onPresenceSubscriptionRevoked.connect([&] (const JID &jid, const string &str) {
     LOG(DEBUG) << "Subscription of " << jid.toString() << " has been revoked: " << str;
@@ -204,21 +168,6 @@ void BcModel::AddNewContact(const JID &jid) {
 //    set->send();
     client_->getSubscriptionManager()->requestSubscription(jid);
   }
-}
-
-void BcModel::RemoveContact(const JID &jid) {
-//  Presence::ref presence(new Presence);
-//  presence->setTo(contact->GetUid());
-//  presence->setType(Presence::Unsubscribe);
-//  client_->sendPresence(presence);
-
-//  RosterPayload::ref roster(new RosterPayload);
-//  RosterItemPayload item;
-//  item.setJID(jid);
-//  item.setSubscription(RosterItemPayload::Remove);
-//  roster->addItem(item);
-//  SetRosterRequest::ref set = SetRosterRequest::create(roster, client_->getIQRouter());
-//  set->send();
 }
 
 BcContact* BcModel::GetContact(const Swift::JID &jid) {
@@ -296,13 +245,14 @@ void BcModel::handleConnected() {
             InBandRegistrationPayload::ref payload(new InBandRegistrationPayload);
             //payload->set... // TODO: Set user account data accordingly
             SetInBandRegistrationRequest::ref reg = SetInBandRegistrationRequest::create(service_jid_, payload, client_->getIQRouter());
-            reg->onResponse.connect([&] (Payload::ref payload, ErrorPayload::ref error) {
+            reg->onResponse.connect([&] (Payload::ref /*payload*/, ErrorPayload::ref error) {
               /*
                * Second level asynchronous call
                */
               if (!error) {
                 LOG(INFO) << "Channel has registered succesfully.";
                 onSelfChannelRegistered();
+                own_channel_->Sync();
               }
             });
             reg->send();
@@ -342,23 +292,45 @@ void BcModel::handleMessageReceived(Message::ref message) {
   // is message event payload
   if (EventPayload::ref event = message->getPayload<EventPayload>()) {
     LOG(DEBUG2) << "Event from node: " << event->getNode();
+    BOOST_FOREACH (boost::shared_ptr<DiscoItems> discoitems, event->getItems()->getInternal<DiscoItems>()) {
+      BOOST_FOREACH (DiscoItems::Item item, discoitems->getItems()) {
+        LOG(DEBUG) << "Subscription to node " <<  item.getNode() << " added to subscripstions storage.";
+        GetOwnChannel()->RetrieveSubscriptions();
+      }
+    }
+    // take all atoms
+    vector<Atom::ref> atoms = event->getItems()->getInternal<Atom>();
+
+    // extract JID from node ID
+    string node = event->getNode();
+    size_t pos = node.find("/posts");
+    string node_jid = node.substr(6, pos - 6);
+
+    BOOST_FOREACH (Atom::ref at, atoms) {
+      Activity act;
+      act.from = at->getAuthorJID();
+      act.to = node_jid;
+      if (at->getObjectType() == Atom::Note) {
+        act.verb = Activity::Note;
+      } else if (at->getObjectType() == Atom::Comment) {
+        act.verb = Activity::Comment;
+      }
+      onNewActivity(act);
+    }
+
     BOOST_FOREACH (Channel* channel , channels_) {
-      LOG(DEBUG3) << "Iterating through channel: " << channel->posts_node_;
       if (channel->posts_node_ == event->getNode()) {
-        BOOST_FOREACH (Atom::ref atom , event->getItems()->getInternal<Atom>()) {
+        BOOST_FOREACH (Atom::ref atom , atoms) {
           if (atom->getObjectType() == Atom::Comment) {
             LOG(DEBUG4) << "In reply to: " << atom->getInReplyTo();
             Post* post = channel->GetPost(atom->getInReplyTo());
             if (post) {
-              Comment* comment = post->AddComment(atom);
-              onNewComment(comment);
+              post->AddComment(atom);
             }
           } else {
-            Post* post = channel->AddPost(atom);
-            onNewPost(post);
+            channel->AddPost(atom);
           }
         }
-
       }
     }
   }
@@ -417,7 +389,7 @@ void BcModel::handleJidRemove(const JID &jid) {
   }
 }
 
-void BcModel::handleJidUpdated(const JID &jid, const string &name, const vector<string> &groups) {
+void BcModel::handleJidUpdated(const JID &jid, const string &/*name*/, const vector<string> &/*groups*/) {
   LOG(INFO) << "JID '" << jid.toString() << "' has been updated in roster";
   XMPPRosterItem item = client_->getRoster()->getItem(jid).get();
   switch (item.getSubscription()) {
@@ -479,21 +451,13 @@ void BcModel::ToggleChannelPrivacy() {
   conf->send();
 }
 
-void BcModel::Unsubscribe() {
-
-  //GetRoster();
-
-  PubsubUnsubscribeRequest::ref payload(new PubsubUnsubscribeRequest);
-  payload->setNode("/user/harry@channel.r.gd/posts");
-  SetPubsubUnsubscribeRequest::ref uns = SetPubsubUnsubscribeRequest::create(payload, service_jid_, client_->getIQRouter());
+void BcModel::UnsubscribeFromChannel(const Swift::JID &jid) {
+  SetPubsubUnsubscribeRequest::ref uns = SetPubsubUnsubscribeRequest::create(Channel::GetPostsNode(jid), service_jid_, client_->getIQRouter());
   uns->send();
 }
 
-void BcModel::SubscribeChannel(const Swift::JID &jid) {
-  PubsubSubscribeRequest::ref payload(new PubsubSubscribeRequest);
-  payload->setSubscribersJID(jid_);
-  payload->setNode(jid);
-  //SetPubsubSubscribeRequest::ref sub = SetPubsubSubscribeRequest::create(payload, ...);
+void BcModel::SubscribeToChannel(const Swift::JID &jid) {
+  subscriber_.Discover(jid, client_->getIQRouter());
 }
 
 /*

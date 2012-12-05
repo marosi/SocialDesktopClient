@@ -28,7 +28,8 @@ class Items : public Swift::Payload {
   const std::vector<boost::shared_ptr<T> > getInternal() const {
     std::vector<boost::shared_ptr<T> > result;
     BOOST_FOREACH (Swift::Payload::ref payload, items_) {
-      result.push_back(boost::dynamic_pointer_cast<T>(payload));
+      if (boost::shared_ptr<T> item = boost::dynamic_pointer_cast<T>(payload))
+        result.push_back(item);
     }
     return result;
   }

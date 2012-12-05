@@ -8,7 +8,6 @@
 #define CONTACTS_PANEL_H_
 
 #include "content_panel.h"
-#include <QStackedWidget>
 
 class QToolButton;
 
@@ -27,13 +26,8 @@ class ContactsPanel : public ContentPanel {
    */
   void ShowNewContactDialog();
 
-  QStackedWidget* stacked_widget() {
-    return stack_;
-  }
-
  private:
   QToolButton* add_button_;
-  QStackedWidget* stack_;
 };
 
 } // namespace sdc

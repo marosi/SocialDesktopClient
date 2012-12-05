@@ -31,7 +31,8 @@ HEADERS += \
     post_activity.h \
     comment_activity.h \
     post_frame.h \
-    comment_frame.h
+    comment_frame.h \
+    discover_service.h
 SOURCES += \
     pubsub_serializer.cc \
     post.cc \
@@ -51,7 +52,8 @@ SOURCES += \
     post_activity.cpp \
     comment_activity.cpp \
     post_frame.cpp \
-    comment_frame.cpp
+    comment_frame.cpp \
+    discover_service.cc
 FORMS += \
     new_post_widget.ui \
     xmpp_commands.ui \

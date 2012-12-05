@@ -77,6 +77,8 @@ class PubsubItemsRequest : public PubsubNode {
  public:
   typedef boost::shared_ptr<PubsubItemsRequest> ref;
 
+  PubsubItemsRequest() : items_(new Items) {}
+
   void setItems(Items::ref items) {
     items_ = items;
   }

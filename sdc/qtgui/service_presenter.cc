@@ -9,7 +9,7 @@
 
 namespace sdc {
 
-ServicePresenter::ServicePresenter() : contacts_button_(new QToolButton) {}
+ServicePresenter::ServicePresenter() {}
 
 void ServicePresenter::SetStylesheet(const QString &stylesheet) {
   qtgui_->AppendStyleSheet(stylesheet);

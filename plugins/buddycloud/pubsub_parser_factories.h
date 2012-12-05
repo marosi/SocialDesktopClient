@@ -29,9 +29,4 @@ class AnyParserFactory : public Swift::PayloadParserFactory {
   Swift::PayloadParser* parser_;
 };
 
-class AtomParserFactory : public Swift::GenericPayloadParserFactory<AtomParser> {
- public:
-  AtomParserFactory() : Swift::GenericPayloadParserFactory<AtomParser>("entry", "http://www.w3.org/2005/Atom") {}
-};
-
 #endif // PUBSUB_PARSER_FACTORIES_H_

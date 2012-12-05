@@ -30,7 +30,6 @@ class UI;
 class PluginManager;
 class DataManager;
 class EventManager;
-class ServiceManager;
 
 /**
  * @class SocialDesktopClient

@@ -7,6 +7,8 @@
 #include "pubsub_parser.h"
 #include "payloads/pubsub.h"
 #include "pubsub_parser_factories.h"
+#include "Swiften/Parser/PayloadParsers/DiscoItemsParser.h"
+#include "Swiften/Parser/GenericPayloadParserFactory.h"
 #include "boost/optional.hpp"
 
 /*
@@ -154,7 +156,8 @@ void AtomParser::handleCharacterData(const std::string&  data) {
  */
 PubsubItemsRequestParser::PubsubItemsRequestParser()
     : level_(TopLevel), is_parsing_items_(false), rsm_parser_(0), is_parsing_rsm_(false) {
-  item_parser_.addPaylodParserFactory(new AtomParserFactory);
+  item_parser_.addPaylodParserFactory(new Swift::GenericPayloadParserFactory<AtomParser>("entry", "http://www.w3.org/2005/Atom"));
+  item_parser_.addPaylodParserFactory(new Swift::GenericPayloadParserFactory<Swift::DiscoItemsParser>("query", "http://jabber.org/protocol/disco#items"));
 }
 
 PubsubItemsRequestParser::~PubsubItemsRequestParser() {
@@ -348,12 +351,12 @@ boost::shared_ptr<Swift::Payload> EventPayloadParser::getPayload() const {
 
 RsmParser::~RsmParser() {}
 
-void RsmParser::handleStartElement(const std::string&  element, const std::string&  ns, const Swift::AttributeMap&  attributes) {
+void RsmParser::handleStartElement(const std::string &element, const std::string &/*ns*/, const Swift::AttributeMap &attributes) {
   if (element == "first")
     getPayloadInternal()->setFirstIndex(attributes.getAttributeValue("index").get_value_or(""));
 }
 
-void RsmParser::handleEndElement(const std::string&  element, const std::string&  ns) {
+void RsmParser::handleEndElement(const std::string &element, const std::string &/*ns*/) {
   if (element == "first") {
     getPayloadInternal()->setFirst(data_);
   } else if (element == "last") {

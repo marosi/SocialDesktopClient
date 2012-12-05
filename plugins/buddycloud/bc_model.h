@@ -7,6 +7,7 @@
 #ifndef BC_MODEL_H_
 #define BC_MODEL_H_
 
+#include "discover_service.h"
 #include "sdc/qtgui/qt_service.h"
 #include "sdc/qtgui/qt_service_model.h"
 #include "Swiften/Client/Client.h"
@@ -22,12 +23,25 @@
 #include "boost/signals2.hpp"
 #include <vector>
 #include <set>
+#include <string>
 
 class BcContact;
 class Channel;
 class Comment;
 class FilesystemStorages;
 class Post;
+
+struct Activity {
+  enum Verb {
+    Note,
+    Comment
+  };
+
+  Swift::JID from;
+  Verb verb;
+  Swift::JID to;
+  std::string to_;
+};
 
 class BcModel : public sdc::QtServiceModel {
   public:
@@ -42,13 +56,18 @@ class BcModel : public sdc::QtServiceModel {
     void Connect();
     void Disconnect();
 
+    /**
+     * Subscribe to channel owned by jid.
+     * @param jid channel owner
+     */
+    void SubscribeToChannel(const Swift::JID &jid);
+    /**
+     * Unsubscribe from channel owned by jid.
+     * @param jid channel owner
+     */
+    void UnsubscribeFromChannel(const Swift::JID &jid);
 
-    //GetSoftwareVersionRequest::ref gsvr = GetSoftwareVersionRequest::create("localhost", client_->getIQRouter());
-    //GetVCardRequest::ref gvcr = GetVCardRequest::create(to, client_->getIQRouter());
     void ToggleChannelPrivacy();
-    void Unsubscribe();
-    // TODO: subscribe to channel logic
-    void SubscribeChannel(const Swift::JID &jid);
 
     /*
      * Content interface
@@ -59,7 +78,6 @@ class BcModel : public sdc::QtServiceModel {
     Channel* GetOwnChannel() { return own_channel_; }
 
     void AddNewContact(const Swift::JID &jid);
-    void RemoveContact(const Swift::JID &jid);
 
     const std::string GetOwnAvatarPath();
     const std::string GetAvatarPath(const Swift::JID &jid);
@@ -83,15 +101,9 @@ class BcModel : public sdc::QtServiceModel {
     boost::signals2::signal<void (const Swift::JID)> onContactAdded;
     boost::signals2::signal<void (const Swift::JID)> onContactRemoved;
 
-    boost::signals2::signal<void (const Post*)> onNewPost;
-    boost::signals2::signal<void (const Comment*)> onNewComment;
+    boost::signals2::signal<void (Activity)> onNewActivity;
 
-    boost::signals2::signal<void (Swift::VCard::ref)> onOwnVCardUpdated; // TODO: signal never emitted
-    boost::signals2::signal<void ()> onOwnAvatarChanged; // TODO: signal never emitted
     boost::signals2::signal<void (const Swift::JID)> onAvatarChanged;
-
-    boost::signals2::signal<void (std::vector<Swift::JID>) > onSubscriptionsRetrieved;
-    boost::signals2::signal<void (Swift::JID)> onSubscriptionsUpdate;
 
   private:
     /*
@@ -163,6 +175,8 @@ class BcModel : public sdc::QtServiceModel {
      */
     std::vector<Swift::PayloadParserFactory*> parsers_;
     std::vector<Swift::PayloadSerializer*> serializers_;
+
+    DiscoverService subscriber_;
 };
 
 #endif // BC_MODEL_H_

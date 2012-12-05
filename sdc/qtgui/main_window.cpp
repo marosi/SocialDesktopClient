@@ -131,8 +131,8 @@ MainWindow::MainWindow(QtGui* qtgui)
 
   // set tree widget to whole scroll area of content panel not content pane,
   // because content pane has a spacer within that makes tree widget cover only a half of the height
-  //delete contacts_panel_->content_scroll_area()->layout();
-  //contacts_panel_->content_scroll_area()->setLayout(grouped_by_account_->GetLayout());
+  delete contacts_panel_->content_scroll_area()->layout();
+  contacts_panel_->content_scroll_area()->setLayout(grouped_by_account_->GetLayout());
 
   // activities
   activities_ = new ActivitiesPanel;
@@ -161,7 +161,6 @@ void MainWindow::AddContact(ServicePresenter* parent, ContactWidget* contact) {
       qtgui_->GetModel(parent)->account()->GetUid();
   contact->setToolTip(QString::fromStdString(tooltip));
   contacts_.insert(parent, contact);
-  //contacts_panel_->content_layout()
   grouped_by_account_->Insert(contact, parent);
 }
 

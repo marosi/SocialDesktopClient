@@ -123,8 +123,19 @@ class SetPubsubSubscribeRequest : public Swift::GenericRequest<PubsubSubscribeRe
  public:
   typedef boost::shared_ptr<SetPubsubSubscribeRequest> ref;
 
-  static ref create(Swift::Payload::ref payload, const Swift::JID &reciever, Swift::IQRouter* router) {
-    return ref(new SetPubsubSubscribeRequest(payload, reciever, router));
+  /**
+   * Creates pubsub subscribe request to node 'node' within service 'service'
+   *
+   * @param node Pubsub node
+   * @param reciever Pubsub service domain
+   * @param router IQRouter
+   * @return boost::shared_ptr<SetPubsubSubscribeRequest>
+   */
+  static ref create(const std::string &node, const Swift::JID &service, Swift::IQRouter* router) {
+    PubsubSubscribeRequest::ref payload(new PubsubSubscribeRequest);
+    //payload->setSubscribersJID(jid_); // required by XEP-0060
+    payload->setNode(node);
+    return ref(new SetPubsubSubscribeRequest(payload, service, router));
   }
 
  private:
@@ -133,14 +144,24 @@ class SetPubsubSubscribeRequest : public Swift::GenericRequest<PubsubSubscribeRe
 };
 
 /**
- * Pubsub node <subscribe> request
+ * Pubsub node <unsubscribe> request
  */
 class SetPubsubUnsubscribeRequest : public Swift::GenericRequest<PubsubUnsubscribeRequest> {
  public:
   typedef boost::shared_ptr<SetPubsubUnsubscribeRequest> ref;
 
-  static ref create(Swift::Payload::ref payload, const Swift::JID &reciever, Swift::IQRouter* router) {
-    return ref(new SetPubsubUnsubscribeRequest(payload, reciever, router));
+  /**
+   * Creates pubsub unsubscribe request from node 'node' within service 'service'
+   *
+   * @param node Pubsub node
+   * @param reciever Pubsub service domain
+   * @param router IQRouter
+   * @return boost::shared_ptr<SetPubsubUnsubscribeRequest>
+   */
+  static ref create(const std::string &node, const Swift::JID &service, Swift::IQRouter* router) {
+    PubsubUnsubscribeRequest::ref payload(new PubsubUnsubscribeRequest);
+    payload->setNode(node);
+    return ref(new SetPubsubUnsubscribeRequest(payload, service, router));
   }
 
  private:
@@ -149,7 +170,7 @@ class SetPubsubUnsubscribeRequest : public Swift::GenericRequest<PubsubUnsubscri
 };
 
 /**
- * Pubsub node <create><configure> request
+ * Pubsub node <create><configure/></create> request
  */
 class SetPubsubConfigureNodeRequest : public Swift::GenericRequest<PubsubConfigureNodeRequest> {
  public:

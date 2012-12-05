@@ -20,6 +20,30 @@ using namespace boost;
 using std::string;
 using std::vector;
 
+std::string Channel::GetPostsNode(const Swift::JID &jid) {
+  return "/user/" + jid.toBare().toString() + "/posts";
+}
+
+std::string Channel::GetStatusNode(const Swift::JID &jid) {
+  return "/user/" + jid.toBare().toString() + "/status";
+}
+
+std::string Channel::GetSubscriptionsNode(const Swift::JID &jid) {
+  return "/user/" + jid.toBare().toString() + "/subscriptions";
+}
+
+std::string Channel::GetGeoCurrentNode(const Swift::JID &jid) {
+  return "/user/" + jid.toBare().toString() + "/geo/current";
+}
+
+std::string Channel::GetGeoNextNode(const Swift::JID &jid) {
+  return "/user/" + jid.toBare().toString() + "/geo/next";
+}
+
+std::string Channel::GetGeoPreviousNode(const Swift::JID &jid) {
+  return "/user/" + jid.toBare().toString() + "/geo/previous";
+}
+
 /*
  * Channel controller
  */
@@ -28,13 +52,9 @@ Channel::Channel(BcModel* model, const Swift::JID &jid)
       router_(model->client_->getIQRouter()),
       model_(model),
       jid_(jid) {
-  null_node_          = "/user/" + jid_.toString();
-  posts_node_         =  null_node_ + "/posts";
-  status_node_        =  null_node_ + "/status";
-  subscription_node_  =  null_node_ + "/subscriptions";
-  geo_current_node_   =  null_node_ + "/geo/current";
-  geo_previous_node_  =  null_node_ + "/geo/previous";
-  geo_future_node_    =  null_node_ + "/geo/future";
+  posts_node_         =  GetPostsNode(jid_);
+  status_node_        =  GetStatusNode(jid_);
+  subscription_node_  =  GetSubscriptionsNode(jid_);
 
   // default pagination of items requests
   pagination_ = "20";
@@ -160,6 +180,10 @@ void Channel::DeletePost(Post* post) {
 void Channel::RetrieveSubscriptions() {
   GetDiscoItemsRequest::ref req = GetDiscoItemsRequest::create(service_.jid, subscription_node_, router_);
   req->onResponse.connect([&] (boost::shared_ptr<DiscoItems> disco, ErrorPayload::ref error) {
+    if (error) {
+      LOG(ERROR) << error->getText();
+      return;
+    }
     subscriptions_.clear();
     BOOST_FOREACH (DiscoItems::Item item, disco->getItems()) {
       Subscription subit;
@@ -170,6 +194,13 @@ void Channel::RetrieveSubscriptions() {
     onSubscriptionsRetrieved(subscriptions_);
   });
   req->send();
+}
+
+void Channel::AddSubscription(Subscription sub) {
+  if (subscriptions_.count(sub.jid) <= 0) {
+    subscriptions_[sub.jid] = sub;
+    onNewSubscription(sub);
+  }
 }
 
 void Channel::DiscoverChannel() {
@@ -283,7 +314,8 @@ Post* Channel::AddPost(Atom::ref atom, bool signal) {
     post->SetAuthor(atom->getAuthor());
     post->SetAuthorJID(atom->getAuthorJID());
     post->SetContent(atom->getContent());
-    post->SetPublished(stringToDateTime(atom->getPublished()));
+    std::string p = atom->getPublished();
+    post->SetPublished(stringToDateTime(p));
     posts_.push_back(post);
     posts_map_[post->GetID()] = post;
     if (signal)

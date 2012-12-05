@@ -13,23 +13,29 @@
 class BcContact;
 class BcPresenter;
 class ChannelPanel;
+class QAction;
+class QMenu;
 
 class BcContactWidget : public sdc::ContactWidget, public AbstractPresenter {
+
+    Q_OBJECT
+
  public:
   BcContactWidget(BcPresenter* presenter, BcContact* contact);
   ~BcContactWidget();
 
-  void Remove() {
-    // TODO: impelment
-    //contact_->bot()->RemoveContact(contact_);
-  }
-
  protected:
   void mouseDoubleClickEvent(QMouseEvent* event);
+
+ protected slots:
+  void ShowContextMenu(QPoint position);
 
  private:
   BcContact* contact_;
   ChannelPanel* channel_;
+  QMenu* menu_;
+  QAction* follow_;
+  QAction* unfollow_;
 };
 
 #endif // BC_CONTACT_WIDGET_H_

@@ -8,20 +8,23 @@
 #define COMMENT_ACTIVITY_H_
 
 #include "sdc/qtgui/activity.h"
+#include "Swiften/JID/JID.h"
+#include <string>
 
 class BcPresenter;
 class Comment;
 
 class CommentActivity : public sdc::Activity {
  public:
-  CommentActivity(BcPresenter* parent, const Comment* comment);
+  CommentActivity(BcPresenter* parent, const Swift::JID &from, const Swift::JID &to);
 
  protected:
   void mouseDoubleClickEvent(QMouseEvent*);
 
  private:
   BcPresenter* presenter_;
-  const Comment* comment_;
+  Swift::JID from_jid_;
+  Swift::JID to_jid_;
 };
 
 #endif // COMMENT_ACTIVITY_H_

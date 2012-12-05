@@ -9,14 +9,14 @@
 #include "channel.h"
 #include "post.h"
 
-CommentActivity::CommentActivity(BcPresenter* parent, const Comment* comment)
-    : presenter_(parent), comment_(comment) {
+CommentActivity::CommentActivity(BcPresenter* parent, const Swift::JID &from, const Swift::JID &to)
+  : presenter_(parent), from_jid_(from), to_jid_(to) {
   setObjectName("CommentActivity");
-  image_label()->setPixmap(presenter_->GetAvatar(comment_->GetAuthorJID())->GetPixmap());
-  QString text = QString::fromStdString(comment_->GetAuthor() + " commented on " + comment_->post()->channel()->JID().toString());
+  image_label()->setPixmap(presenter_->GetAvatar(from_jid_)->GetPixmap());
+  QString text = QString::fromStdString(from_jid_.toString()+ " commented on " + to_jid_.toString());
   text_label()->setText(text);
 }
 
 void CommentActivity::mouseDoubleClickEvent(QMouseEvent *) {
-  presenter_->ShowChannel(comment_->post()->channel()->JID());
+  presenter_->ShowChannel(to_jid_);
 }

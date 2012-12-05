@@ -42,9 +42,6 @@ void BcPresenter::Init() {
   QIcon icon(":/icon.svg");
   account_button()->button()->setIcon(icon);
   account_button()->button()->setIconSize(QSize(32, 32));
-  // ... and also on contacts button
-  contacts_button()->setIcon(icon);
-  contacts_button()->setIconSize(QSize(16, 16));
 
   connect(account_button()->title_action(), SIGNAL(triggered()),
           this, SLOT(ShowOwnChannel()));
@@ -57,23 +54,6 @@ void BcPresenter::Init() {
   edit->setDefaultWidget(subscribe_to_);
   subscribe->addAction(edit);
   connect(subscribe_to_, SIGNAL(returnPressed()), this, SLOT(OnShowChannelLineEditEnter()));
-
-  // contacts button logic
-  subscribers_layout_ = new QVBoxLayout;
-  subscribers_layout_->addStretch(10);
-  QWidget* sw = new QWidget;
-  sw->setLayout(subscribers_layout_);
-
-  followers_ = new QWidget;
-  followers_ ->setLayout(new QVBoxLayout);
-  subscribers_pos_ = main_window()->contacts()->stacked_widget()->addWidget(sw);
-  followers_pos_ = main_window()->contacts()->stacked_widget()->addWidget(followers_);
-  QAction* subs = new QAction("Subscriptions", contacts_button());
-  QAction* foll = new QAction("Followers", contacts_button());
-  contacts_button()->addAction(subs);
-  contacts_button()->addAction(foll);
-  connect(subs, SIGNAL(triggered()), this, SLOT(ShowSubscribers()));
-  connect(foll, SIGNAL(triggered()), this, SLOT(ShowFollowers()));
 
   // set stylesheet
   QFile file("plugins/buddycloud/resources/bc.qss");
@@ -90,29 +70,27 @@ void BcPresenter::Init() {
     }
   });
 
-  sdc::bind(model_->onOwnAvatarChanged, [&] () {
-    //SetOwnAvatar(model_->GetOwnAvatarPath());
-  });
-
   sdc::bind(model_->onAvatarChanged, [&] (const JID jid) {
     UpdateAvatar(jid);
   });
 
+  /*
   sdc::bind(model_->onContactAdded, [&] (const JID jid) {
     BcContact* contact = model_->GetContact(jid);
     BcContactWidget* widget = new BcContactWidget(this, contact);
     contacts_.append(widget);
     this->main_window()->AddContact(this, widget);
   });
+  */
 
-  sdc::bind(model_->onNewPost, [&] (const Post* post) {
-    PostActivity* act = new PostActivity(this, post);
-    this->main_window()->activities()->AddActivity(act);
-  });
-
-  sdc::bind(model_->onNewComment, [&] (const Comment* comment) {
-    CommentActivity* act = new CommentActivity(this, comment);
-    this->main_window()->activities()->AddActivity(act);
+  sdc::bind(model_->onNewActivity, [&] (Activity activity) {
+    if (activity.verb == Activity::Note) {
+      PostActivity* act = new PostActivity(this, activity.from, activity.to);
+      this->main_window()->activities()->AddActivity(act);
+    } else if (activity.verb == Activity::Comment) {
+      CommentActivity* act = new CommentActivity(this, activity.from, activity.to);
+      this->main_window()->activities()->AddActivity(act);
+    }
   });
 
   sdc::bind(model_->onError, [&] (BcModel::Error error) {
@@ -136,22 +114,21 @@ void BcPresenter::Init() {
     model_->GetOwnChannel()->RetrieveSubscriptions();
 
     sdc::bind(model_->GetOwnChannel()->onSubscriptionsRetrieved, [&] (std::map<Swift::JID, Channel::Subscription> subscriptions) {
-      if (subscribers_layout_ != NULL)
-      {
-        QLayoutItem* item;
-        while ((item = subscribers_layout_->takeAt(0)) != NULL)
-        {
-          delete item->widget();
-          delete item;
-        }
-      }
       std::map<Swift::JID, Channel::Subscription>::iterator iter;
+      this->main_window()->RemoveAllContacts(this);
       for (iter = subscriptions.begin(); iter != subscriptions.end(); ++iter) {
         BcContact* contact = new BcContact(model_, iter->first);
         contact->SetUid(iter->first);
         BcContactWidget* widget = new BcContactWidget(this, contact);
-        subscribers_layout_->insertWidget(0, widget, 0, Qt::AlignTop);
+        this->main_window()->AddContact(this, widget);
       }
+    });
+
+    sdc::bind(model_->GetOwnChannel()->onNewSubscription, [&] (Channel::Subscription sub) {
+      BcContact* contact = new BcContact(model_, sub.jid);
+      contact->SetUid(sub.jid);
+      BcContactWidget* widget = new BcContactWidget(this, contact);
+      this->main_window()->AddContact(this, widget);
     });
 
   });
@@ -185,14 +162,6 @@ void BcPresenter::ShowOwnChannel() {
 
 void BcPresenter::OnShowChannelLineEditEnter() {
   ShowChannel(subscribe_to_->text().toStdString());
-}
-
-void BcPresenter::ShowSubscribers() {
-  main_window()->contacts()->stacked_widget()->setCurrentIndex(subscribers_pos_);
-}
-
-void BcPresenter::ShowFollowers() {
-  main_window()->contacts()->stacked_widget()->setCurrentIndex(followers_pos_);
 }
 
 void BcPresenter::UpdateAvatar(const JID &jid) {

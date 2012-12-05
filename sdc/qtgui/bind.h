@@ -14,14 +14,13 @@
 #include "boost/make_shared.hpp"
 #include "boost/signals2/signal.hpp"
 #include <type_traits>
+#include <QMetaType>
 
 namespace sdc {
 
-class bind_params_base : public QObject {
-
-    Q_OBJECT
-
+class bind_params_base  {
  public:
+  virtual ~bind_params_base() {}
   virtual void callback()=0;
 };
 
@@ -32,7 +31,7 @@ class bind_params : public bind_params_base {
   void callback() {
     f_(p_);
   }
- private:
+
   boost::function<R (P)> f_;
   P p_;
 };
@@ -59,6 +58,7 @@ class bind_base : public QObject {
   }
   void slot(bind_params_base* p) {
     p->callback();
+    delete p;
   }
 };
 
@@ -118,5 +118,7 @@ void bind(boost::signals2::signal<T> &signal, typename std::common_type<boost::f
 }
 
 } // namespace sdc
+
+//Q_DECLARE_METATYPE(sdc::bind_params_base)
 
 #endif // BIND_H_
