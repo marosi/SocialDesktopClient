@@ -14,7 +14,6 @@ class BcContact;
 class BcPresenter;
 class ChannelPanel;
 class QAction;
-class QMenu;
 
 class BcContactWidget : public sdc::ContactWidget, public AbstractPresenter {
 
@@ -26,15 +25,13 @@ class BcContactWidget : public sdc::ContactWidget, public AbstractPresenter {
 
  protected:
   void mouseDoubleClickEvent(QMouseEvent* event);
+  void contextMenuEvent(QContextMenuEvent* event);
 
- protected slots:
-  void ShowContextMenu(QPoint position);
+ private slots:
+  void Unfollow();
 
  private:
   BcContact* contact_;
-  ChannelPanel* channel_;
-  QMenu* menu_;
-  QAction* follow_;
   QAction* unfollow_;
 };
 

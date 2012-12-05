@@ -21,6 +21,8 @@ class BcContact : public sdc::Contact, public AbstractModel {
   Channel* GetChannel();
   const Swift::JID& GetJID() { return jid_; }
 
+  void Unfollow();
+
   boost::signals2::signal<void ()> onChannelRetrieved;
 
  private:

@@ -62,6 +62,16 @@ BcModel::BcModel(sdc::Account* account)
     sub->send();
   });
 
+  unsubscriber_.onAvailable.connect([&] (DiscoverService::Info service, JID jid) {
+    SetPubsubUnsubscribeRequest::ref uns = SetPubsubUnsubscribeRequest::create(Channel::GetPostsNode(jid), service.jid, client_->getIQRouter());
+    uns->onResponse.connect([&] (PubsubUnsubscribeRequest::ref, ErrorPayload::ref error) {
+      if (!error) {
+        GetOwnChannel()->RetrieveSubscriptions();
+      }
+    });
+    uns->send();
+  });
+
   /*
    * VCard actions
    */
@@ -452,8 +462,7 @@ void BcModel::ToggleChannelPrivacy() {
 }
 
 void BcModel::UnsubscribeFromChannel(const Swift::JID &jid) {
-  SetPubsubUnsubscribeRequest::ref uns = SetPubsubUnsubscribeRequest::create(Channel::GetPostsNode(jid), service_jid_, client_->getIQRouter());
-  uns->send();
+  unsubscriber_.Discover(jid, client_->getIQRouter());
 }
 
 void BcModel::SubscribeToChannel(const Swift::JID &jid) {

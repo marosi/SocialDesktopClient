@@ -154,7 +154,8 @@ class PubsubSubscribeRequest : public PubsubNode {
 };
 
 class PubsubUnsubscribeRequest : public PubsubNode {
-
+ public:
+  typedef boost::shared_ptr<PubsubUnsubscribeRequest> ref;
 };
 
 class PubsubConfigureNodeRequest : public PubsubNode {

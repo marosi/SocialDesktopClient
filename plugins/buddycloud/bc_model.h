@@ -177,6 +177,7 @@ class BcModel : public sdc::QtServiceModel {
     std::vector<Swift::PayloadSerializer*> serializers_;
 
     DiscoverService subscriber_;
+    DiscoverService unsubscriber_;
 };
 
 #endif // BC_MODEL_H_

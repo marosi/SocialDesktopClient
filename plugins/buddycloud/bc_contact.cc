@@ -17,3 +17,7 @@ BcContact::BcContact(BcModel* model, const Swift::JID &jid)
 Channel* BcContact::GetChannel() {
   return model_->GetChannel(jid_);
 }
+
+void BcContact::Unfollow() {
+  model()->UnsubscribeFromChannel(jid_);
+}
