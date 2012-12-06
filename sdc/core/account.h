@@ -28,7 +28,7 @@ class Account : public Properties {
       : service_ptr_(0),
         service_model_ptr_(0) {}
 
-  virtual ~Account() {}
+  //virtual ~Account() {}
 
   /*
    * Setters
@@ -101,6 +101,18 @@ class Account : public Properties {
     return "./resources/" + GetId();
   }
 
+  /*
+   * Status
+   */
+  void SetStatus(int status) {
+    status_ = status;
+  }
+
+  int GetStatus() const {
+    return status_;
+  }
+
+
  private:
   Service* service_ptr_;  /**< actual service instance */
   ServiceModel* service_model_ptr_; /**< actual service model instance */
@@ -110,6 +122,8 @@ class Account : public Properties {
   std::string uid_; /**< user's unique identifier */
   std::string password_; /**< pasword */ //TODO: secure
   bool is_enabled_; /**< specify account availability */
+  int status_; /**< account status */
+
 
   /**
    * Method for account data serialization
@@ -123,6 +137,7 @@ class Account : public Properties {
     ar & BOOST_SERIALIZATION_NVP(is_enabled_);
     ar & BOOST_SERIALIZATION_NVP(uid_);
     ar & BOOST_SERIALIZATION_NVP(password_);
+    ar & BOOST_SERIALIZATION_NVP(status_);
   }
 };
 
