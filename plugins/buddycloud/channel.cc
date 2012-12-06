@@ -90,14 +90,16 @@ void Channel::RetrieveNextPosts() {
     }
     // obtain channel posts
     vector<Post*> new_posts;
-    BOOST_FOREACH (const Atom::ref &atom , items->getItems()->getInternal<Atom>()) {
+    vector<Atom::ref> atoms = items->getItems()->getInternal<Atom>();
+
+    BOOST_FOREACH (const Atom::ref &atom , atoms) {
       if (atom->getInReplyTo() == "") {
         Post* post = AddPost(atom, false);
         new_posts.push_back(post);
       }
     }
     // obtain channel comments
-    BOOST_FOREACH (const Atom::ref &atom , items->getItems()->getInternal<Atom>()) {
+    BOOST_FOREACH (const Atom::ref &atom , atoms) {
       if (atom->getInReplyTo() != "") {
         Post* post = GetPost(atom->getInReplyTo());
         if (post) {

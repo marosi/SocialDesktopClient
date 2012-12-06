@@ -83,16 +83,21 @@ FORMS += \
 RESOURCES += \  
     sdc/qtgui/resources/sdc.qrc
 INCLUDEPATH += \
-    3rdparty/boost \
+    #3rdparty/boost \
     sdc \
     sdc/core \
     sdc/qtgui
 LIBS += \
-    3rdparty/boost/stage/lib/libboost_system.a \
-    3rdparty/boost/stage/lib/libboost_serialization.a \
-    3rdparty/boost/stage/lib/libboost_filesystem.a \
-    3rdparty/boost/stage/lib/libboost_thread.a \
-    3rdparty/boost/stage/lib/libboost_program_options.a \
+    #3rdparty/boost/stage/lib/libboost_system.a \
+    #3rdparty/boost/stage/lib/libboost_serialization.a \
+    #3rdparty/boost/stage/lib/libboost_filesystem.a \
+    #3rdparty/boost/stage/lib/libboost_thread.a \
+    #3rdparty/boost/stage/lib/libboost_program_options.a \
+    -lboost_serialization \
+    -lboost_filesystem \
+    -lboost_program_options \
+    -lboost_thread \
+    -lboost_system \
     \
     -ldl
 QMAKE_LFLAGS += -export-dynamic #-Wl,-rpath,./3rdparty/boost/stage/lib
