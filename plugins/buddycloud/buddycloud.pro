@@ -78,7 +78,7 @@ QMAKE_CXXFLAGS += \
 
 DEFINES += \
   BOOST_FILESYSTEM_VERSION=2 \
-  LOG_PRODUCER=Buddycloud \
+  LOG_PRODUCER=buddycloud \
   BOOST_TT_HAS_OPERATOR_HPP_INCLUDED # because of parse error in BOOST_JOIN macro in moc files
 
 OTHER_FILES += \

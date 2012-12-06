@@ -34,7 +34,10 @@ class WidgetFactory;
 class ServicePresenter;
 
 /**
- * Kind of a main controller in MVC abstraction.
+ * Qt GUI implementations for SocialDesktopClient.
+ *
+ * This class is instatiated along with the Core object.
+ * It is also a place to handle Core signals.
  */
 class QtGui : public QObject, public UI {
 

@@ -1,20 +1,13 @@
 /*
- * qt_gui.cc
- *
- *			Author: Maros Kasinec
- *  Created on: Apr 2, 2012
+ *  Copyright (c) 2011-2012 Maroš Kasinec
+ *  Licensed under the GNU General Public License v3.
+ *  See COPYING for more information.
  */
 
 #include "qt_gui.h"
 #include "account_button.h"
 #include "bind.h"
 #include "core.h"
-/*
- *  Copyright (c) 2011-2012 Maroš Kasinec
- *  Licensed under the GNU General Public License v3.
- *  See COPYING for more information.
- */
-
 #include "main_window.h"
 #include "service_model.h"
 #include "service_presenter.h"
@@ -40,7 +33,6 @@ void QtGui::Init() {
    * NOTE: For the type to be handled by QVariant it needs to be
    * added by macro Q_DECLARE_METATYPE(TypeName)
    */
-  //qRegisterMetaType<Content::Ref>("Content::Ref");
   qRegisterMetaType<bind_params_base*>("bind_params_base");
   /*
    * Bind to core signals

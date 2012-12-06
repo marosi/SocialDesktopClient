@@ -16,8 +16,10 @@ class ServiceController;
 class ServiceModel;
 class Account;
 
-/// @class Service
-/// @brief TODO:
+/**
+ * Social service represation structure.
+ * It containts service metadata and factory methods for implemented types.
+ */
 class Service {
  public:
   friend class Core;
@@ -40,6 +42,10 @@ class Service {
     return signature_;
   }
 
+  /**
+   * Creates social service model.
+   * @return service model instance
+   */
   virtual ServiceModel* CreateServiceModel(Account*)=0;
 
  protected:

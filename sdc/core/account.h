@@ -18,20 +18,17 @@ class Service;
 class ServiceModel;
 
 /**
- *
+ * Main Account class holding common service account information.
  */
 class Account : public Properties {
  public:
   friend class boost::serialization::access;
 
-  enum Status {
-    Offline = 0,
-    Online = 1
-  };
-
   Account()
       : service_ptr_(0),
         service_model_ptr_(0) {}
+
+  virtual ~Account() {}
 
   /*
    * Setters
@@ -62,10 +59,6 @@ class Account : public Properties {
 
   void SetDataIndex(int index) {
     data_index_ = index;
-  }
-
-  void SetStatus(int status) {
-    status_ = status;
   }
 
   /*
@@ -100,10 +93,6 @@ class Account : public Properties {
     return data_index_;
   }
 
-  int GetStatus() const {
-    return status_;
-  }
-
   std::string GetId() const {
     return service_ + uid_;
   }
@@ -113,16 +102,19 @@ class Account : public Properties {
   }
 
  private:
-  Service* service_ptr_;  // service instance
-  ServiceModel* service_model_ptr_; // service model instance
-  int data_index_;  //
+  Service* service_ptr_;  /**< actual service instance */
+  ServiceModel* service_model_ptr_; /**< actual service model instance */
+  int data_index_;  /**< index for presentational purposes */
 
-  PluginSignature service_;
-  std::string uid_;
-  std::string password_;
-  bool is_enabled_;
-  int status_;
+  PluginSignature service_; /**< plugin service persistent signature */
+  std::string uid_; /**< user's unique identifier */
+  std::string password_; /**< pasword */ //TODO: secure
+  bool is_enabled_; /**< specify account availability */
 
+  /**
+   * Method for account data serialization
+   * conforming to Boost Serialization library guidelines.
+   */
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version) {
     if (version) {}
@@ -131,7 +123,6 @@ class Account : public Properties {
     ar & BOOST_SERIALIZATION_NVP(is_enabled_);
     ar & BOOST_SERIALIZATION_NVP(uid_);
     ar & BOOST_SERIALIZATION_NVP(password_);
-    ar & BOOST_SERIALIZATION_NVP(status_);
   }
 };
 

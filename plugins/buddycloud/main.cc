@@ -28,7 +28,7 @@ sdc::Registration* registerLibrary() {
 
 
 sdc::Service* createBuddycloudService() {
-  return new BuddycloudService();
+  return new BcService();
 }
 
 }

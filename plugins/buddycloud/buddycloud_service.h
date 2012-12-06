@@ -9,9 +9,9 @@
 
 #include "sdc/qtgui/qt_service.h"
 
-class BuddycloudService : public sdc::QtService {
+class BcService : public sdc::QtService {
  public:
-  BuddycloudService() {
+  BcService() {
     SetName("buddycloud");
     SetDescription("buddycloud Channels Service.");
     SetDir("resources/buddycloud");

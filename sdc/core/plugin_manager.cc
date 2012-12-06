@@ -27,7 +27,6 @@ using std::string;
 
 namespace sdc {
 
-// PluginManager
 PluginManager::PluginManager(Core* core)
     : AbstractManager(core),
       connectionconfigmodel_provider_(this) {}
@@ -35,8 +34,6 @@ PluginManager::~PluginManager() {}
 
 void PluginManager::LoadPlugins() {
   LOG(INFO) << "Loading plugins...";
-  //TODO: loop it for a certain directory
-  //TODO: implement try catch block
 
   /**
    * Each plugin MUST be in plugins dir relative to sdc executable.

@@ -19,16 +19,32 @@ namespace sdc {
 class Core;
 class Message;
 
+/**
+ * EventManager instance is responsible for the Core thread safety.
+ *
+ */
 class EventManager : public AbstractManager {
  public:
   class Event;
 
   EventManager(Core* core) : AbstractManager(core), is_running_(true) {}
 
+  /**
+   * Execution point of event-loop prosessing.
+   *
+   * This method keeps thread running unless Stop() is called.
+   */
   void Run();
 
+  /**
+   * Posts event callback to the queue.
+   * @param callback
+   */
   void PostEvent(boost::function<void ()> callback);
 
+  /**
+   * Stops executing event-loop.
+   */
   void Stop();
 
  private:
@@ -41,9 +57,12 @@ class EventManager : public AbstractManager {
   bool is_running_;
 };
 
+/**
+ * Simple structure encapsulating event metadata.
+ */
 struct EventManager::Event {
   Event(boost::function<void ()> function) : callback(function) {}
-  unsigned int id; //FIXME: this is unused so far
+  unsigned int id;
   boost::function<void ()> callback;
 };
 

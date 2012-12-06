@@ -11,6 +11,9 @@
 
 int main(int argc, char* argv[]) {
 
+  /*
+   * Program command options
+   */
   namespace po = boost::program_options;
 
   po::options_description desc("Allowed options");

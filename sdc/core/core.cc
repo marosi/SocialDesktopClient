@@ -27,9 +27,6 @@ std::string Core::home_dir("");
 
 template std::map<PluginSignature, Service*> PluginManager::CreateAllInstances<Service>(const PluginType);
 
-/**
- * Public interface
- */
 std::vector<Service*> Core::services() {
   std::vector<Service*> result;
   std::map<PluginSignature, Service*>::iterator it;
@@ -43,8 +40,8 @@ Service* Core::service(const PluginSignature &signature) {
   return services_[signature];
 }
 
-/**
- * Construct Core.
+/*
+ * Core construction.
  */
 Core* Core::instance_ = NULL;
 
@@ -101,7 +98,7 @@ void Core::Start() {
   /*
    * Map service object with loaded accounts
    */
-  BOOST_FOREACH (Account* account , data()->accounts()) {
+  BOOST_FOREACH (Account* account , data()->accounts_) {
     if (services_.count(account->GetServiceSignature()) > 0) {
       Service* service = services_[account->GetServiceSignature()];
       account->SetService(service);
@@ -152,16 +149,11 @@ void Core::Exec() {
   }
   onGuiPrepared();
   // activate enabled accounts
-  BOOST_FOREACH (Account* account , data()->accounts()) {
+  BOOST_FOREACH (Account* account , data()->accounts_) {
     if (account->IsEnabled()) {
       this->ActivateAccount(account);
     }
   }
-  // TODO: connects services that were left online
-//  BOOST_FOREACH (ServiceModel* model , service_models_) {
-//    if (model->account()->GetStatus()) // status == 0 is offline status
-//      model->Connect();
-//  }
   // run event loop in core thread
   event_manager_->Run();
 }
@@ -176,9 +168,8 @@ void Core::ExecUi() {
   return_code_ = ui_->Exec();
 }
 
-
-/**
- * ServiceModels handling
+/*
+ * Service models handling
  */
 
 void Core::ActivateAccount(Account* account) {
@@ -203,7 +194,6 @@ void Core::ActivateAccount(Account* account) {
   service_models_map_[account->GetId()] = model;
 
   MakeServiceThread(model);
-  // hook model with its service and connection
 
   // signal activated account
   onAccountActivated(account->GetId());

@@ -12,20 +12,23 @@ namespace sdc {
 class Service;
 class ServiceController;
 
+/**
+ * Abstract class for UI implementation.
+ */
 class UI {
  public:
   UI();
   virtual ~UI();
 
   /**
-   * @brief GUI initializes in this method.
+   * UI initializer.
    */
   virtual void Init();
 
   /**
-   * GUI execution point.
+   * UI execution point.
    *
-   * This method is responsible for keeping GUI alive as long as it takes.
+   * This method is responsible for keeping UI alive as long as it takes.
    */
   virtual int Exec()=0;
 };

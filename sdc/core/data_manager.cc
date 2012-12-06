@@ -16,6 +16,10 @@ namespace sdc {
 
 const std::string DataManager::kConfFile = "sdc.xml";
 
+/**
+ * On DataManager initialization configuration file is read
+ * and deserialized into DataManager instance.
+ */
 void DataManager::Init() {
   // Load configuration
   std::ifstream file(kConfFile);
@@ -35,6 +39,9 @@ void DataManager::Init() {
   }
 }
 
+/**
+ * Upon DataManager exit all structures are being serialized into an XML archive.
+ */
 void DataManager::OnExit() {
   std::ofstream file(kConfFile.c_str());
   {

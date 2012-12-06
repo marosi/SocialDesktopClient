@@ -49,6 +49,10 @@ void EventManager::ProcessEvent(const Event& event) {
   }
 }
 
+/**
+ * In order to stop EventManager correctly all before added events in the queue has to be processed.
+ * Therefore also stop event needs to be posted to the queue.
+ */
 void EventManager::Stop() {
   PostEvent(boost::bind(&EventManager::DoStop, this));
 }

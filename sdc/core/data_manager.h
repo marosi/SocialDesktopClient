@@ -21,14 +21,20 @@
 
 namespace sdc {
 
+/**
+ * Structure for library persistent data.
+ */
 class Library {
  public:
   friend class boost::serialization::access;
 
  private:
-  bool enabled_;
-  std::string filename_;
+  bool enabled_; /**< library enabled state */
+  std::string filename_; /**< library actual file name */
 
+  /**
+   * Boost serialization method
+   */
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version) {
     if (version) {}
@@ -39,8 +45,11 @@ class Library {
 
 class Account;
 
-/// @class ConfigManager
-/// @brief Maintains application configuration and provides interface for other managers.
+
+/**
+ * DataManager maintains SocialDesktopClient configuration,
+ * while providing interface to work with application persistent data.
+ */
 class DataManager : public AbstractManager, public Properties {
  public:
   friend class boost::serialization::access;
@@ -61,31 +70,46 @@ class DataManager : public AbstractManager, public Properties {
     }
   }
 
+  /**
+   * Adds account to the persistent storage.
+   * @param account account data
+   */
   void AddAccount(Account* account) {
     accounts_.push_back(account);
     SetEnabledAccount(accounts_.size() - 1, true);
     onAccountsChanged();
   }
 
-  void SetAccount(int index, Account* data) {
-    accounts_[index] = data;
-    onAccountsChanged();
-  }
-
+  /**
+   * Removes account from storage.
+   * @param index account index
+   */
   void RemoveAccount(int index) {
     onAccountDisabled(accounts_[index]);
     accounts_.erase(accounts_.begin() + index);
     onAccountsChanged();
   }
 
+  /**
+   * Gets account based on its index.
+   * @param index account index
+   * @return Account instance
+   */
   Account* GetAccount(int index) {
     return accounts_[index];
   }
 
+  /**
+   * Gets all configured accounts.
+   * @return vector of accounts
+   */
   std::vector<Account*> GetAccounts() const {
     return accounts_;
   }
 
+  /**
+   * Exit actions like data serialization.
+   */
   void OnExit();
 
   boost::signals2::signal<void ()> onAccountsChanged;
@@ -93,14 +117,14 @@ class DataManager : public AbstractManager, public Properties {
   boost::signals2::signal<void (Account*)> onAccountDisabled;
 
  private:
-  std::vector<Account*>& accounts() {
-    return accounts_;
-  }
+  static const std::string kConfFile; /**< configuration file name */
+  std::vector<Library> libraries_; /**< internal structure for available libraries */
+  std::vector<Account*> accounts_; /**< internal structure for available accounts */
 
-  static const std::string kConfFile;
-  std::vector<Library> libraries_;
-  std::vector<Account*> accounts_;
-
+  /**
+   * Boost serialization method.
+   * Serializes DataManager internal structures.
+   */
   template<class Archive>
   void serialize(Archive & ar, const unsigned int version) {
     //ar & boost::serialization::base_object<Properties>(*this);

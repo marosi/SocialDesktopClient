@@ -25,12 +25,16 @@ namespace sdc {
 class Service;
 class PluginManager;
 
-/// Possible implementation extensions of the SDC Core.
+/**
+ * Available plugin types.
+ */
 enum PluginType {
-  SERVICE /// Social network service implementation class
+  SERVICE /**< Social network service implementation class */
 };
 
-/// Structure holding data necessary for class registration in Core.
+/**
+ * Structure holding data necessary for class registration in Core.
+ */
 struct ClassDataRegistration { // TODO: put ClassDataRegistration into Registration class
   PluginType type;
   std::string class_name;
@@ -38,7 +42,10 @@ struct ClassDataRegistration { // TODO: put ClassDataRegistration into Registrat
   LibSignature lib_signature;
 };
 
-/// Holds data that each plugin must provide.
+/**
+ * Plugin library registration object.
+ * Provides interface for registering plugin metadata within SocialDesktopClient.
+ */
 class Registration {
  public:
   Registration(std::string & name, std::string & version, std::string & description)
@@ -64,27 +71,33 @@ class Registration {
   std::vector<ClassDataRegistration> new_plugins_;
 };
 
-/// @defgroup g1 Core-to-plugin interface
-/// These C funcions provide communication between SDC Core and shared/dynamic libraries.
-/// @{
+/**
+ * Low level plugin C function interface.
+ * This function must be implemented in plugin library
+ */
 typedef Registration* registerLibrary();
-/// @}
 
+/**
+ * Factory class for creating plugin instances of available plugin types.
+ */
 template <class T>
 class PluginProvider {
  public:
   PluginProvider(PluginManager* pm) : plugin_manager_(pm) {}
   typedef T* type();
-  T* CreateInstance(const PluginSignature &); /// Factory method. Creates object based on its plugin signature.
+  /**
+   * Factory method. Creates object based on its plugin signature.
+   */
+  T* CreateInstance(const PluginSignature &);
  protected:
   PluginManager* plugin_manager_;
 };
 
-/// @class PluginManager
-/// @brief Singleton class. Takes care of plugin management, exposing plugin implementation to SDC Core.
-/// PluginManager acts as a bridge between SDC Core and its extensions.
-/// It handles shared/dynamic libraries and provides interface for the work with plugins. It is accessible through sdc::g_plugin_manager.
-/// It also works as class factory.
+
+ /**
+  * Takes care of plugin management, exposing plugin implementation to the Core.
+  * It handles plugins represented by shared/dynamic libraries and provides interface for the work with plugins.
+  */
 class PluginManager : public AbstractManager {
  public:
   PluginManager(Core* core);
@@ -94,43 +107,45 @@ class PluginManager : public AbstractManager {
 
   LIB_HANDLE_TYPE GetLibraryHandle(const PluginSignature &);
 
-  /// @brief Loads symbol from shared/dynamic library
+  //@{ Loads symbol from shared/dynamic library
   void* LoadLibrarySymbol(LIB_HANDLE_TYPE, const std::string &);
   void* LoadLibrarySymbol(const PluginSignature &);
+  //@}
 
-  /// @brief Returns every class data object of a certain plugin type.
+  /**
+   * Returns every class data object of a certain plugin type.
+   */
   std::vector<ClassDataRegistration> GetClassData(const PluginType &) const;
-  /// @brief Creates and returns all instances of plugin type.
-  //template<class T>
-  //std::vector<T>* CreateAllInstances(const PluginType);
+  /**
+   * Creates and returns all instances of plugin type.
+   */
   template<class T>
   std::map<PluginSignature, T*> CreateAllInstances(const PluginType);
 
  private:
-  LIB_HANDLE_TYPE LoadLibrary(const std::string &); /// Loads library specified by its full path.
-  LibSignature GetLibrarySignature(const std::string &) const;
-  PluginSignature GetClassSignature(const ClassDataRegistration & class_data) const;
+  /**
+   * Loads library specified by its full path.
+   */
+  LIB_HANDLE_TYPE LoadLibrary(const std::string &);
+
+  /**
+   * Return library signature based on library file name
+   * @
+   * @return library signature
+   */
+  LibSignature GetLibrarySignature(const std::string &file_name) const;
+
+  /**
+   * Returns class signature based on class registration object.
+   * @param class_data class registration structure
+   * @return class signature
+   */
+  PluginSignature GetClassSignature(const ClassDataRegistration &class_data) const;
 
   PluginProvider<Service> connectionconfigmodel_provider_;
   std::map<PluginSignature, ClassDataRegistration> class_data_;
   std::map<LibSignature, LIB_HANDLE_TYPE> lib_handles_;
 };
-
-///
-/// Template methods implementation
-///
-/*
-template<class T>
-std::vector<T>* PluginManager::CreateAllInstances(const PluginType plugin_type) {
-  PluginProvider<T> plugin_provider(this); //TODO: !!!!
-  std::vector<ClassDataRegistration> cd_array = GetClassData(plugin_type);
-  std::vector<T>* instances = new std::vector<T>();
-  for(std::vector<ClassDataRegistration>::iterator it = cd_array.begin();
-      it != cd_array.end(); ++it)
-    instances->push_back(*plugin_provider.CreateInstance(GetClassSignature(*it)));
-  return instances;
-}
-*/
 
 template<class T>
 std::map<PluginSignature, T*> PluginManager::CreateAllInstances(const PluginType plugin_type) {

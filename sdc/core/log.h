@@ -12,7 +12,12 @@
 #include <string>
 #include <map>
 
-/// Macro defined for logging purposes
+/**
+ * Macro defined for logging purposes.
+ *
+ * If assembly is compiled with LOG_PRODUCER=NAME directive
+ * all logs within the assembly include NAME prefix.
+ */
 #ifdef LOG_PRODUCER
 
 #define TOKEN_TO_STRING(TOK) # TOK
@@ -31,6 +36,10 @@
 
 namespace sdc {
 
+/**
+ * SocialDesktopClient logger.
+ * It provides leveled logging capabilieties.
+ */
 class Log {
  public:
   enum Level {
@@ -42,7 +51,7 @@ class Log {
     DEBUG1,
     DEBUG2,
     DEBUG3,
-    DEBUG4,
+    DEBUG4
   };
   Log();
   virtual ~Log();

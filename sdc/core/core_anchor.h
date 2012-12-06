@@ -13,6 +13,10 @@ namespace sdc {
 
 class Core;
 
+/**
+ * Parent for all Core object "users".
+ * DEPRECATED since the introduction of Core singleton.
+ */
 class CoreAnchor {
  public:
   CoreAnchor() : core_(0) {} // TODO: Remove this together with SetCore() method

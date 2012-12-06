@@ -15,6 +15,9 @@
 
 namespace sdc {
 
+/**
+ * Class for common SocialDesktopClient contact representation.
+ */
 class Contact {
  public:
   typedef boost::shared_ptr<Contact> Ref;
@@ -26,6 +29,9 @@ class Contact {
 
   virtual ~Contact() {}
 
+  /*
+   * Setters and getters
+   */
   void SetName(const std::string &name) { name_ = name; }
   const std::string& GetName() const { return name_; }
   void SetUid(const std::string &uid) { uid_ = uid; }
