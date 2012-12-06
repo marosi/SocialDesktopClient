@@ -111,7 +111,7 @@ BcModel::BcModel(sdc::Account* account)
     LOG(DEBUG) << "Subscription of " << jid.toString() << " has been revoked: " << str;
   });
   // Tracers
-  tracer_ = new ClientXMLTracer(client_);
+  //tracer_ = new ClientXMLTracer(client_);
   // Add parsers and serializers
   AddParserFactories();
   AddSerializers();
@@ -134,7 +134,7 @@ BcModel::~BcModel() {
   BOOST_FOREACH (PayloadSerializer* ps , serializers_) {
     delete ps;
   }
-  delete tracer_;
+  //delete tracer_;
   delete client_;
   delete loop_;
   delete network_;
