@@ -47,13 +47,16 @@ void BcPresenter::Init() {
           this, SLOT(ShowOwnChannel()));
 
   // set subscribe to channel action
+  // TODO: show channel disabled, needs different GUI approach
+  /*
   QMenu* subscribe = account_button()->button()->menu()->addMenu("Show Channel");
   QWidgetAction* edit = new QWidgetAction(account_button()->button()->menu());
   subscribe_to_ = new QLineEdit;
   subscribe_to_->setMinimumWidth(200);
   edit->setDefaultWidget(subscribe_to_);
-  subscribe->addAction(edit);
+  //subscribe->addAction(edit);
   connect(subscribe_to_, SIGNAL(returnPressed()), this, SLOT(OnShowChannelLineEditEnter()));
+  */
 
   // set stylesheet
   QFile file("plugins/buddycloud/resources/bc.qss");

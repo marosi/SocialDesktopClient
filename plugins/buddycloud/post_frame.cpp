@@ -73,7 +73,8 @@ void PostFrame::mouseReleaseEvent(QMouseEvent *) {
 }
 
 void PostFrame::enterEvent(QEvent *) {
-  ui.deleteButton->show();
+  // TODO: temporarily disabled due to unfinished specification
+  //ui.deleteButton->show();
 }
 
 void PostFrame::leaveEvent(QEvent *) {
