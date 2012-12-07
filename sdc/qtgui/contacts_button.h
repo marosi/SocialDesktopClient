@@ -13,6 +13,9 @@ namespace sdc {
 
 class ContactsPanel;
 
+/**
+ * Prime button for contacts panel.
+ */
 class ContactsButton : public PrimeButton {
 
     Q_OBJECT
@@ -20,6 +23,10 @@ class ContactsButton : public PrimeButton {
  public:
   ContactsButton();
 
+  /**
+   * Sets contacts panel.
+   * @param panel
+   */
   void SetPanel(ContactsPanel* panel);
 
  private slots:

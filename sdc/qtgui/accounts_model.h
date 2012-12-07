@@ -13,6 +13,9 @@ namespace sdc {
 
 class Core;
 
+/**
+ * This class represents model, in Qt Model-View paradigm, for accounts table displayed in settings dialog.
+ */
 class AccountsModel : public QAbstractTableModel {
  public:
   AccountsModel(Core* core);

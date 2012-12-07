@@ -16,6 +16,10 @@ class PrimeButton;
 
 namespace sdc {
 
+/**
+ * PrimeButton is a common parent widget for all buttons residing in application main control panel area.
+ * We call such buttons as prime buttons.
+ */
 class PrimeButton : public QWidget {
 
     Q_OBJECT
@@ -24,6 +28,10 @@ class PrimeButton : public QWidget {
   explicit PrimeButton(QWidget *parent = 0);
   ~PrimeButton();
 
+  /**
+   * Returns actual control panel button.
+   * @return actual button
+   */
   QToolButton* button();
 
  private:

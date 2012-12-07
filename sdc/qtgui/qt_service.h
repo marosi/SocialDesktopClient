@@ -22,12 +22,28 @@ class QtServiceModel;
 class WidgetFactory;
 class ServicePresenter;
 
+/**
+ * Qt Service class.
+ * It contains required elements for a service to be used by Qt GUI.
+ */
 class QtService : public Service {
  public:
+  /**
+   * Factory method for new account widget.
+   * @return new account widget
+   */
   virtual NewAccountWidget* CreateNewAccountPane()=0;
+  /**
+   * Factory method for new contact widget.
+   * @return new contact widget
+   */
   virtual NewContactWidget* CreateNewContactWidget()=0;
 
   virtual std::vector<WidgetFactory*> CreateWidgetFactories()=0;
+  /**
+   * Factory method for service presenter instance.
+   * @return service presenter
+   */
   virtual ServicePresenter* CreateServicePresenter()=0;
 };
 

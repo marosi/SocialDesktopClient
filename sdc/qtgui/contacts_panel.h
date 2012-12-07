@@ -13,6 +13,9 @@ class QToolButton;
 
 namespace sdc {
 
+/**
+ * Common panel for all application contacts.
+ */
 class ContactsPanel : public ContentPanel {
 
     Q_OBJECT

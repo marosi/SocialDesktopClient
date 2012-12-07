@@ -14,6 +14,9 @@ namespace sdc {
 class MainWindow;
 class SettingsDialog;
 
+/**
+ * Application central button, displayed in control panel as a prime button.
+ */
 class MainButton : public PrimeButton {
 
     Q_OBJECT
@@ -22,6 +25,9 @@ class MainButton : public PrimeButton {
   MainButton(MainWindow* main_window_);
 
  private slots:
+  /**
+   * Displays application settings dialog.
+   */
   void ShowSettingsDialog();
 
  private:

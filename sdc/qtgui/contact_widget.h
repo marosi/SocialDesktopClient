@@ -15,15 +15,30 @@ namespace sdc {
 
 class Contact;
 
+/**
+ * Common widget for all application contacts.
+ */
 class ContactWidget : public QWidget {
 
     Q_OBJECT
 
  public:
+  /**
+   * Contstructs contact widget for particular contact.
+   * @param contact
+   */
   ContactWidget(Contact* contact);
   virtual ~ContactWidget();
 
+  /**
+   * Gets image label for avatar.
+   * @return label
+   */
   QLabel* avatar_label() { return ui.avatarLabel; }
+  /**
+   * Gets contact model.
+   * @return
+   */
   Contact* model() { return contact_; }
 
  private:

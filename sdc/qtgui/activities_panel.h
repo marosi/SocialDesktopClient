@@ -14,10 +14,17 @@ namespace sdc {
 
 class Activity;
 
+/**
+ * Specific content panel for activities.
+ */
 class ActivitiesPanel : public ContentPanel {
  public:
   ActivitiesPanel();
 
+  /**
+   * Adds activity widget to the top of content area.
+   * @param activity
+   */
   void AddActivity(Activity* activity);
 
  private:

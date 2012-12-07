@@ -15,6 +15,9 @@ namespace sdc {
 class Account;
 class NewAccountWidget;
 
+/**
+ * Dialog for new account creation.
+ */
 class NewAccountDialog : public QDialog
 {
     Q_OBJECT

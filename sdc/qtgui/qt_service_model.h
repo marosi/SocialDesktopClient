@@ -16,17 +16,29 @@ namespace sdc {
 
 class QtGui;
 
+/**
+ * Qt ServiceModel class.
+ * Servic model conforming to the requirements of Qt GUI.
+ */
 class QtServiceModel : public QObject, public ServiceModel {
  public:
   QtServiceModel(Account* account);
   virtual ~QtServiceModel() {}
 
+  /**
+   * Set main Qt GUI controller.
+   * @param gui qt gui controller
+   */
   void SetGui(QtGui* gui) {
     gui_ = gui;
   }
   QtService* GetQtService();
 
  protected:
+  /**
+   * Gets main Qt GUI controller.
+   * @return Qt GUI controller
+   */
   QtGui* GetGui() {
     return gui_;
   }

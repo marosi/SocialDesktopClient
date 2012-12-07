@@ -49,24 +49,50 @@ class QtGui : public QObject, public UI {
         main_window_(0) {}
   ~QtGui();
 
+  /**
+   * Called from Core. Initializes Qt GUI components.
+   */
   void Init(); // TODO: do something with init() and exec() they are accessible from each QtView
 
+  /**
+   * Called from Core. Starts GUI application.
+   * @return exit code
+   */
   int Exec() {
     return app_.exec();
   }
 
+  /**
+   * Gets model based on associated presenter.
+   * @param presenter service presenter
+   * @return associated model
+   */
   QtServiceModel* GetModel(ServicePresenter* presenter) {
     return presenter_to_model_[presenter];
   }
 
+  /**
+   * Gets presenter based on associated model.
+   * @param model servic model
+   * @return associated presenter
+   */
   ServicePresenter* GetPresenter(QtServiceModel* model) {
     return model_to_presenter_[model];
   }
 
+  /**
+   * Gets service instance based on associated presenter.
+   * @param presenter presenter
+   * @return associated service
+   */
   QtService* GetService(ServicePresenter* presenter) {
     return presenter_to_service_[presenter];
   }
 
+  /**
+   * Interface for applying stylesheets.
+   * @param stylesheet
+   */
   void AppendStyleSheet(const QString &stylesheet);
 
  private:

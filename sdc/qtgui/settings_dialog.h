@@ -14,6 +14,9 @@ namespace sdc {
 
 class Service;
 
+/**
+ * Settings left panel item.
+ */
 class SettingsListItem : public QListWidgetItem {
  public:
   SettingsListItem(QListWidget* parent, QWidget* referenced_page) : QListWidgetItem(parent) {
@@ -28,6 +31,9 @@ class SettingsListItem : public QListWidgetItem {
   QWidget* page_;
 };
 
+/**
+ * Application settings dialog.
+ */
 class SettingsDialog : public QDialog
 {
     Q_OBJECT

@@ -13,6 +13,9 @@ namespace sdc {
 
 class ActivitiesPanel;
 
+/**
+ * Activities prime button.
+ */
 class ActivitiesButton : public PrimeButton {
 
     Q_OBJECT
@@ -20,6 +23,10 @@ class ActivitiesButton : public PrimeButton {
  public:
   ActivitiesButton();
 
+  /**
+   * Sets panel for activities.
+   * @param panel activities panel
+   */
   void SetPanel(ActivitiesPanel* panel);
 
  private slots:

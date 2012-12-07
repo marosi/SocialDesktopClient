@@ -16,6 +16,9 @@ class Activity;
 
 namespace sdc {
 
+/**
+ * Common widget for activity notification of any social network service.
+ */
 class Activity : public QFrame {
 
     Q_OBJECT
@@ -24,7 +27,15 @@ class Activity : public QFrame {
   explicit Activity(QFrame *parent = 0);
   virtual ~Activity();
 
+  /**
+   * Gets label image.
+   * @return label
+   */
   QLabel* image_label();
+  /**
+   * Gets text label right next to the image label.
+   * @return text label
+   */
   QLabel* text_label();
 
  private:

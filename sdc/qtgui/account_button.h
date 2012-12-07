@@ -16,6 +16,9 @@ namespace sdc {
 
 class QtServiceModel;
 
+/**
+ * Class represents central button for each activated account.
+ */
 class AccountButton : public PrimeButton {
 
     Q_OBJECT
@@ -24,8 +27,16 @@ class AccountButton : public PrimeButton {
   AccountButton(QtServiceModel* model);
   virtual ~AccountButton();
 
+  /**
+   * Sets icon for account button.
+   * @param icon QIcon
+   */
   void SetAccountIcon(const QIcon &icon);
 
+  /**
+   * When clicking button this action shows as the first in the menu.
+   * @return QAction
+   */
   QAction* title_action() { return title_; }
 
  protected slots:

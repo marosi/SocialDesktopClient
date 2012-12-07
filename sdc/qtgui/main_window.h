@@ -65,9 +65,16 @@ class MainWindow : public QMainWindow {
   void AddContentPanel(ServicePresenter* parent, ContentPanel* panel);
   void RemoveAllContentPanels(ServicePresenter* parent);
 
-
+  /**
+   * Gets common activities panel.
+   * @return activities panel
+   */
   ActivitiesPanel* activities() { return activities_; }
 
+  /**
+   * Gets common contacts panel.
+   * @return contacts panel
+   */
   ContactsPanel* contacts() { return contacts_panel_; }
 
  private:

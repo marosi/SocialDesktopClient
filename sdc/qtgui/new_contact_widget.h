@@ -13,15 +13,34 @@ namespace sdc {
 
 class ServiceModel;
 
+/**
+ * Common class for specific social network new contact widgets.
+ */
 class NewContactWidget : public QWidget {
  public:
+  /**
+   * Verifies input validity.
+   * @return true if input data is valid, false otherwise
+   */
   virtual bool IsInputValid()=0;
+  /**
+   * Handler for processing new contact within its ServiceModel.
+   * @param model service model
+   */
   virtual void Process(ServiceModel* model)=0;
+  /**
+   * Gets error message.
+   * @return error message
+   */
   QString GetErrorMessage() {
     return error_;
   }
  protected:
-  void SetErrorMessagte(const QString &msg) {
+  /**
+   * Sets error message.
+   * @param msg
+   */
+  void SetErrorMessage(const QString &msg) {
     error_ = msg;
   }
  private:

@@ -111,6 +111,10 @@ class bind_<R (P)> : public bind_base {
   boost::function<R (P)> callback_;
 };
 
+/**
+ * Function provides the way to interconnect Boost Signals and Qt signal/slot mechanism in a thread-safe manner.
+ * It actually pushes function callback with arguments to the Qt thread.
+ */
 template<typename T>
 void bind(boost::signals2::signal<T> &signal, typename std::common_type<boost::function<T> >::type function) {
   boost::shared_ptr<bind_<T> > binding(new bind_<T>(function));

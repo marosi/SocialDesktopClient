@@ -14,6 +14,9 @@ namespace sdc {
 
 class NewContactWidget;
 
+/**
+ * Dialog for application's new contact.
+ */
 class NewContactDialog : public QDialog {
 
     Q_OBJECT

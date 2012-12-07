@@ -17,6 +17,10 @@
 
 namespace sdc {
 
+/**
+ * The service presenter class.
+ * Encapsulates all Qt GUI presentation bussiness logic within service implementation.
+ */
 class ServicePresenter : public QObject {
 
     Q_OBJECT
@@ -27,25 +31,48 @@ class ServicePresenter : public QObject {
 
   ServicePresenter();
   virtual ~ServicePresenter() {}
+  /**
+   * Initializes service presenter.
+   */
   virtual void Init() {}
 
+  /**
+   * Gets main application window.
+   * @return main window
+   */
   MainWindow* main_window() const {
     return main_window_;
   }
 
+  /**
+   * Gets associated service model
+   * @return associated service model
+   */
   QtServiceModel* model() const {
     return service_model_;
   }
 
+  /**
+   * Get associated service model downcasted as required.
+   * @return associated service model instance of required type
+   */
   template<class T>
   T* model() const {
     return boost::polymorphic_downcast<T*>(service_model_);
   }
 
+  /**
+   * Gets main account prime button.
+   * @return account prime button
+   */
   AccountButton* account_button() const {
     return account_button_;
   }
 
+  /**
+   * Sets Qt stylesheet for styling service components.
+   * @param stylesheet
+   */
   void SetStylesheet(const QString &stylesheet);
 
  private:
