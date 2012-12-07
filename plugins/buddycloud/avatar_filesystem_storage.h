@@ -15,6 +15,9 @@ class Account;
 
 }
 
+/**
+ * Filesystem storage for avatars.
+ */
 class AvatarFilesystemStorage : public Swift::AvatarStorage {
  public:
   AvatarFilesystemStorage(const std::string &service_dir, sdc::Account* account);

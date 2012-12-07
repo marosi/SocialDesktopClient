@@ -9,12 +9,20 @@
 
 class BcModel;
 
+/**
+ * Common model class.
+ * All descendants has access to main ServiceModel instance.
+ */
 class AbstractModel {
  public:
   AbstractModel(BcModel* model) : model_(model) {}
   AbstractModel(AbstractModel* model) : model_(model->model()) {}
 
  protected:
+  /**
+   * Gets buddycloud service model.
+   * @return service model.
+   */
   BcModel* model() {
     return model_;
   }

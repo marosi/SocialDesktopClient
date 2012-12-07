@@ -15,6 +15,9 @@ class BcPresenter;
 class ChannelPanel;
 class QAction;
 
+/**
+ * buddycloud contact widget implementation.
+ */
 class BcContactWidget : public sdc::ContactWidget, public AbstractPresenter {
 
     Q_OBJECT

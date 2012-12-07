@@ -18,6 +18,10 @@ class PubsubSubscribeRequest;
 class PubsubUnsubscribeRequest;
 class Rsm;
 
+/*
+ * VARIOUS SERIALIZERS
+ */
+
 class AtomSerializer : public Swift::GenericPayloadSerializer<Atom> {
  public:
   std::string serializePayload(boost::shared_ptr<Atom> payload) const;

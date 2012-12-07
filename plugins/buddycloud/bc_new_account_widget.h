@@ -12,8 +12,11 @@
 #include <QtGui/QWidget>
 #include "ui_bc_new_account_widget.h"
 
-class BcNewAccountWidget : public sdc::NewAccountWidget
-{
+/**
+ * buddycloud new account widget implementation.
+ */
+class BcNewAccountWidget : public sdc::NewAccountWidget {
+
     Q_OBJECT
 
  public:

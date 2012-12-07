@@ -10,6 +10,9 @@
 #include <QtGui/QWidget>
 #include "ui_xmpp_commands.h"
 
+/**
+ * DEPRECATED
+ */
 class XmppCommands : public QWidget
 {
     Q_OBJECT

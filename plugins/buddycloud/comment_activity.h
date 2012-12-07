@@ -14,6 +14,9 @@
 class BcPresenter;
 class Comment;
 
+/**
+ * Commenting activity widget.
+ */
 class CommentActivity : public sdc::Activity {
  public:
   CommentActivity(BcPresenter* parent, const Swift::JID &from, const Swift::JID &to);

@@ -17,6 +17,9 @@ class CommentFrame;
 class Post;
 class Comment;
 
+/**
+ * Channel topic post widget.
+ */
 class PostFrame : public QFrame, public AbstractPresenter {
 
     Q_OBJECT

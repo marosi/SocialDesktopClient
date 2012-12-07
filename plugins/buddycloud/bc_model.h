@@ -31,6 +31,9 @@ class Comment;
 class FilesystemStorages;
 class Post;
 
+/**
+ * Structure for activity data.
+ */
 struct Activity {
   enum Verb {
     Note,
@@ -43,6 +46,10 @@ struct Activity {
   std::string to_;
 };
 
+/**
+ * buddycluod service model implementation.
+ * Top-level service business logic.
+ */
 class BcModel : public sdc::QtServiceModel {
   public:
     friend class BuddycloudConnection;
@@ -51,6 +58,9 @@ class BcModel : public sdc::QtServiceModel {
     BcModel(sdc::Account* account);
     ~BcModel();
 
+    /*
+     * ServiceModel interface.
+     */
     void Run();
     void Stop();
     void Connect();
@@ -67,42 +77,69 @@ class BcModel : public sdc::QtServiceModel {
      */
     void UnsubscribeFromChannel(const Swift::JID &jid);
 
+    /**
+     * Toggle channel privacy between open and private channel.
+     * ! EXPERIMENTAL !
+     * Not supported at time being.
+     */
     void ToggleChannelPrivacy();
 
     /*
      * Content interface
      */
+
+    /**
+     * Gets contact model based on its JID.
+     * @param jid JID
+     * @return buddycloud contact model
+     */
     BcContact* GetContact(const Swift::JID &jid);
+
+    /**
+     * Gets self JID.
+     * @return self JID
+     */
     Swift::JID GetOwnJID() { return jid_; }
+
+    /**
+     * Gets channel model based on its JID.
+     * @param jid JID
+     * @return channel model
+     */
     Channel* GetChannel(const Swift::JID &jid);
+
+    /**
+     * Gets self channel model.
+     * @return self channel model.
+     */
     Channel* GetOwnChannel() { return own_channel_; }
 
+    /*
+     * ! EXPERIMENTAL !
+     */
     void AddNewContact(const Swift::JID &jid);
-
     const std::string GetOwnAvatarPath();
     const std::string GetAvatarPath(const Swift::JID &jid);
     const std::string GetDefaultAvatarPath();
-    /*
-     * Errors
+
+    /**
+     * Enumeration of error states.
      */
     enum Error {
       ServiceUnavailable
     };
+
     /*
      * Signals
      */
     boost::signals2::signal<void (Error)> onError;
     boost::signals2::signal<void ()> onConnected;
     boost::signals2::signal<void ()> onDisconnected;
-
     boost::signals2::signal<void ()> onSelfChannelRegistered;
     boost::signals2::signal<void ()> onChannelAvailable;
-
     boost::signals2::signal<void (const Swift::JID)> onContactAdded;
     boost::signals2::signal<void (const Swift::JID)> onContactRemoved;
-
     boost::signals2::signal<void (Activity)> onNewActivity;
-
     boost::signals2::signal<void (const Swift::JID)> onAvatarChanged;
 
   private:
@@ -140,29 +177,29 @@ class BcModel : public sdc::QtServiceModel {
      */
     const std::string SavePhoto(const Swift::JID &jid, Swift::VCard::ref vcard);
     int GetStatus(Swift::Presence::ref presence);
-    /**
+    /*
      * SDC data
      */
     sdc::Account* account_;
     std::vector<BcContact*> contacts_;
     std::map<Swift::JID, BcContact*> contacts_map_;
-    /**
+    /*
      * Domain server stuff
      */
     Swift::DiscoInfo::ref server_info_;
-    /**
+    /*
      * Channels
      */
     Channel* own_channel_;
     std::vector<Channel*> channels_;
     std::map<Swift::JID, Channel*> channels_map_;
-    /**
+    /*
      * Channel client data
      */
     Swift::JID jid_;
     Swift::JID service_jid_;
     bool is_service_registration_available_;
-    /**
+    /*
      * Switen engine
      */
     Swift::SimpleEventLoop* loop_;
@@ -170,12 +207,14 @@ class BcModel : public sdc::QtServiceModel {
     FilesystemStorages* storages_;
     Swift::Client* client_;
     Swift::ClientXMLTracer* tracer_;
-    /**
+    /*
      * Serializers & Parsers
      */
     std::vector<Swift::PayloadParserFactory*> parsers_;
     std::vector<Swift::PayloadSerializer*> serializers_;
-
+    /*
+     * Subscribe/unsubscribe controllers
+     */
     DiscoverService subscriber_;
     DiscoverService unsubscriber_;
 };

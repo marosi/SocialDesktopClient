@@ -26,7 +26,7 @@ using namespace sdc;
 using std::string;
 using std::vector;
 
-/**
+/*
  * PUBLIC INTERFACE
  */
 BcModel::BcModel(sdc::Account* account)
@@ -81,6 +81,7 @@ BcModel::BcModel(sdc::Account* account)
   client_->getVCardManager()->onVCardChanged.connect([&] (const JID &jid, VCard::ref vcard) {
   });
   */
+
   /*
    * Avatar management
    */
@@ -91,6 +92,7 @@ BcModel::BcModel(sdc::Account* account)
     onAvatarChanged(jid);
     LOG(DEBUG) << "Avatar of " << jid.toString() << " changed";
   });
+
   /*
    * Presence handling
    */
@@ -101,6 +103,7 @@ BcModel::BcModel(sdc::Account* account)
     }
     LOG(DEBUG) << "Presence changed by " << presence->getFrom().toString() << " to " << GetStatus(presence);
   });
+
   /*
    * Subscriptions
    */
@@ -110,8 +113,10 @@ BcModel::BcModel(sdc::Account* account)
   client_->getSubscriptionManager()->onPresenceSubscriptionRevoked.connect([&] (const JID &jid, const string &str) {
     LOG(DEBUG) << "Subscription of " << jid.toString() << " has been revoked: " << str;
   });
+
   // Tracers
   //tracer_ = new ClientXMLTracer(client_);
+
   // Add parsers and serializers
   AddParserFactories();
   AddSerializers();
@@ -224,7 +229,6 @@ const std::string BcModel::GetDefaultAvatarPath() {
 /*
  * Connected/disconnected handlers
  */
-
 void BcModel::handleConnected() {
   LOG(TRACE) << "XMPP client is connected" << std::endl;
   // request contact vCards and create channel for each contact

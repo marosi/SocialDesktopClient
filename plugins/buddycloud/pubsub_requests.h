@@ -10,6 +10,10 @@
 #include "payloads/pubsub.h"
 #include "Swiften/Queries/GenericRequest.h"
 
+/*
+ * VARIOUS REQUESTS
+ */
+
 /**
  * Pubsub <items> request class
  */

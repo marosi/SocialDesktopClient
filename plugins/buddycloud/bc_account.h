@@ -9,6 +9,9 @@
 
 #include "sdc/core/account.h"
 
+/**
+ * buddycloud channel service account.
+ */
 class BcAccount : public sdc::Account {
 
 };

@@ -14,13 +14,28 @@
 class BcModel;
 class Channel;
 
+/**
+ * buddycloud contact.
+ */
 class BcContact : public sdc::Contact, public AbstractModel {
  public:
   BcContact(BcModel* model, const Swift::JID &jid);
 
+  /**
+   * Returns contact's channel.
+   * @return channel
+   */
   Channel* GetChannel();
+
+  /**
+   * Gets contact's JID
+   * @return JID
+   */
   const Swift::JID& GetJID() { return jid_; }
 
+  /**
+   * Unfollows contact's channel.
+   */
   void Unfollow();
 
   boost::signals2::signal<void ()> onChannelRetrieved;

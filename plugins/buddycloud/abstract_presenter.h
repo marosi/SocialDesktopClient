@@ -9,12 +9,20 @@
 
 class BcPresenter;
 
+/**
+ * Common presenter class.
+ * All descendants has access to main ServicePresenter instance.
+ */
 class AbstractPresenter {
  public:
   AbstractPresenter(BcPresenter* presenter) : presenter_(presenter) {}
   AbstractPresenter(AbstractPresenter* presenter) : presenter_(presenter->presenter()) {}
 
  protected:
+  /**
+   * Gets buddycloud service presenter.
+   * @return service presenter
+   */
   BcPresenter* presenter() {
     return presenter_;
   }

@@ -14,6 +14,9 @@
 #include "ui_bc_new_contact_widget.h"
 #include "boost/cast.hpp"
 
+/**
+ * buddycloud new contact widget implementation.
+ */
 class BcNewContactWidget : public sdc::NewContactWidget {
 
     Q_OBJECT

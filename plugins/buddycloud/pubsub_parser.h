@@ -25,13 +25,17 @@ class Rsm;
 class RsmParser;
 
 /**
- *
+ * Parser for <items/> with various payload.
  */
 class ItemParser : public Swift::GenericPayloadParser<Items> {
  public:
   ItemParser();
   ~ItemParser();
 
+  /**
+   * Adds specific payload parser to parse required payload within <item/> element.
+   * @param parser
+   */
   void addPaylodParserFactory(Swift::PayloadParserFactory* parser);
 
   virtual void handleStartElement(const std::string& element, const std::string& ns, const Swift::AttributeMap& attributes);
@@ -50,6 +54,10 @@ class ItemParser : public Swift::GenericPayloadParser<Items> {
   bool is_item_;
 };
 
+/**
+ * Parser for debugging purposes.
+ * All elements are dumped to LOG(DEBUG).
+ */
 class LogParser : public Swift::PayloadParser {
  public:
   void handleStartElement(const std::string&  element, const std::string&  ns, const Swift::AttributeMap&  /*attributes*/) {
@@ -69,6 +77,9 @@ class LogParser : public Swift::PayloadParser {
   }
 };
 
+/**
+ * Parser for buddycloud Atom payload.
+ */
 class AtomParser : public Swift::GenericPayloadParser<Atom> {
  public:
   AtomParser();
@@ -94,6 +105,9 @@ class AtomParser : public Swift::GenericPayloadParser<Atom> {
   std::string text_;
 };
 
+/**
+ * Parser for Pubsub <items/> request.
+ */
 class PubsubItemsRequestParser : public Swift::GenericPayloadParser<PubsubItemsRequest> {
  public:
   PubsubItemsRequestParser();
@@ -114,6 +128,9 @@ class PubsubItemsRequestParser : public Swift::GenericPayloadParser<PubsubItemsR
   bool is_parsing_rsm_;
 };
 
+/**
+ * Parser for Pubsub <publish/> request.
+ */
 class PubsubPublishRequestParser : public Swift::GenericPayloadParser<PubsubPublishRequest> {
  public:
   virtual void handleStartElement(const std::string& element, const std::string& /*ns*/, const Swift::AttributeMap& attributes);
@@ -128,6 +145,9 @@ class PubsubPublishRequestParser : public Swift::GenericPayloadParser<PubsubPubl
 //  virtual void handleCharacterData(const std::string& /*data*/) {}
 //};
 
+/**
+ * Parser for Pubsub <subscribe/> request.
+ */
 class PubsubSubscribeRequestParser : public Swift::GenericPayloadParser<PubsubSubscribeRequest> {
  public:
   virtual void handleStartElement(const std::string& element, const std::string& /*ns*/, const Swift::AttributeMap& attributes);
@@ -135,6 +155,9 @@ class PubsubSubscribeRequestParser : public Swift::GenericPayloadParser<PubsubSu
   virtual void handleCharacterData(const std::string& /*data*/) {}
 };
 
+/**
+ * Top-level Pubsub parser.
+ */
 class PubsubParser : public Swift::PayloadParser {
  public:
   PubsubParser();
@@ -159,6 +182,9 @@ class PubsubParser : public Swift::PayloadParser {
   PayloadParser* parser_;
 };
 
+/**
+ * Top-level Pubsub <event/> payload.
+ */
 class EventPayloadParser : public Swift::GenericPayloadParser<EventPayload> {
  public:
   EventPayloadParser();
@@ -187,6 +213,9 @@ class EventPayloadParser : public Swift::GenericPayloadParser<EventPayload> {
   PayloadParser* parser_;
 };
 
+/**
+ * Parser for <rsm/> items management payload.
+ */
 class RsmParser : public Swift::GenericPayloadParser<Rsm> {
  public:
   ~RsmParser();

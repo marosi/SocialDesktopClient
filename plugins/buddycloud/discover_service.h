@@ -16,6 +16,9 @@
 #include "boost/signals2/signal.hpp"
 #include <vector>
 
+/**
+ * Class for discovering channel service.
+ */
 class DiscoverService {
  public:
   struct Info {

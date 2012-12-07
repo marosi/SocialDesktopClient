@@ -23,8 +23,15 @@ class BcModel;
 class Post;
 class Comment;
 
+/**
+ * Channel model class.
+ * Encapsulates business logic for Channel protocol.
+ */
 class Channel : public AbstractModel {
  public:
+  /**
+   * Structure holding channel service metadata.
+   */
   struct ChannelServiceInfo {
     Swift::JID jid;
     bool is_available;
@@ -37,6 +44,9 @@ class Channel : public AbstractModel {
           is_registration_available(is_registration) {}
   };
 
+  /**
+   * Structures for channel user metadata.
+   */
   struct ChannelUserInfo {
     bool is_user_channel_registered; // TODO: deprecate, only client can have this state!
 
@@ -93,11 +103,17 @@ class Channel : public AbstractModel {
   friend class BcModel;
   typedef boost::shared_ptr<Channel> ref;
 
+  /**
+   * Enumeration of channel error states.
+   */
   enum Error {
     ChannelsServiceUnavailable,
     UserChannelNotPresent
   };
 
+  /**
+   * Enumeration of available channel nodes.
+   */
   enum Nodes {
     Posts,
     Status,
@@ -107,16 +123,9 @@ class Channel : public AbstractModel {
     GeoFuture
   };
 
-  enum AccessModel {
-    Open,
-    Whitelist
-  };
-
-  enum PublishModel {
-    Publishers,
-    Subscribers
-  };
-
+  /*
+   * Getters for channel nodes.
+   */
   static std::string GetPostsNode(const Swift::JID &jid);
   static std::string GetStatusNode(const Swift::JID &jid);
   static std::string GetSubscriptionsNode(const Swift::JID &jid);
@@ -127,26 +136,67 @@ class Channel : public AbstractModel {
   Channel(BcModel* bot, const Swift::JID &jid);
   ~Channel();
 
+  /**
+   * Synchronizes user channel content within the client.
+   */
   void Sync();
+
+  /**
+   * Sequentialy retrieves posts.
+   */
   void RetrieveNextPosts();
+
+  /**
+   * Publishes topic post.
+   * @param content topic content
+   */
   void PublishPost(const std::string &content);
+
+  /**
+   * Publishes comment post.
+   * @param commented_post_id in reply to post with ID
+   * @param content comment content
+   */
   void PublishComment(const std::string &commented_post_id, const std::string &content);
-  void DeletePost(Post* post); // TODO:
+
+  /**
+   * Deletes particular post.
+   * TODO: unfinished logic
+   * @param post
+   */
+  void DeletePost(Post* post);
+
   /**
    * Retrieve channel subscriptions.
    */
   void RetrieveSubscriptions();
 
+  /**
+   * Adds subscription to internal structures.
+   * @param subscription
+   */
   void AddSubscription(Subscription subscription);
 
+  /**
+   * Gets all retrieved channel posts.
+   * @return vector of posts
+   */
   const std::vector<Post*> posts() const {
     return posts_;
   }
 
+  /**
+   * Gets user channel's JID.
+   * @return JID
+   */
   Swift::JID GetChannelServiceJid() const {
     return service_.jid;
   }
 
+  /**
+   * Returns channel registration availability state.
+   * @return true, if In-Band registration is available, false otherwise
+   */
   bool IsRegisterationAvailable() const {
     return service_.is_registration_available;
   }
@@ -161,15 +211,19 @@ class Channel : public AbstractModel {
   boost::signals2::signal<void (const std::vector<Post*>) > onNewPostsRetrieved;
   boost::signals2::signal<void (const std::string)> onChannelTitleChange;
   boost::signals2::signal<void (const std::string)> onChannelDescriptionChange;
-
   boost::signals2::signal<void (const std::string)> onPostDeleted;
   boost::signals2::signal<void (Post*)> onPostAdded;
-
   boost::signals2::signal<void (std::map<Swift::JID, Subscription>)> onSubscriptionsRetrieved;
   boost::signals2::signal<void (Subscription)> onNewSubscription;
 
  private:
+  /**
+   * Discovers user's channel.
+   */
   void DiscoverChannel();
+  /**
+   * Discovers channel component within user's XMPP server.
+   */
   void DiscoverService();
   /**
    * When searching for a channel service this handler is used to recursively iterate through domain items.
@@ -181,7 +235,9 @@ class Channel : public AbstractModel {
   Post* AddPost(Atom::ref, bool signal = true);
   void RemovePost(const std::string &id);
   Post* GetPost(const std::string &id);
-
+  /*
+   * Service model vars
+   */
   Swift::IQRouter* router_;
   BcModel* model_;
   /*

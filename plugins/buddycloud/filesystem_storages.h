@@ -17,6 +17,9 @@ class Account;
 
 }
 
+/**
+ * Filesystem storage for various XMPP client's data.
+ */
 class FilesystemStorages : public Swift::Storages {
  public:
   FilesystemStorages(const std::string &service_dir, sdc::Account* account);

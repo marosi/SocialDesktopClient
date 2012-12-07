@@ -16,6 +16,9 @@ namespace Ui {
 class CommentFrame;
 }
 
+/**
+ * Channel comment widget.
+ */
 class CommentFrame : public QFrame, public AbstractPresenter {
 
     Q_OBJECT

@@ -9,6 +9,9 @@
 
 #include "sdc/qtgui/qt_service.h"
 
+/**
+ * buddycloud service class.
+ */
 class BcService : public sdc::QtService {
  public:
   BcService() {

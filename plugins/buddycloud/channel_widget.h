@@ -17,6 +17,9 @@
 
 class PostFrame;
 
+/**
+ * Content panel implementation for channel display.
+ */
 class ChannelPanel : public sdc::ContentPanel, public AbstractPresenter {
 
     Q_OBJECT

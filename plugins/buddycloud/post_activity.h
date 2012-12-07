@@ -13,6 +13,9 @@
 class BcPresenter;
 class Post;
 
+/**
+ * Topic posting activity widget.
+ */
 class PostActivity : public sdc::Activity {
  public:
   PostActivity(BcPresenter* parent, const Swift::JID &from, const Swift::JID &to);

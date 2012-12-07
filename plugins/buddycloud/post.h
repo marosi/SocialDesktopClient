@@ -17,6 +17,9 @@
 class Channel;
 class Comment;
 
+/**
+ * Channel post common class.
+ */
 class Content : public AbstractModel {
  public:
   Content(AbstractModel* model) : AbstractModel(model) {}
@@ -40,6 +43,9 @@ class Content : public AbstractModel {
   boost::posix_time::ptime published_;
 };
 
+/**
+ * Topic post model.
+ */
 class Post : public Content {
  public:
   friend class Channel;
@@ -66,6 +72,9 @@ class Post : public Content {
   std::vector<Comment*> comments_;
 };
 
+/**
+ * Comment post model.
+ */
 class Comment : public Content {
  public:
   Comment(Post* post);

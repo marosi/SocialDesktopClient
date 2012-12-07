@@ -12,6 +12,10 @@
 
 class AtomParser;
 
+/*
+ * Parser factory for any payload.
+ * Used for testing purposes.
+ */
 class AnyParserFactory : public Swift::PayloadParserFactory {
  public:
   AnyParserFactory(Swift::PayloadParser* parser) : parser_(parser) {}

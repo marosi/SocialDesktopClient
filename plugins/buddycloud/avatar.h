@@ -10,6 +10,9 @@
 #include <QObject>
 #include <QPixmap>
 
+/**
+ * Structure for avatar images.
+ */
 class Avatar : public QObject {
 
     Q_OBJECT
@@ -22,16 +25,27 @@ class Avatar : public QObject {
     avatar_ = pixmap;
   }
 
+  /**
+   * Loads avatar image file.
+   * @param file image file name
+   */
   void Load(const std::string &file) {
     avatar_.load(QString::fromStdString(file));
     changed(avatar_);
   }
 
+  /**
+   * Gets QPixmap of loaded avatar.
+   * @return
+   */
   QPixmap GetPixmap() {
     return avatar_;
   }
 
  signals:
+  /**
+   * Signal is emited when avatar changes.
+   */
   void changed(const QPixmap &);
 
  private:
