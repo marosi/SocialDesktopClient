@@ -114,8 +114,6 @@ void BcPresenter::Init() {
    */
   sdc::bind(model_->onChannelAvailable, [&] () {
 
-    model_->GetOwnChannel()->RetrieveSubscriptions();
-
     sdc::bind(model_->GetOwnChannel()->onSubscriptionsRetrieved, [&] (std::map<Swift::JID, Channel::Subscription> subscriptions) {
       std::map<Swift::JID, Channel::Subscription>::iterator iter;
       this->main_window()->RemoveAllContacts(this);

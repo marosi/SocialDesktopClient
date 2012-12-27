@@ -59,6 +59,11 @@ BcModel::BcModel(sdc::Account* account)
 
   subscriber_.onAvailable.connect([&] (DiscoverService::Info service, JID jid) {
     SetPubsubSubscribeRequest::ref sub = SetPubsubSubscribeRequest::create(Channel::GetPostsNode(jid), service.jid, client_->getIQRouter());
+    sub->onResponse.connect([&] (PubsubSubscribeRequest::ref, ErrorPayload::ref error) {
+      if (!error) {
+        GetOwnChannel()->RetrieveSubscriptions();
+      }
+    });
     sub->send();
   });
 
@@ -285,6 +290,7 @@ void BcModel::handleConnected() {
     });
     own_channel_->onChannelAvailable.connect([&] () {
       onChannelAvailable();
+      own_channel_->RetrieveSubscriptions();
     });
   }
   onConnected();
@@ -309,7 +315,7 @@ void BcModel::handleMessageReceived(Message::ref message) {
     BOOST_FOREACH (boost::shared_ptr<DiscoItems> discoitems, event->getItems()->getInternal<DiscoItems>()) {
       BOOST_FOREACH (DiscoItems::Item item, discoitems->getItems()) {
         LOG(DEBUG) << "Subscription to node " <<  item.getNode() << " added to subscripstions storage.";
-        GetOwnChannel()->RetrieveSubscriptions();
+        //GetOwnChannel()->RetrieveSubscriptions();
       }
     }
     // take all atoms
