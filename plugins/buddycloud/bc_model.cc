@@ -312,7 +312,8 @@ void BcModel::handleMessageReceived(Message::ref message) {
   // is message event payload
   if (EventPayload::ref event = message->getPayload<EventPayload>()) {
     LOG(DEBUG2) << "Event from node: " << event->getNode();
-    BOOST_FOREACH (boost::shared_ptr<DiscoItems> discoitems, event->getItems()->getInternal<DiscoItems>()) {
+    vector<shared_ptr<DiscoItems> > dits = event->getItems()->getInternal<DiscoItems>();
+    BOOST_FOREACH (boost::shared_ptr<DiscoItems> discoitems, dits) {
       BOOST_FOREACH (DiscoItems::Item item, discoitems->getItems()) {
         LOG(DEBUG) << "Subscription to node " <<  item.getNode() << " added to subscripstions storage.";
         //GetOwnChannel()->RetrieveSubscriptions();
@@ -324,7 +325,10 @@ void BcModel::handleMessageReceived(Message::ref message) {
     // extract JID from node ID
     string node = event->getNode();
     size_t pos = node.find("/posts");
-    string node_jid = node.substr(6, pos - 6);
+    string node_jid;
+    if (pos != string::npos) {
+      node_jid = node.substr(6, pos - 6);
+    }
 
     BOOST_FOREACH (Atom::ref at, atoms) {
       Activity act;
